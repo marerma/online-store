@@ -20,6 +20,11 @@ const baseConfig = {
         test: /\.tsx?$/,
         loader: 'ts-loader',
       },
+      { test: /\.(png|jpg|gif)$/i, type: 'asset/resource' },
+      {
+        test: /\.svg/,
+        type: 'asset/inline',
+      },
     ],
   },
   resolve: {
@@ -28,11 +33,13 @@ const baseConfig = {
   output: {
     filename: 'index.js',
     path: path.resolve(__dirname, './dist'),
+    assetModuleFilename: 'assets/[name][ext]',
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './src/index.html'),
       filename: 'index.html',
+      favicon: './src/favicon.ico',
     }),
     new CleanWebpackPlugin(),
   ],
