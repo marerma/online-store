@@ -6,5 +6,8 @@ module.exports = {
   devServer: {
     static: path.resolve(__dirname, './dist'),
     historyApiFallback: true,
+    client: {
+      overlay: false,
+    },
   },
 };

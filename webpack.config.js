@@ -42,14 +42,6 @@ const baseConfig = {
       filename: 'index.html',
       favicon: './src/favicon.ico',
     }),
-    new CopyPlugin({
-      patterns: [
-        {
-          from: path.resolve(__dirname, 'src/components/'),
-          to: path.resolve(__dirname, 'dist/components/'),
-        },
-      ],
-    }),
     new CleanWebpackPlugin(),
   ],
 };
