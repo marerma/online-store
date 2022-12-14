@@ -1,0 +1,10 @@
+@import './components/main/main';
+
+$color: rgb(212, 212, 212);
+
+.main-content {
+  display: flex;
+  width: 100%;
+  margin: 0 auto;
+  background: $color;
+}

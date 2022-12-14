@@ -1,0 +1,54 @@
+.filters__container {
+  width: 30%;
+}
+
+.filter__list {
+  max-height: 20vh;
+  overflow-y: scroll;
+  border: 1px solid black;
+}
+
+.catalogue__container {
+  width: 70%;
+}
+
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 14px;
+};
+
+.product-item {
+  width: 30%;
+  border: 1px solid black;
+};
+
+.product-item__thumb {
+  width: 100%;
+  height: auto;
+  max-height: 100px;
+};
+
+// .product-item__props{
+
+// };
+// .product-item__title {
+
+// };
+.product-item__button-container {
+  display: flex;
+  gap: 5px;
+}
+.product-item__button {
+  border: 1px solid rgb(32, 32, 32);
+  background: grey;
+  border-radius: 2px;
+  width: 50%;
+  margin: 0 auto;
+};
+// .product-item__price {
+
+// };
+
