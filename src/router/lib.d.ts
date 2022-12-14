@@ -5,4 +5,7 @@ export declare global {
   interface EventTarget {
     href: string | URL;
   }
+  interface Routes {
+    [index: string]: string;
+  }
 }

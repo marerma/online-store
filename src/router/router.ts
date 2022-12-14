@@ -25,10 +25,6 @@ window.addEventListener('popstate', () => {
 window.route = route;
 handleLocation();
 
-interface Routes {
-  [index: string]: string;
-}
-
 function getSelector(parent: DocumentFragment | Document, selector: string) {
   const item = parent.querySelector(selector);
   if (!item) throw new Error(`Selector ${selector} didn't match any elements.`);
