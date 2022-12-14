@@ -14,8 +14,8 @@ class FiltersList implements HTMLComponent {
 
   render() {
     let innerHTML = '';
-    this.typesList.forEach((filerName) => {
-      innerHTML += new Filter(filerName).render();
+    this.typesList.forEach((filterName) => {
+      innerHTML += new Filter(filterName).render();
     });
     return innerHTML;
   }
@@ -23,12 +23,7 @@ class FiltersList implements HTMLComponent {
   loadFilters() {
     this.filterComponent.innerHTML = this.render();
     this.filterComponent.className = 'filters__container';
-    if (this.root) {
-      this.root.append(this.filterComponent);
-      return this.root;
-    } else {
-      return this.filterComponent;
-    }
+    return this.filterComponent;
   }
 }
 

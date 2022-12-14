@@ -1,3 +1,5 @@
+import { loadMainPage } from '../components/main/index';
+
 const route = (event: Event) => {
   event = event || window.event;
   event.preventDefault();
@@ -7,16 +9,17 @@ const route = (event: Event) => {
 
 const routes: Routes = {
   404: '/components/error-page/error.html',
-  '/': '/components/main/main.html',
+  '/': loadMainPage.loadPage(),
   '/cart': '/components/cart/cart.html',
   '/description': '/components/description/description.html',
 };
 
-const handleLocation = async () => {
+const handleLocation = () => {
   const path: string = window.location.pathname,
-    route = routes[path] || routes[404];
-  const htmlInner = await fetch(route).then((data) => data.text());
-  getSelector(document, '#wrapper').innerHTML = htmlInner;
+    route = routes[path] || routes[404],
+    container = getSelector(document, '.main-content');
+
+  route.forEach((block: string | Node) => container.append(block));
 };
 
 window.addEventListener('popstate', () => {

@@ -7,12 +7,9 @@ class MainPage {
     document.title = this.title;
   }
   loadPage() {
-    filtersList.loadFilters();
-    shopCatalogue.loadCatalogue();
+    return [filtersList.loadFilters(), shopCatalogue.loadCatalogue()];
   }
 }
 const loadMainPage = new MainPage();
 
-loadMainPage.loadPage();
-
-export * from './index';
+export { loadMainPage };
