@@ -2,13 +2,13 @@ import { shopCatalogue } from '../catalogue/index';
 import { IProductItem } from '../interface/Iproducts';
 import IFilter from '../interface/Ifilters';
 
-type filersTypes = 'brand' | 'category' | 'price' | 'rating';
+type filtersTypes = 'brand' | 'category' | 'price' | 'rating';
 
 class Filter implements IFilter {
-  readonly type: filersTypes;
+  readonly type: filtersTypes;
   productList: IProductItem[];
 
-  constructor(type: filersTypes) {
+  constructor(type: filtersTypes) {
     this.type = type;
     this.productList = shopCatalogue.catalogue.productsList; // получаем список всех начальных загруженных на страницу товаров
   }
@@ -62,4 +62,4 @@ class Filter implements IFilter {
     return innerHTML;
   }
 }
-export { Filter, filersTypes };
+export { Filter, filtersTypes };
