@@ -54,7 +54,7 @@ class Filter implements IFilter {
       this.getFilterFieldList().forEach((filterItem) => {
         filtersListHTML += `
         <div class="filter__checkbox-item">
-          <label><input type="checkbox" name="${this.type}">${filterItem}</label>
+          <label for="${filterItem}"><input type="checkbox" name="${this.type}" id ="${filterItem}">${filterItem}</label>
         </div>`;
       });
       innerHTML = `<h3 class="filter__title">${this.type}</h3>` + `<div class="filter__list">${filtersListHTML}</div>`;
