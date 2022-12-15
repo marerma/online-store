@@ -1,4 +1,5 @@
 import { loadMainPage } from '../components/main/index';
+import { loadErrorPage } from '../components/error-page';
 
 const route = (event: Event) => {
   event = event || window.event;
@@ -8,7 +9,7 @@ const route = (event: Event) => {
 };
 
 const routes: Routes = {
-  404: '/components/error-page/error.html',
+  404: loadErrorPage.loadPage(),
   '/': loadMainPage.loadPage(),
   '/cart': '/components/cart/cart.html',
   '/description': '/components/description/description.html',
