@@ -14,4 +14,20 @@ export default class ProductList implements HTMLComponent {
       ${this.productsList.map((product) => new ProductComponent(product).render()).join('')}
     </div>`;
   }
+
+  filter(filterName: string, filterField: string[]) {
+    if (
+      filterField.length !== 0 &&
+      (filterName === 'brand' || filterName === 'category' || filterName === 'price' || filterName === 'rating')
+    ) {
+      const filteredProducts = this.productsList.filter((el) => {
+        const a = String(el[filterName]);
+        if (filterField.includes(a)) {
+          return a;
+        }
+      });
+      const filteredProductsID = filteredProducts.map((el) => el.id);
+      return filteredProductsID;
+    }
+  }
 }
