@@ -2,7 +2,7 @@ import { shopCatalogue } from './catalogue/index';
 import { filtersList } from './filters/index';
 
 class MainPage {
-  title = 'Main';
+  title = 'Online Store';
   constructor() {
     document.title = this.title;
   }
