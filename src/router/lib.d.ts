@@ -6,6 +6,6 @@ export declare global {
     href: string | URL;
   }
   interface Routes {
-    [index: string]: string;
+    [index: (<T>() => T) | string]: T;
   }
 }
