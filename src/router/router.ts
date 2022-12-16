@@ -1,5 +1,7 @@
 import { loadMainPage } from '../components/main/index';
 import { loadErrorPage } from '../components/error-page';
+import { loadProductPage } from '../components/product-details';
+import { PRODUCTS_DB } from '../data/data';
 
 const route = (event: Event) => {
   event = event || window.event;
@@ -12,8 +14,11 @@ const routes: Routes = {
   404: () => loadErrorPage.loadPage(),
   '/': () => loadMainPage.loadPage(), // вот тут получается, что по ключу вызывается метод, а в main я добавила, что загрузка идет в main-content
   '/cart': '/components/cart/cart.html',
-  '/description': '/components/description/description.html',
 };
+
+PRODUCTS_DB.forEach((item) => {
+  routes[`/product-${+item.id}`] = () => loadProductPage.loadPage(+item.id);
+});
 
 const handleLocation = () => {
   const path: string = window.location.pathname,
@@ -29,4 +34,4 @@ window.addEventListener('popstate', () => {
 window.route = route;
 handleLocation();
 
-export * from './router';
+export { routes };

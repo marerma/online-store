@@ -14,8 +14,8 @@ export class ProductComponent {
           <h3 product-item__title>${this.product.title}</h3>
             <span class="product-item__price">$ ${this.product.price}</span>
             <div class="product-item__button-container">
-            <a href="" class="product-item__button">BUY</a>
-            <a href="" class="product-item__button">DETAILS</a>
+            <button class="product-item__buy">BUY</button>
+            <button class="product-item__details">DETAILS</button>
             </div>
         </div>
       </div>`;

@@ -2,6 +2,8 @@ import { shopCatalogue } from './catalogue/index';
 import { filtersList } from './filters/index';
 import { Loader } from './catalogue/loader';
 import { IApiResponse, IProductItem } from './interface/Iproducts';
+import { loadProductPage } from '../product-details';
+import * as router from '../../router/router';
 
 class MainPage extends Loader {
   title = 'Online Store';
@@ -15,6 +17,7 @@ class MainPage extends Loader {
       .then((products: IProductItem[]) => {
         const element = document.querySelector('.main-content');
         element?.append(filtersList.loadFilters(products), shopCatalogue.loadCatalogue(products));
+        loadProductPage.renderItem();
       });
     //return [filtersList.loadFilters(), shopCatalogue.loadCatalogue()];
   }
