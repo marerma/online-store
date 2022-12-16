@@ -1,4 +1,5 @@
-import ProductList from './productList';
+import { ProductList } from './productList';
+import { IProductItem } from '../interface/Iproducts';
 
 export class Catalogue {
   catalogue: ProductList;
@@ -9,8 +10,8 @@ export class Catalogue {
     this.catalogue = new ProductList();
   }
 
-  loadCatalogue() {
-    this.catalogueComponent.innerHTML = this.catalogue.render();
+  loadCatalogue(products: IProductItem[]) {
+    this.catalogueComponent.innerHTML = this.catalogue.render(products);
     this.catalogueComponent.className = 'catalogue__container';
     return this.catalogueComponent;
   }
