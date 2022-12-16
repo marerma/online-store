@@ -9,18 +9,18 @@ const route = (event: Event) => {
 };
 
 const routes: Routes = {
-  404: loadErrorPage.loadPage(),
-  '/': loadMainPage.loadPage(),
+  404: () => loadErrorPage.loadPage(),
+  '/': () => loadMainPage.loadPage(), // вот тут получается, что по ключу вызывается метод, а в main я добавила, что загрузка идет в main-content
   '/cart': '/components/cart/cart.html',
   '/description': '/components/description/description.html',
 };
 
 const handleLocation = () => {
   const path: string = window.location.pathname,
-    route = routes[path] || routes[404],
-    container = getSelector(document, '.main-content');
-
-  route.forEach((block: string | Node) => container.append(block));
+    route = routes[path] || routes[404];
+  //container = getSelector(document, '.main-content');
+  route(); // вот тут получается, что по ключу объекта вызывается метод
+  //route.forEach((block: string | Node) => container.append(block));
 };
 
 window.addEventListener('popstate', () => {
