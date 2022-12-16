@@ -42,11 +42,13 @@ class Filter implements IFilter {
             <input type="range" 
                    min=${0} 
                    max=${this.getFilterFieldList()[1]} 
-                   value="30">
+                   value="30"
+                   name="${this.type}">
             <input type="range"
                    min=${0} 
                    max=${this.getFilterFieldList()[1]}
-                   value="2">
+                   value="2"
+                   name="${this.type}">
         </div>`;
     }
     if (this.type === 'brand' || this.type === 'category') {
