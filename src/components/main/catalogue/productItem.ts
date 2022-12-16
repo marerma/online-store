@@ -1,12 +1,11 @@
-import { IProductItem, HTMLComponent } from '../interface/Iproducts';
+import { IProductItem } from '../interface/Iproducts';
 
-export default class ProductComponent implements HTMLComponent {
+export class ProductComponent {
   product: IProductItem;
   constructor(product: IProductItem) {
     this.product = product;
   }
 
-  //TODO: проверка загрузки или асинхронный запрос картинки, т.к. могут быть битые ссылки или картинка не загрузится
   render() {
     return `
     <div class="product-item" id=${this.product.id}>

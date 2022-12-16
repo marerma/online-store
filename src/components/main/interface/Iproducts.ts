@@ -1,3 +1,10 @@
+interface IApiResponse {
+  limit: number;
+  products: IProductItem[];
+  skip: number;
+  total: number;
+}
+
 interface IProductItem {
   id: number;
   title: string;
@@ -12,8 +19,4 @@ interface IProductItem {
   images: string[];
 }
 
-interface HTMLComponent {
-  render(): string;
-}
-
-export { IProductItem, HTMLComponent };
+export { IProductItem, IApiResponse };
