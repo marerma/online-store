@@ -16,22 +16,32 @@ const routes: Routes = {
   '/cart': '/components/cart/cart.html',
 };
 
+const handleLocation = () => {
+  const path: string = window.location.pathname,
+    route = routes[path] || routes[404];
+
+  route(); // вот тут получается, что по ключу объекта вызывается метод
+};
+
+// добавил обнуление контента при нажатии "назад/вперед"
+const clearContent = () => {
+  const children = document.querySelector('.main-content')?.childNodes;
+
+  children?.forEach((item) => {
+    item.remove();
+  });
+};
+
 PRODUCTS_DB.forEach((item) => {
   routes[`/product-${+item.id}`] = () => loadProductPage.loadPage(+item.id);
 });
 
-const handleLocation = () => {
-  const path: string = window.location.pathname,
-    route = routes[path] || routes[404];
-  //container = getSelector(document, '.main-content');
-  route(); // вот тут получается, что по ключу объекта вызывается метод
-  //route.forEach((block: string | Node) => container.append(block));
-};
-
 window.addEventListener('popstate', () => {
+  clearContent();
   handleLocation();
 });
+
 window.route = route;
 handleLocation();
 
-export { routes };
+export { clearContent };
