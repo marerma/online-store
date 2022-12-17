@@ -36,9 +36,11 @@ class ProductPage {
               <div class="product__title">${item.title}</div>
               <div class="product__info">
                 <div class="product__info-images">
-                  <div class="side-images"></div>
-                  <div class="head-image"></div>
-                  </div>
+                  <div class="side__images"></div>
+                  <div class="head__image"></div>
+                </div>
+                <div class="product__info-details">
+                  <div class="">
                 </div>
               </div>
             </div>
@@ -52,33 +54,58 @@ class ProductPage {
   }
 
   renderImages(product: IProductItem) {
-    const renderImage = (parentSelector: string, className: string, path: string) => {
-      const img = document.createElement('img'),
-        parent = document.querySelector(parentSelector);
+    renderImage('.head__image', 'thumbnail', product.thumbnail);
 
-      img.classList.add(className);
-      img.style.backgroundImage = `url(${path})`;
-
-      parent?.append(img);
-    };
-
-    renderImage('.head-image', 'thumbnail', product.thumbnail);
-
-    product.images.forEach((url: string) => {
-      renderImage('.side-images', 'product__image', url);
-    });
+    getImages(product.images);
   }
 
   addImageChanger() {
-    const sideImages = getSelector(document, '.side-images'),
-      thumbnail = getSelector(document, '.thumbnail');
+    const sideImages = getSelector(document, '.side__images'),
+      thumbnail = <HTMLImageElement>getSelector(document, '.thumbnail');
 
     sideImages.addEventListener('click', (e) => {
-      const target = <HTMLElement>e.target;
-
-      thumbnail.style.backgroundImage = target?.style.backgroundImage;
+      const target = <HTMLImageElement>e.target;
+      thumbnail.src = target.src;
     });
   }
+}
+
+const renderImage = (parentSelector: string, className: string, path: string) => {
+  const img = document.createElement('img'),
+    parent = document.querySelector(parentSelector);
+
+  img.classList.add(className);
+  img.src = path;
+
+  parent?.append(img);
+};
+
+async function getImages(array: string[]): Promise<void> {
+  const arr: unknown[] = [];
+
+  for (let i = 0; i < array.length; i++) {
+    const response = await fetch(array[i]);
+    const blob = response.blob().then(
+      (blob) =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        })
+    );
+    arr.push(blob);
+  }
+
+  Promise.all(arr).then((res) => {
+    const unique = res.filter((item, index) => {
+      return res.indexOf(item) === index;
+    });
+
+    for (let i = 0; i < unique.length; i++) {
+      renderImage('.side__images', 'side__images-item', <string>unique[i]);
+    }
+  });
 }
 
 const loadProductPage = new ProductPage();
