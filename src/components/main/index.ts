@@ -20,7 +20,7 @@ class MainPage extends Loader {
         const element = document.querySelector('.main-content');
 
         element?.append(filtersList.loadFilters(products), shopCatalogue.loadCatalogue(products));
-        loadProductPage.renderItem();
+        loadProductPage.loadPage();
       });
     //return [filtersList.loadFilters(), shopCatalogue.loadCatalogue()];
   }

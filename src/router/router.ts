@@ -33,7 +33,7 @@ const clearContent = () => {
 };
 
 PRODUCTS_DB.forEach((item) => {
-  routes[`/product-${+item.id}`] = () => loadProductPage.loadPage(+item.id);
+  routes[`/product-${+item.id}`] = () => loadProductPage.renderItem(+item.id);
 });
 
 window.addEventListener('popstate', () => {
