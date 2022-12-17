@@ -1,6 +1,7 @@
 import { getSelector } from '../../functions/utils';
 import { PRODUCTS_DB } from '../../data/data';
 import { IProductItem } from '../main/interface/Iproducts';
+import { loadThumbnail, loadImages } from './images/images';
 
 class ProductPage {
   loadPage() {
@@ -19,8 +20,6 @@ class ProductPage {
   renderItem(x: number) {
     PRODUCTS_DB.forEach((item) => {
       if (item.id === x) {
-        console.log(item);
-
         getSelector(document, '.main-content').innerHTML = `
           <div class="container__details">
             <div class="crumbs">
@@ -47,65 +46,15 @@ class ProductPage {
           </div>
         `;
 
-        this.renderImages(item);
-        this.addImageChanger();
+        this.appendImages(item);
       }
     });
   }
 
-  renderImages(product: IProductItem) {
-    renderImage('.head__image', 'thumbnail', product.thumbnail);
-
-    getImages(product.images);
+  appendImages(product: IProductItem) {
+    loadThumbnail(product.thumbnail);
+    loadImages(product.images);
   }
-
-  addImageChanger() {
-    const sideImages = getSelector(document, '.side__images'),
-      thumbnail = <HTMLImageElement>getSelector(document, '.thumbnail');
-
-    sideImages.addEventListener('click', (e) => {
-      const target = <HTMLImageElement>e.target;
-      thumbnail.src = target.src;
-    });
-  }
-}
-
-const renderImage = (parentSelector: string, className: string, path: string) => {
-  const img = document.createElement('img'),
-    parent = document.querySelector(parentSelector);
-
-  img.classList.add(className);
-  img.src = path;
-
-  parent?.append(img);
-};
-
-async function getImages(array: string[]): Promise<void> {
-  const arr: unknown[] = [];
-
-  for (let i = 0; i < array.length; i++) {
-    const response = await fetch(array[i]);
-    const blob = response.blob().then(
-      (blob) =>
-        new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result);
-          reader.onerror = reject;
-          reader.readAsDataURL(blob);
-        })
-    );
-    arr.push(blob);
-  }
-
-  Promise.all(arr).then((res) => {
-    const unique = res.filter((item, index) => {
-      return res.indexOf(item) === index;
-    });
-
-    for (let i = 0; i < unique.length; i++) {
-      renderImage('.side__images', 'side__images-item', <string>unique[i]);
-    }
-  });
 }
 
 const loadProductPage = new ProductPage();

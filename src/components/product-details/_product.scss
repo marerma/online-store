@@ -41,7 +41,11 @@
         width: 40%;
 
         & .side__images {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
           width: 25%;
+
 
           &-item {
             width: 100%;
