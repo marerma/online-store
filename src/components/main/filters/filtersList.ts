@@ -1,6 +1,8 @@
 import { Filter } from './filtersClass';
 import { IProductItem } from '../interface/Iproducts';
 
+import { getIntersectionsInArray } from '../../../functions/utils';
+
 // класс для формирования списка всех фильтров: 2 с чекбоксами и 2 со слайдерами
 
 class FiltersList {
@@ -8,10 +10,12 @@ class FiltersList {
   static activeFilters: { [x: string]: string[] };
   root: HTMLElement | null = document.querySelector('.main-content');
   filterComponent: HTMLElement = document.createElement('div');
+  static stateArray: { [x: string]: number[] };
 
   constructor() {
     FiltersList.typesList = ['brand', 'category', 'price', 'rating'];
     FiltersList.activeFilters = { brand: [], category: [], price: [], rating: [] };
+    FiltersList.stateArray = { brand: [], category: [], price: [], rating: [] };
   }
 
   render(products: IProductItem[]) {
@@ -79,26 +83,37 @@ function hideProducts(products: IProductItem[]) {
   const idByFilter = getIDbyFilter(products);
 
   idByFilter.forEach((productID) => {
-    const id = String(productID);
-    const product = document.getElementById(id);
+    const product = document.getElementById(`${productID}`);
     product?.classList.remove('hidden');
   });
 
   if (idByFilter.length === 0) {
-    productsCards.forEach((card) => card.classList.remove('hidden'));
+    const productList = document.querySelector('.product-list') as HTMLElement;
+    productList.innerHTML = `<p>Products not found</p>`;
   }
 }
 
 function getIDbyFilter(products: IProductItem[]) {
-  const idArr: number[] = [];
-
   for (const key in FiltersList.activeFilters) {
     const filterField = FiltersList.activeFilters[key];
 
-    filterField.map((item) => {
-      return products.filter((el) => item === el.brand || item === el.category).forEach((el) => idArr.push(el.id));
-    });
+    if (key === 'category') {
+      FiltersList.stateArray.category = products
+        .filter((item) => {
+          return filterField.some((value) => item.category === value);
+        })
+        .map((item) => item.id);
+    }
+    if (key === 'brand') {
+      FiltersList.stateArray.brand = products
+        .filter((item) => {
+          return filterField.some((value) => item.brand === value);
+        })
+        .map((item) => item.id);
+    }
   }
+
+  const idArr = getIntersectionsInArray(FiltersList.stateArray);
   return idArr;
 }
 
