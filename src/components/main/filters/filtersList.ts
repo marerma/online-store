@@ -2,6 +2,7 @@ import { Filter } from './filtersClass';
 import { IProductItem } from '../interface/Iproducts';
 
 import { getIntersectionsInArray } from '../../../functions/utils';
+import { ProductList } from '../catalogue/productList';
 
 // класс для формирования списка всех фильтров: 2 с чекбоксами и 2 со слайдерами
 
@@ -42,8 +43,8 @@ class FiltersList {
         setAttributeChecked(clickedFilterField);
       }
       updateFiltersObj(allCheckedInputs);
-      hideProducts(products);
       this.makeQuery();
+      renderFilteredProducts(products);
     });
   }
 
@@ -76,21 +77,15 @@ function setAttributeChecked(targetInput: HTMLInputElement) {
 // функция отбирает продукты на странице по селектору и проходит по ним, добавляя display: none всем продуктам,
 // а затем показывает только те, которые соответветствуют фильтру
 
-function hideProducts(products: IProductItem[]) {
-  const productsCards = [...document.querySelectorAll('.product-item')];
-  productsCards.forEach((card) => card.classList.add('hidden'));
-
-  const idByFilter = getIDbyFilter(products);
-
-  idByFilter.forEach((productID) => {
-    const product = document.getElementById(`${productID}`);
-    product?.classList.remove('hidden');
-  });
-
-  if (idByFilter.length === 0) {
-    const productList = document.querySelector('.product-list') as HTMLElement;
-    productList.innerHTML = `<p>Products not found</p>`;
+function renderFilteredProducts(products: IProductItem[]) {
+  const idArr = getIDbyFilter(products);
+  const productsArr = [...products].filter((item) => idArr.includes(item.id));
+  let newProducts = new ProductList().render(productsArr);
+  if (idArr.length === 0) {
+    newProducts = new ProductList().render(products);
   }
+  const catalogueContainer = document.querySelector('.catalogue__container') as HTMLElement;
+  catalogueContainer.innerHTML = newProducts;
 }
 
 function getIDbyFilter(products: IProductItem[]) {
