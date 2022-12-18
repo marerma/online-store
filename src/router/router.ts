@@ -12,17 +12,17 @@ const route = (event: Event) => {
 
 const routes: Routes = {
   404: () => loadErrorPage.loadPage(),
-  '/': () => loadMainPage.loadPage(), // вот тут получается, что по ключу вызывается метод, а в main я добавила, что загрузка идет в main-content
+  '/': () => loadMainPage.loadPage(),
   '/cart': '/components/cart/cart.html',
 };
 
 const handleLocation = async () => {
   const path: string = window.location.pathname,
     route = routes[path] || routes[404];
-  route(); // вот тут получается, что по ключу объекта вызывается метод
+
+  route();
 };
 
-// добавил обнуление контента при нажатии "назад/вперед"
 const clearContent = () => {
   const children = document.querySelector('.main-content')?.childNodes;
 
