@@ -1,6 +1,7 @@
 import { loadMainPage } from '../components/main/index';
 import { loadErrorPage } from '../components/error-page';
 import { loadProductPage } from '../components/product-details';
+import { loadCartPage } from '../components/cart';
 import { PRODUCTS_DB } from '../data/data';
 
 const route = (event: Event) => {
@@ -13,7 +14,7 @@ const route = (event: Event) => {
 const routes: Routes = {
   404: () => loadErrorPage.loadPage(),
   '/': () => loadMainPage.loadPage(),
-  '/cart': '/components/cart/cart.html',
+  '/cart': () => loadCartPage.loadPage(),
 };
 
 const handleLocation = async () => {
