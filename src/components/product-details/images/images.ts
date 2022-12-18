@@ -34,10 +34,14 @@ async function loadImages(array: string[]): Promise<void> {
 
 function addImageChanger() {
   const sideImages = getSelector(document, '.side__images'),
-    thumbnail = <HTMLImageElement>getSelector(document, '.thumbnail');
+    thumbnail = getSelector(document, '.thumbnail');
 
   sideImages.addEventListener('click', (e) => {
-    const target = <HTMLImageElement>e.target;
+    const target = e.target;
+
+    if (!(target instanceof HTMLImageElement) || !(thumbnail instanceof HTMLImageElement)) {
+      throw new Error('It is not the picture');
+    }
 
     if (target?.matches('.side__images-item')) {
       thumbnail.src = target.src;

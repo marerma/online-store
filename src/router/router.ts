@@ -16,10 +16,9 @@ const routes: Routes = {
   '/cart': '/components/cart/cart.html',
 };
 
-const handleLocation = () => {
+const handleLocation = async () => {
   const path: string = window.location.pathname,
     route = routes[path] || routes[404];
-
   route(); // вот тут получается, что по ключу объекта вызывается метод
 };
 
@@ -44,4 +43,4 @@ window.addEventListener('popstate', () => {
 window.route = route;
 handleLocation();
 
-export { clearContent };
+export { clearContent, route, handleLocation };

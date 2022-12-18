@@ -11,7 +11,7 @@ class ProductPage {
       item.addEventListener('click', (e) => {
         if (e.target === item.querySelector('.product-item__details')) {
           this.renderItem(+item.id);
-          history.pushState(null, '', `product-${+item.id}`);
+          window.history.pushState({}, '', `product-${+item.id}`);
         }
       });
     });
