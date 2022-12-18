@@ -45,7 +45,8 @@
   display: flex;
   gap: 5px;
 }
-.product-item__button {
+.product-item__buy,
+.product-item__details {
   border: 1px solid rgb(32, 32, 32);
   background: grey;
   border-radius: 2px;

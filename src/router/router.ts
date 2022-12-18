@@ -1,5 +1,7 @@
 import { loadMainPage } from '../components/main/index';
 import { loadErrorPage } from '../components/error-page';
+import { loadProductPage } from '../components/product-details';
+import { PRODUCTS_DB } from '../data/data';
 
 const route = (event: Event) => {
   event = event || window.event;
@@ -12,27 +14,34 @@ const routes: Routes = {
   404: () => loadErrorPage.loadPage(),
   '/': () => loadMainPage.loadPage(), // вот тут получается, что по ключу вызывается метод, а в main я добавила, что загрузка идет в main-content
   '/cart': '/components/cart/cart.html',
-  '/description': '/components/description/description.html',
 };
 
 const handleLocation = () => {
   const path: string = window.location.pathname,
     route = routes[path] || routes[404];
-  //container = getSelector(document, '.main-content');
+
   route(); // вот тут получается, что по ключу объекта вызывается метод
-  //route.forEach((block: string | Node) => container.append(block));
 };
 
+// добавил обнуление контента при нажатии "назад/вперед"
+const clearContent = () => {
+  const children = document.querySelector('.main-content')?.childNodes;
+
+  children?.forEach((item) => {
+    item.remove();
+  });
+};
+
+PRODUCTS_DB.forEach((item) => {
+  routes[`/product-${+item.id}`] = () => loadProductPage.renderItem(+item.id);
+});
+
 window.addEventListener('popstate', () => {
+  clearContent();
   handleLocation();
 });
+
 window.route = route;
 handleLocation();
 
-function getSelector(parent: DocumentFragment | Document, selector: string) {
-  const item = parent.querySelector(selector);
-  if (!item) throw new Error(`Selector ${selector} didn't match any elements.`);
-  return <HTMLElement>item;
-}
-
-export * from './router';
+export { clearContent };

@@ -1,6 +1,8 @@
 class ErrorPage {
   loadPage() {
+    const element = document.querySelector('.main-content');
     const errorPage = document.createElement('article');
+
     errorPage.classList.add('error');
     errorPage.innerHTML = `
       <div class="error__number">
@@ -12,7 +14,7 @@ class ErrorPage {
       </div>
     `;
 
-    return [errorPage];
+    element?.append(errorPage);
   }
 }
 
