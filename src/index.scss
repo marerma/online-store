@@ -1,6 +1,7 @@
 @import './components/main/main';
 @import './components/error-page/error';
 @import './components/product-details/_product';
+@import './components/cart/_cart';
 
 * {
   margin: 0;
@@ -9,6 +10,48 @@
 }
 
 $color: rgb(212, 212, 212);
+
+.header {
+  &__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+
+    background: rgb(156, 156, 156);
+
+    &-home {
+      font-weight: 800;
+    }
+
+    &-money {
+    }
+
+    &-cart {
+      display: flex;
+      justify-content: end;
+      align-items: flex-end;
+      width: 40px;
+      height: 40px;
+
+      background-image: url('./assets/cart.jpg');
+      background-size: 100% 100%;
+    }
+
+    .cart-count {
+      width: 20px;
+      height: 20px;
+
+      text-align: center;
+
+      border: 2px solid red;
+      border-radius: 100%;
+
+      background: $color;
+      font-weight: 800;
+    }
+  }
+}
 
 .main-content {
   display: flex;

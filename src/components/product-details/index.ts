@@ -11,7 +11,7 @@ class ProductPage {
       item.addEventListener('click', (e) => {
         if (e.target === item.querySelector('.product-item__details')) {
           this.renderItem(+item.id);
-          history.pushState(null, '', `product-${+item.id}`);
+          window.history.pushState({}, '', `product-${+item.id}`);
         }
       });
     });
@@ -20,6 +20,7 @@ class ProductPage {
   renderItem(x: number) {
     PRODUCTS_DB.forEach((item) => {
       if (item.id === x) {
+        console.log(item);
         getSelector(document, '.main-content').innerHTML = `
           <div class="container__details">
             <div class="crumbs">
@@ -39,8 +40,36 @@ class ProductPage {
                   <div class="head__image"></div>
                 </div>
                 <div class="product__info-details">
-                  <div class="">
+                  <div class="details">
+                    <div class="details__header">Description:</div>
+                    <div class="details__inner">${item.description}</div>
+                  </div>
+                  <div class="details">
+                    <div class="details__header">Discount Percentage:</div>
+                    <div class="details__inner">${item.discountPercentage}</div>
+                  </div>
+                  <div class="details">
+                    <div class="details__header">Rating:</div>
+                    <div class="details__inner">${item.rating}</div>
+                  </div>
+                  <div class="details">
+                    <div class="details__header">Stock:</div>
+                    <div class="details__inner">${item.stock}</div>
+                  </div>
+                  <div class="details">
+                    <div class="details__header">Brand:</div>
+                    <div class="details__inner">${item.brand}</div>
+                  </div>
+                  <div class="details">
+                    <div class="details__header">Category:</div>
+                    <div class="details__inner">${item.category}</div>
+                  </div>
                 </div>
+              <div class="product__options">
+                <div class="product__options-price">€${item.price}</div>
+                <button class="product__options-add">ADD TO CART</button>
+                <button class="product__options-buy">BUY NOW</button>
+              </div>
               </div>
             </div>
           </div>

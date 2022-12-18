@@ -1,7 +1,10 @@
 function getSelector(parent: DocumentFragment | Document, selector: string) {
   const item = parent.querySelector(selector);
-  if (!item) throw new Error(`Selector ${selector} didn't match any elements.`);
-  return <HTMLElement>item;
+  if (!(item instanceof HTMLElement)) {
+    throw new Error('There is no items');
+  } else {
+    return item;
+  }
 }
 
 function getDataBase64() {
