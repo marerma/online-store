@@ -1,63 +1,54 @@
-import { Filter } from './filtersClass';
+import { FilterComponents } from './filtersComponent';
 import { IProductItem } from '../interface/Iproducts';
-
 import { getIntersectionsInArray } from '../../../functions/utils';
 import { ProductList } from '../catalogue/productList';
 
-// класс для формирования списка всех фильтров: 2 с чекбоксами и 2 со слайдерами
-
-class FiltersList {
-  static typesList: ['brand', 'category', 'price', 'rating'];
+class FilterProducts extends FilterComponents {
   static activeFilters: { [x: string]: string[] };
-  root: HTMLElement | null = document.querySelector('.main-content');
-  filterComponent: HTMLElement = document.createElement('div');
   static stateArray: { [x: string]: number[] };
 
   constructor() {
-    FiltersList.typesList = ['brand', 'category', 'price', 'rating'];
-    FiltersList.activeFilters = { brand: [], category: [], price: [], rating: [] };
-    FiltersList.stateArray = { brand: [], category: [], price: [], rating: [] };
+    super();
+    this.setDefaultState(); // потом проверять есть ли в query или LS сохраненные фильтры
   }
 
-  render(products: IProductItem[]) {
-    let innerHTML = '';
-    FiltersList.typesList.forEach((filterName) => {
-      innerHTML += new Filter(filterName).render(products);
-    });
-    return innerHTML;
+  setDefaultState() {
+    FilterProducts.activeFilters = { brand: [], category: [], price: [], rating: [] };
+    FilterProducts.stateArray = { brand: [], category: [], price: [], rating: [] };
   }
 
-  loadFilters(products: IProductItem[]) {
-    this.filterComponent.innerHTML = this.render(products);
-    this.filterComponent.className = 'filters__container';
-    this.addListener(products);
-    return this.filterComponent;
+  setAttributeChecked(target: HTMLInputElement) {
+    if (target.type === 'checkbox') {
+      setAttributeChecked(target);
+    }
   }
 
   addListener(products: IProductItem[]) {
     this.filterComponent.addEventListener('input', (e) => {
       const clickedFilterField = e.target as HTMLInputElement;
       const allCheckedInputs = [...document.getElementsByTagName('input')];
-
-      if (clickedFilterField.type === 'checkbox') {
-        setAttributeChecked(clickedFilterField);
-      }
+      this.setAttributeChecked(clickedFilterField);
       updateFiltersObj(allCheckedInputs);
       this.makeQuery();
-      renderFilteredProducts(products);
+      renderFilteredProducts(products, this.checkNotActiveState());
     });
   }
 
   makeQuery() {
     let queryURL = '';
-    for (const key in FiltersList.activeFilters) {
-      const values = encodeURIComponent(FiltersList.activeFilters[key].join('|'));
+    for (const key in FilterProducts.activeFilters) {
+      const values = encodeURIComponent(FilterProducts.activeFilters[key].join('|'));
       queryURL += `${key}=${values}&`;
     }
     return queryURL;
   }
+
+  checkNotActiveState() {
+    const values = Object.values(FilterProducts.stateArray);
+    return values.every((item) => item.length === 0);
+  }
 }
-export { FiltersList };
+export { FilterProducts };
 
 // FUNCTIONS //
 
@@ -77,38 +68,37 @@ function setAttributeChecked(targetInput: HTMLInputElement) {
 // функция отбирает продукты на странице по селектору и проходит по ним, добавляя display: none всем продуктам,
 // а затем показывает только те, которые соответветствуют фильтру
 
-function renderFilteredProducts(products: IProductItem[]) {
+function renderFilteredProducts(products: IProductItem[], notActive: boolean) {
   const idArr = getIDbyFilter(products);
   const productsArr = [...products].filter((item) => idArr.includes(item.id));
   let newProducts = new ProductList().render(productsArr);
-  if (idArr.length === 0) {
+
+  if (idArr.length === 0 && !notActive) {
+    newProducts = 'not found';
+  } else if (notActive) {
     newProducts = new ProductList().render(products);
   }
+
   const catalogueContainer = document.querySelector('.catalogue__container') as HTMLElement;
   catalogueContainer.innerHTML = newProducts;
 }
 
 function getIDbyFilter(products: IProductItem[]) {
-  for (const key in FiltersList.activeFilters) {
-    const filterField = FiltersList.activeFilters[key];
-
-    if (key === 'category') {
-      FiltersList.stateArray.category = products
-        .filter((item) => {
-          return filterField.some((value) => item.category === value);
-        })
-        .map((item) => item.id);
-    }
+  for (const key in FilterProducts.activeFilters) {
+    const filterField = FilterProducts.activeFilters[key];
+    let keyInProduct: keyof IProductItem = 'category';
     if (key === 'brand') {
-      FiltersList.stateArray.brand = products
-        .filter((item) => {
-          return filterField.some((value) => item.brand === value);
-        })
-        .map((item) => item.id);
+      keyInProduct = 'brand';
     }
+    FilterProducts.stateArray[key] = products
+      .filter((item) => {
+        return filterField.some((value) => item[keyInProduct] === value);
+      })
+      .map((item) => item.id);
   }
 
-  const idArr = getIntersectionsInArray(FiltersList.stateArray);
+  const idArr = getIntersectionsInArray(FilterProducts.stateArray);
+
   return idArr;
 }
 
@@ -136,13 +126,13 @@ function updateFiltersObj(inputArr: HTMLInputElement[]) {
 
 function updateActiveFilters(condition: boolean, key: string, inputValue: string) {
   if (condition) {
-    if (!FiltersList.activeFilters[key].includes(inputValue)) {
-      FiltersList.activeFilters[key].push(inputValue);
+    if (!FilterProducts.activeFilters[key].includes(inputValue)) {
+      FilterProducts.activeFilters[key].push(inputValue);
     }
   } else {
-    if (FiltersList.activeFilters[key].includes(inputValue)) {
-      const indexNotChecked = FiltersList.activeFilters[key].indexOf(inputValue);
-      FiltersList.activeFilters[key].splice(indexNotChecked, 1);
+    if (FilterProducts.activeFilters[key].includes(inputValue)) {
+      const indexNotChecked = FilterProducts.activeFilters[key].indexOf(inputValue);
+      FilterProducts.activeFilters[key].splice(indexNotChecked, 1);
     }
   }
 }
