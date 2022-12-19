@@ -13,16 +13,16 @@ class FilterProducts extends FilterComponents {
   }
 
   setDefaultState() {
-    FilterProducts.activeFilters = { brand: [], category: [], price: [], rating: [] };
-    FilterProducts.stateArray = { brand: [], category: [], price: [], rating: [] };
+    FilterProducts.activeFilters = { category: [], brand: [], price: [], rating: [] };
+    FilterProducts.stateArray = { category: [], brand: [], price: [], rating: [] };
   }
 
   addListener(products: IProductItem[]) {
     this.filterComponent.addEventListener('input', () => {
       const allInputs = [...document.getElementsByTagName('input')];
       updateFiltersObj(allInputs);
-      this.makeQuery();
-      renderFilteredProducts(products);
+      this.syncURL(FilterProducts.activeFilters);
+      this.renderFilteredProducts(products);
     });
 
     this.filterComponent.addEventListener('click', (e) => {
@@ -36,53 +36,61 @@ class FilterProducts extends FilterComponents {
           case 'reset':
             this.setDefaultState();
             allInputs.forEach((item) => (item.checked = false));
-            renderFilteredProducts(products);
+            this.renderFilteredProducts(products);
+            this.syncURL({});
             break;
         }
       }
     });
   }
 
-  makeQuery() {
-    let queryURL = '';
-    for (const key in FilterProducts.activeFilters) {
-      const values = encodeURIComponent(FilterProducts.activeFilters[key].join('|'));
-      queryURL += `${key}=${values}&`;
+  renderFilteredProducts(products: IProductItem[]) {
+    const idArr = getIDbyFilter(products);
+    const productsArr = [...products].filter((item) => idArr.includes(item.id));
+    const notActive = Object.values(FilterProducts.stateArray).every((item) => item.length == 0);
+    const allCounts = [...document.querySelectorAll('.checkbox-amount-active')] as HTMLElement[];
+    let newProducts = '';
+    allCounts.forEach((span) => (span.innerHTML = ' 0/ '));
+
+    if (idArr.length !== 0) {
+      newProducts = new ProductList().render(productsArr);
+      this.updateFiltersAmount(productsArr);
+      this.updateFoundSpan(productsArr);
     }
-    return queryURL;
+
+    if (idArr.length === 0 && !notActive) {
+      newProducts = 'products not found';
+      this.updateFoundSpan(productsArr);
+    }
+
+    if (idArr.length === 0 && notActive) {
+      newProducts = new ProductList().render(products);
+      this.updateFiltersAmount(products);
+      this.updateFoundSpan(products);
+    }
+
+    const catalogueContainer = document.querySelector('.catalogue__container') as HTMLElement;
+    catalogueContainer.innerHTML = newProducts;
   }
 
-  checkNotActiveState() {
-    const values = Object.values(FilterProducts.stateArray);
-    return values.every((item) => item.length === 0);
+  makeQuery(filters: { [x: string]: string[] }) {
+    const query = Object.entries(filters)
+      .map(([key, value]) => {
+        return `${key}=${value}`;
+      })
+      .join('&');
+    return `?${query}`;
+  }
+
+  syncURL(filters: { [x: string]: string[] }) {
+    const path = document.location.pathname;
+    const query = this.makeQuery(filters);
+    window.history.replaceState(filters, '', `${path}${query}`);
   }
 }
 export { FilterProducts };
 
 // FUNCTIONS //
-
-//рендерит отфильтрованные продукты по отфильтрованным id
-
-function renderFilteredProducts(products: IProductItem[]) {
-  const idArr = getIDbyFilter(products);
-  const productsArr = [...products].filter((item) => idArr.includes(item.id));
-  let newProducts = '';
-  const notActive = Object.values(FilterProducts.stateArray).every((item) => item.length == 0);
-
-  if (idArr.length !== 0) {
-    newProducts = new ProductList().render(productsArr);
-  }
-  if (idArr.length === 0 && !notActive) {
-    newProducts = 'products not found';
-  }
-
-  if (idArr.length === 0 && notActive) {
-    newProducts = new ProductList().render(products);
-  }
-
-  const catalogueContainer = document.querySelector('.catalogue__container') as HTMLElement;
-  catalogueContainer.innerHTML = newProducts;
-}
 
 function getIDbyFilter(products: IProductItem[]) {
   for (const key in FilterProducts.activeFilters) {
@@ -104,10 +112,10 @@ function getIDbyFilter(products: IProductItem[]) {
   return idArr;
 }
 
-// находим на странице все input с checkbox:true и слайдер
+// находим на странице все input с checkbox:true
 // собираем из них объект для дальнейшей фильтрации по базе данных по ключу "название фильтра": [значения];
 // присваиваем статическому свойству класса этот объект,
-// т.о. он будет доступен для формирования query и быстрого сохранения в LS
+// т.о. он будет доступен для формирования query
 
 function updateFiltersObj(inputArr: HTMLInputElement[]) {
   return inputArr

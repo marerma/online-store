@@ -5,7 +5,6 @@ import { FilterProducts } from './filterProducts';
 class FiltersLoader extends FilterProducts {
   root: HTMLElement | null = document.querySelector('.main-content');
   filterComponent: HTMLElement = document.createElement('div');
-  static stateArray: { [x: string]: number[] };
 
   constructor() {
     super();

@@ -3,21 +3,25 @@ import { FilterCheckbox } from './filterCheckbox';
 import { FilterSliderRange } from './filterDualSlider';
 class FilterComponents {
   static typesList: string[];
+  static filterArray: (FilterCheckbox | FilterSliderRange)[];
   filterComponent: HTMLElement = document.createElement('div');
 
   constructor() {
-    FilterComponents.typesList = ['brand', 'category', 'price', 'rating'];
+    FilterComponents.typesList = ['category', 'brand', 'price', 'rating'];
+    FilterComponents.filterArray = [];
   }
 
   render(products: IProductItem[]) {
-    let innerHTMLFilters = this.addButtons();
+    let innerHTMLFilters = this.addButtons() + this.addFoundTotal();
 
     FilterComponents.typesList.forEach((type) => {
       if (type === 'brand' || type === 'category') {
-        innerHTMLFilters += new FilterCheckbox(type, products).render().innerHTML;
+        innerHTMLFilters += new FilterCheckbox(type, products).render();
+        FilterComponents.filterArray.push(new FilterCheckbox(type, products));
       }
       if (type === 'price' || type === 'rating') {
         innerHTMLFilters += new FilterSliderRange(type, products).render();
+        FilterComponents.filterArray.push(new FilterSliderRange(type, products));
       }
     });
     return innerHTMLFilters;
@@ -34,6 +38,22 @@ class FilterComponents {
               <div class='filter__button' id='reset'>Reset filters</div>
               <div class='filter__button' id='copy'>Copy filters</div>
             </div>`;
+  }
+  addFoundTotal() {
+    return `<div class='filter__found-count'>
+              <p>Found: <span class='filter__found-count-item'> </span> </p>
+            </div>`;
+  }
+  updateFoundSpan(products: IProductItem[]) {
+    const foundCount = document.querySelector('.filter__found-count-item') as HTMLElement;
+    foundCount.textContent = `${products.length}`;
+  }
+  updateFiltersAmount(products: IProductItem[]) {
+    FilterComponents.filterArray.forEach((el) => {
+      if (el instanceof FilterCheckbox) {
+        el.updateAmount(products);
+      }
+    });
   }
 }
 

@@ -32,4 +32,7 @@ export class FilterSliderRange extends FilterBase {
             </div>`;
     return sliderHTML;
   }
+  upDateAmount() {
+    return true;
+  }
 }

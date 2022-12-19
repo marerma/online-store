@@ -67,3 +67,7 @@
   cursor: pointer;
 }
 
+
+.filter__checkbox-input:checked + * {
+  font-weight: bold;
+}

@@ -14,4 +14,16 @@ export class FilterBase {
     const fieldsListFormatted: (string | number)[] = [...new Set(fieldsList)];
     return fieldsListFormatted;
   }
+  getCountByField(products: IProductItem[]) {
+    const fieldsList = products.map((product: IProductItem) => product[this.type]);
+    const count: { [x: string]: number } = {};
+    for (const elem of fieldsList) {
+      if (count[elem] === undefined) {
+        count[elem] = 1;
+      } else {
+        count[elem]++;
+      }
+    }
+    return count;
+  }
 }
