@@ -27,4 +27,18 @@ function appendImage(parentSelector: string, className: string, path: string) {
   parent?.append(img);
 }
 
-export { getSelector, getDataBase64, appendImage };
+function getIntersectionsInArray(object: { [x: string]: number[] }) {
+  const values = Object.values(object);
+  const valuesNotEmpty = values.filter((item) => item.length !== 0);
+  if (valuesNotEmpty.length > 1) {
+    const combinedArray = Object.values(object).reduce((acc, item) => {
+      return acc.concat(item);
+    }, [] as number[]);
+    const cleanedArray = combinedArray.filter((item, index) => combinedArray.indexOf(item) !== index);
+    return cleanedArray;
+  } else {
+    return valuesNotEmpty.flat();
+  }
+}
+
+export { getSelector, getDataBase64, appendImage, getIntersectionsInArray };
