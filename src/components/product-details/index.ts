@@ -2,6 +2,8 @@ import { getSelector } from '../../functions/utils';
 import { PRODUCTS_DB } from '../../data/data';
 import { IProductItem } from '../main/interface/Iproducts';
 import { loadThumbnail, loadImages } from './images/images';
+import { cartStatement, getState, setState, Cart } from '../cart/local-storage/cart-storage';
+import { increaseCartIcon } from '../cart/cart-icon/icon';
 
 class ProductPage {
   loadPage() {
@@ -9,18 +11,22 @@ class ProductPage {
 
     items.forEach((item) => {
       item.addEventListener('click', (e) => {
-        if (e.target === item.querySelector('.product-item__details')) {
+        if (e.target === getSelector(item, '.product-item__details')) {
           this.renderItem(+item.id);
           window.history.pushState({}, '', `product-${+item.id}`);
+        }
+
+        if (e.target === getSelector(item, '.product-item__buy')) {
+          cartStatement.inCart.push(+item.id);
+          increaseCartIcon();
         }
       });
     });
   }
 
   renderItem(x: number) {
-    PRODUCTS_DB.forEach((item) => {
+    PRODUCTS_DB.forEach((item: IProductItem) => {
       if (item.id === x) {
-        console.log(item);
         getSelector(document, '.main-content').innerHTML = `
           <div class="container__details">
             <div class="crumbs">
@@ -75,6 +81,12 @@ class ProductPage {
           </div>
         `;
 
+        const addToCartButton = getSelector(document, '.product__options-add');
+
+        addToCartButton.addEventListener('click', () => {
+          addToCart(+item.id);
+        });
+
         this.appendImages(item);
       }
     });
@@ -84,6 +96,13 @@ class ProductPage {
     loadThumbnail(product.thumbnail);
     loadImages(product.images);
   }
+}
+
+function addToCart(item: number) {
+  const cart: number[] = cartStatement.inCart;
+  cart.push(item);
+  increaseCartIcon();
+  setState();
 }
 
 const loadProductPage = new ProductPage();

@@ -3,7 +3,9 @@ import { filtersList } from './filters/index';
 import { Loader } from './catalogue/loader';
 import { IApiResponse, IProductItem } from './interface/Iproducts';
 import { loadProductPage } from '../product-details';
+import { loadCartPage } from '../cart';
 import { clearContent } from '../../router/router';
+import { icon } from '../cart/cart-icon/icon';
 
 class MainPage extends Loader {
   title = 'Online Store';
@@ -21,6 +23,11 @@ class MainPage extends Loader {
 
         element?.append(filtersList.loadFilters(products), shopCatalogue.loadCatalogue(products));
         loadProductPage.loadPage();
+
+        icon.addEventListener('click', () => {
+          loadCartPage.loadPage();
+          window.history.pushState({}, '', `cart`);
+        });
       });
     //return [filtersList.loadFilters(), shopCatalogue.loadCatalogue()];
   }

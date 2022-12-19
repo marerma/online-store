@@ -1,4 +1,4 @@
-function getSelector(parent: DocumentFragment | Document, selector: string) {
+function getSelector(parent: DocumentFragment | Document | Element, selector: string) {
   const item = parent.querySelector(selector);
   if (!(item instanceof HTMLElement)) {
     throw new Error('There is no items');
