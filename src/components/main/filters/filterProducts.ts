@@ -45,28 +45,28 @@ class FilterProducts extends FilterComponents {
   }
 
   renderFilteredProducts(products: IProductItem[]) {
-    const idArr = getIDbyFilter(products);
-    const productsArr = [...products].filter((item) => idArr.includes(item.id));
-    const notActive = Object.values(FilterProducts.stateArray).every((item) => item.length == 0);
+    const idFilteredProducts = getIDbyFilter(products);
+    const productsArr = [...products].filter((item) => idFilteredProducts.includes(item.id));
+    const isNotActive = Object.values(FilterProducts.stateArray).every((item) => item.length == 0);
     const allCounts = [...document.querySelectorAll('.checkbox-amount-active')] as HTMLElement[];
     let newProducts = '';
     allCounts.forEach((span) => (span.innerHTML = ' 0/ '));
 
-    if (idArr.length !== 0) {
+    if (idFilteredProducts.length !== 0) {
       newProducts = new ProductList().render(productsArr);
       this.updateFiltersAmount(productsArr);
-      this.updateFoundSpan(productsArr);
+      this.updateFoundProductsTotal(productsArr);
     }
 
-    if (idArr.length === 0 && !notActive) {
+    if (idFilteredProducts.length === 0 && !isNotActive) {
       newProducts = 'products not found';
-      this.updateFoundSpan(productsArr);
+      this.updateFoundProductsTotal(productsArr);
     }
 
-    if (idArr.length === 0 && notActive) {
+    if (idFilteredProducts.length === 0 && isNotActive) {
       newProducts = new ProductList().render(products);
       this.updateFiltersAmount(products);
-      this.updateFoundSpan(products);
+      this.updateFoundProductsTotal(products);
     }
 
     const catalogueContainer = document.querySelector('.catalogue__container') as HTMLElement;

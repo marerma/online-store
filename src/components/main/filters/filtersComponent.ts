@@ -12,7 +12,7 @@ class FilterComponents {
   }
 
   render(products: IProductItem[]) {
-    let innerHTMLFilters = this.addButtons() + this.addFoundTotal();
+    let innerHTMLFilters = this.addButtons() + this.addFoundProductsTotal();
 
     FilterComponents.typesList.forEach((type) => {
       if (type === 'brand' || type === 'category') {
@@ -39,12 +39,12 @@ class FilterComponents {
               <div class='filter__button' id='copy'>Copy filters</div>
             </div>`;
   }
-  addFoundTotal() {
+  addFoundProductsTotal() {
     return `<div class='filter__found-count'>
               <p>Found: <span class='filter__found-count-item'> </span> </p>
             </div>`;
   }
-  updateFoundSpan(products: IProductItem[]) {
+  updateFoundProductsTotal(products: IProductItem[]) {
     const foundCount = document.querySelector('.filter__found-count-item') as HTMLElement;
     foundCount.textContent = `${products.length}`;
   }

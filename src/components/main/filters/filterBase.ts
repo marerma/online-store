@@ -14,16 +14,16 @@ export class FilterBase {
     const fieldsListFormatted: (string | number)[] = [...new Set(fieldsList)];
     return fieldsListFormatted;
   }
-  getCountByField(products: IProductItem[]) {
+  getProductsAmountByField(products: IProductItem[]) {
     const fieldsList = products.map((product: IProductItem) => product[this.type]);
-    const count: { [x: string]: number } = {};
+    const amountObject: { [x: string]: number } = {};
     for (const elem of fieldsList) {
-      if (count[elem] === undefined) {
-        count[elem] = 1;
+      if (amountObject[elem] === undefined) {
+        amountObject[elem] = 1;
       } else {
-        count[elem]++;
+        amountObject[elem]++;
       }
     }
-    return count;
+    return amountObject;
   }
 }

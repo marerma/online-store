@@ -11,7 +11,7 @@ export class FilterCheckbox extends FilterBase {
   render() {
     let filtersListHTML = '';
     const filterItems = this.getFilterFieldList(this.products);
-    const count = this.getCountByField(this.products);
+    const amountObject = this.getProductsAmountByField(this.products);
 
     filterItems.forEach((filterItem) => {
       filtersListHTML += `
@@ -21,8 +21,8 @@ export class FilterCheckbox extends FilterBase {
                  name='${this.type}' 
                  id ='${filterItem}'>
           <label class='filter__checkbox-label' for='${filterItem}'>${filterItem}
-            <span class='checkbox-amount-active'> ${count[filterItem]}/ </span>
-            <span class='checkbox-amount'>${count[filterItem]}</span>
+            <span class='checkbox-amount-active'> ${amountObject[filterItem]}/ </span>
+            <span class='checkbox-amount'>${amountObject[filterItem]}</span>
           </label>
       </div>`;
     });
@@ -33,13 +33,13 @@ export class FilterCheckbox extends FilterBase {
   }
 
   updateAmount(products: IProductItem[]) {
-    const count = this.getCountByField(products);
-    for (const key in count) {
+    const amountObject = this.getProductsAmountByField(products);
+    for (const key in amountObject) {
       const label = [...document.querySelectorAll(`.filter__checkbox-label`)] as HTMLElement[];
       label.forEach((el) => {
         const activeAmount = el.querySelector('.checkbox-amount-active') as HTMLElement;
         if (el.getAttribute('for') === key) {
-          activeAmount.innerHTML = ` ${count[key]}/ `;
+          activeAmount.innerHTML = ` ${amountObject[key]}/ `;
         }
       });
     }
