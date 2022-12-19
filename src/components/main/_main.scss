@@ -53,7 +53,17 @@
   width: 50%;
   margin: 0 auto;
 };
-// .product-item__price {
 
-// };
+.filter__button-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.filter__button {
+  width: 100px;
+  height: 30px;
+  background-color: green;
+  border: 1px solid black;
+  cursor: pointer;
+}
 

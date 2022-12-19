@@ -1,6 +1,5 @@
 import { FilterBase, filtersTypes } from './filterBase';
 import { IProductItem } from '../interface/Iproducts';
-import { ProductList } from '../catalogue/productList';
 
 export class FilterCheckbox extends FilterBase {
   root: HTMLElement;
@@ -28,13 +27,5 @@ export class FilterCheckbox extends FilterBase {
 
   getRoot(): HTMLElement {
     return document.querySelector('.filter__checkbox-item') as HTMLElement;
-  }
-
-  checkState() {
-    const allCheckboxes = [...document.querySelectorAll(`input[name="${this.type}"`)] as HTMLInputElement[];
-    if (!allCheckboxes.filter((checkbox) => checkbox.checked)) {
-      return true;
-    }
-    return false;
   }
 }

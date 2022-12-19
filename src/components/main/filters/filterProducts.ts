@@ -9,7 +9,7 @@ class FilterProducts extends FilterComponents {
 
   constructor() {
     super();
-    this.setDefaultState(); // потом проверять есть ли в query или LS сохраненные фильтры
+    this.setDefaultState(); // потом проверять, есть ли в query или LS сохраненные фильтры, если нет - обнулять
   }
 
   setDefaultState() {
@@ -17,20 +17,29 @@ class FilterProducts extends FilterComponents {
     FilterProducts.stateArray = { brand: [], category: [], price: [], rating: [] };
   }
 
-  setAttributeChecked(target: HTMLInputElement) {
-    if (target.type === 'checkbox') {
-      setAttributeChecked(target);
-    }
-  }
-
   addListener(products: IProductItem[]) {
-    this.filterComponent.addEventListener('input', (e) => {
-      const clickedFilterField = e.target as HTMLInputElement;
-      const allCheckedInputs = [...document.getElementsByTagName('input')];
-      this.setAttributeChecked(clickedFilterField);
-      updateFiltersObj(allCheckedInputs);
+    this.filterComponent.addEventListener('input', () => {
+      const allInputs = [...document.getElementsByTagName('input')];
+      updateFiltersObj(allInputs);
       this.makeQuery();
-      renderFilteredProducts(products, this.checkNotActiveState());
+      renderFilteredProducts(products);
+    });
+
+    this.filterComponent.addEventListener('click', (e) => {
+      const allInputs = [...document.getElementsByTagName('input')];
+      const target = e.target as HTMLElement;
+      if (target.classList.contains('filter__button')) {
+        const buttonID = target.getAttribute('id');
+        switch (buttonID) {
+          case 'copy':
+            break;
+          case 'reset':
+            this.setDefaultState();
+            allInputs.forEach((item) => (item.checked = false));
+            renderFilteredProducts(products);
+            break;
+        }
+      }
     });
   }
 
@@ -52,30 +61,22 @@ export { FilterProducts };
 
 // FUNCTIONS //
 
-//проверяем, есть ли у цели аттрибут checked, если нет, то устанавливаем его,
-// если есть - проверяем, в каком он положении и меняем
+//рендерит отфильтрованные продукты по отфильтрованным id
 
-function setAttributeChecked(targetInput: HTMLInputElement) {
-  if (targetInput.getAttribute('checked')) {
-    targetInput.getAttribute('checked') === 'true'
-      ? targetInput.setAttribute('checked', 'false')
-      : targetInput.setAttribute('checked', 'true');
-  } else {
-    targetInput.setAttribute('checked', 'true');
-  }
-}
-
-// функция отбирает продукты на странице по селектору и проходит по ним, добавляя display: none всем продуктам,
-// а затем показывает только те, которые соответветствуют фильтру
-
-function renderFilteredProducts(products: IProductItem[], notActive: boolean) {
+function renderFilteredProducts(products: IProductItem[]) {
   const idArr = getIDbyFilter(products);
   const productsArr = [...products].filter((item) => idArr.includes(item.id));
-  let newProducts = new ProductList().render(productsArr);
+  let newProducts = '';
+  const notActive = Object.values(FilterProducts.stateArray).every((item) => item.length == 0);
 
+  if (idArr.length !== 0) {
+    newProducts = new ProductList().render(productsArr);
+  }
   if (idArr.length === 0 && !notActive) {
-    newProducts = 'not found';
-  } else if (notActive) {
+    newProducts = 'products not found';
+  }
+
+  if (idArr.length === 0 && notActive) {
     newProducts = new ProductList().render(products);
   }
 
@@ -90,6 +91,7 @@ function getIDbyFilter(products: IProductItem[]) {
     if (key === 'brand') {
       keyInProduct = 'brand';
     }
+
     FilterProducts.stateArray[key] = products
       .filter((item) => {
         return filterField.some((value) => item[keyInProduct] === value);
