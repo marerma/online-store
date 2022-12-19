@@ -1,12 +1,13 @@
-import { getState, setState, cartStatement } from '../local-storage/cart-storage';
+import { setState, cartStatement } from '../local-storage/cart-storage';
 import { getSelector } from '../../../functions/utils';
 
-const icon = getSelector(document, '.cart-count');
+const cartButton = getSelector(document, '.header__container-cart'),
+  cartCounter = getSelector(cartButton, '.cart-count');
 
 renderCartIcon();
 
 function renderCartIcon() {
-  icon.textContent = cartStatement.counter.toString();
+  cartCounter.textContent = cartStatement.counter.toString();
 }
 
 function increaseCartIcon() {
@@ -15,4 +16,4 @@ function increaseCartIcon() {
   setState();
 }
 
-export { increaseCartIcon, icon };
+export { increaseCartIcon, cartCounter, cartButton };
