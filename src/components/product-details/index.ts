@@ -1,31 +1,32 @@
 import { getSelector } from '../../functions/utils';
-import { PRODUCTS_DB } from '../../data/data';
 import { IProductItem } from '../main/interface/Iproducts';
 import { loadThumbnail, loadImages } from './images/images';
-import { cartStatement, getState, setState, Cart } from '../cart/local-storage/cart-storage';
+import { cartStatement, setState, Amount } from '../cart/local-storage/cart-storage';
 import { increaseCartIcon } from '../cart/cart-icon/icon';
 
 class ProductPage {
-  loadPage() {
+  loadPage(elements: IProductItem[]) {
     const items = Array.from(document.getElementsByClassName('product-item'));
 
     items.forEach((item) => {
       item.addEventListener('click', (e) => {
-        if (e.target === getSelector(item, '.product-item__details')) {
-          this.renderItem(+item.id);
-          window.history.pushState({}, '', `product-${+item.id}`);
+        const id = +item.id,
+          target = e.target;
+
+        if (target === getSelector(item, '.product-item__details')) {
+          this.renderItem(elements, id);
+          window.history.pushState({}, '', `product-${id}`);
         }
 
-        if (e.target === getSelector(item, '.product-item__buy')) {
-          cartStatement.inCart.push(+item.id);
-          increaseCartIcon();
+        if (target === getSelector(item, '.product-item__buy') && target instanceof HTMLElement) {
+          addToCart(elements, id);
         }
       });
     });
   }
 
-  renderItem(x: number) {
-    PRODUCTS_DB.forEach((item: IProductItem) => {
+  renderItem(elements: IProductItem[], x: number) {
+    elements.forEach((item: IProductItem) => {
       if (item.id === x) {
         getSelector(document, '.main-content').innerHTML = `
           <div class="container__details">
@@ -84,7 +85,7 @@ class ProductPage {
         const addToCartButton = getSelector(document, '.product__options-add');
 
         addToCartButton.addEventListener('click', () => {
-          addToCart(+item.id);
+          addToCart(elements, item.id);
         });
 
         this.appendImages(item);
@@ -98,13 +99,26 @@ class ProductPage {
   }
 }
 
-function addToCart(item: number) {
-  const cart: number[] = cartStatement.inCart;
-  cart.push(item);
+function addToCart(items: IProductItem[], id: number) {
   increaseCartIcon();
+
+  const cartInner = cartStatement.inCart;
+
+  cartInner.push(JSON.stringify(items[id - 1]));
+
+  cartStatement.inCartAmount = cartInner.reduce((item: Amount, id) => {
+    item[id] = (item[id] || 0) + 1;
+    return item;
+  }, {});
+
   setState();
+}
+
+interface ProductInCart {
+  item: IProductItem;
+  amount: number;
 }
 
 const loadProductPage = new ProductPage();
 
-export { loadProductPage };
+export { loadProductPage, ProductInCart };

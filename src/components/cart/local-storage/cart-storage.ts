@@ -5,6 +5,7 @@ if (localStorage.getItem('cartStatement')) {
 } else {
   cartStatement = {
     inCart: [],
+    inCartAmount: {},
     counter: 0,
   };
 }
@@ -18,8 +19,11 @@ function getState() {
 }
 
 interface Cart {
-  inCart: number[];
+  inCart: string[];
+  inCartAmount: Amount;
   counter: number;
 }
 
-export { cartStatement, getState, setState, Cart };
+type Amount = { [key: string]: number };
+
+export { cartStatement, getState, setState, Cart, Amount };

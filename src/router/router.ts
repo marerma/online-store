@@ -14,7 +14,7 @@ const route = (event: Event) => {
 const routes: Routes = {
   404: () => loadErrorPage.loadPage(),
   '/': () => loadMainPage.loadPage(),
-  '/cart': () => loadCartPage.loadPage(),
+  '/cart': () => loadCartPage.loadPage(PRODUCTS_DB),
 };
 
 const handleLocation = async () => {
@@ -33,7 +33,7 @@ const clearContent = () => {
 };
 
 PRODUCTS_DB.forEach((item) => {
-  routes[`/product-${+item.id}`] = () => loadProductPage.renderItem(+item.id);
+  routes[`/product-${+item.id}`] = () => loadProductPage.renderItem(PRODUCTS_DB, +item.id);
 });
 
 window.addEventListener('popstate', () => {

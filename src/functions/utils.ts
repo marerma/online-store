@@ -1,7 +1,7 @@
 function getSelector(parent: DocumentFragment | Document | Element, selector: string) {
   const item = parent.querySelector(selector);
   if (!(item instanceof HTMLElement)) {
-    throw new Error('There is no items');
+    throw new Error(`Can't find selector: ${selector}`);
   } else {
     return item;
   }
