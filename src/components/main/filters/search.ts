@@ -1,7 +1,8 @@
 import { IProductItem } from '../interface/Iproducts';
+import { filtersList } from './index';
 
 export class Search {
-  searchComponent: HTMLElement = document.createElement('div');
+  searchComponent: HTMLInputElement = document.createElement('input');
   searchValue = '';
 
   getSearchValue() {
@@ -19,30 +20,36 @@ export class Search {
     this.searchValue = value;
   }
 
+  resetSearch() {
+    this.searchComponent.placeholder = 'Search the products..';
+    this.setSearchValue('');
+    this.searchComponent.value = this.getSearchValue();
+  }
+
   addListener(products: IProductItem[]) {
     this.searchComponent.addEventListener('input', (e) => {
       const searchInput = e.target;
       if (searchInput instanceof HTMLInputElement) {
         this.setSearchValue(searchInput.value);
-        this.searchProducts(products);
+        this.renderProducts(products);
         this.syncURL();
       }
     });
   }
+
   render() {
-    return `
-      <div name='search-products'>
-          <input type='search' 
-                id='search' 
-                name='search-products'
-                placeholder='Search the products..'>
-       </div>
-    `;
+    this.searchComponent.setAttribute('type', 'search');
+    this.searchComponent.setAttribute('id', 'search');
+    this.searchComponent.setAttribute('name', 'search-products');
+    this.searchComponent.setAttribute('placeholder', 'Search the products..');
+    return this.searchComponent;
   }
+
   loadSearchComponent(root: HTMLElement, products: IProductItem[]) {
-    this.searchComponent.className = 'search-container';
-    this.searchComponent.innerHTML = this.render();
-    root.append(this.searchComponent);
+    const container = document.createElement('div');
+    container.className = 'search-products';
+    container.append(this.render());
+    root.append(container);
     this.addListener(products);
     return this.searchComponent;
   }
@@ -61,9 +68,13 @@ export class Search {
         regEx.test(`${product.stock}`)
       );
     });
-
     return result;
   }
+
+  renderProducts(products: IProductItem[]) {
+    filtersList.renderFilteredProducts(products);
+  }
+
   makeQuery() {
     const searchValue = this.getSearchValue();
     const query = `search=${searchValue}`;

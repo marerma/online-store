@@ -7,7 +7,7 @@ import { searchComponent } from './search';
 
 class FilterProducts extends FilterComponents {
   static activeFilters: { [x: string]: string[] };
-  static stateArray: { [x: string]: number[] };
+  static stateArray: { [x: string]: IProductItem[] };
 
   constructor() {
     super();
@@ -38,6 +38,7 @@ class FilterProducts extends FilterComponents {
           case 'reset':
             this.setDefaultState();
             sortComponent.setSortValue('default');
+            searchComponent.resetSearch();
             allInputs.forEach((item) => (item.checked = false));
             this.renderFilteredProducts(products);
             this.syncURL({});
@@ -48,39 +49,43 @@ class FilterProducts extends FilterComponents {
   }
 
   renderFilteredProducts(products: IProductItem[]) {
-    const idFilteredProducts = getIDbyFilter(products);
-    const productsArr = [...products].filter((item) => idFilteredProducts.includes(item.id));
+    const productsArr = getProductsAllFilters(products);
     const isNotActive = Object.values(FilterProducts.stateArray).every((item) => item.length == 0);
+
+    const newProducts = '';
+
     const allCounts = [...document.querySelectorAll('.checkbox-amount-active')] as HTMLElement[];
-    let newProducts = '';
     allCounts.forEach((span) => (span.innerHTML = ' 0/ '));
 
-    const updateProductsList = (productsArray: IProductItem[]) => {
-      if (searchComponent.isActiveSearch()) {
-        productsArray = searchComponent.searchProducts(productsArray);
-      }
+    const updateProductsList = (productsArray: IProductItem[], htmlString: string) => {
       sortComponent.sortProductsLogic(productsArray);
-      newProducts = new ProductList().render(productsArray);
       this.updateFiltersAmount(productsArray);
       this.updateFoundProductsTotal(productsArray);
+      htmlString = productsArray.length === 0 ? 'products not found' : new ProductList().render(productsArray);
+      const productsContainer = getSelector(document, '.products-container');
+      productsContainer.innerHTML = htmlString;
     };
 
-    if (idFilteredProducts.length !== 0) {
-      updateProductsList(productsArr);
+    if (searchComponent.isActiveSearch()) {
+      if (isNotActive) {
+        const foundProducts = searchComponent.searchProducts(products);
+        updateProductsList(foundProducts, newProducts);
+      }
+
+      if (!isNotActive) {
+        const foundProducts = searchComponent.searchProducts(productsArr);
+        updateProductsList(foundProducts, newProducts);
+      }
     }
 
-    if (idFilteredProducts.length === 0 && !isNotActive) {
-      newProducts = 'products not found';
-      this.updateFoundProductsTotal(productsArr);
+    if (!searchComponent.isActiveSearch()) {
+      if (isNotActive) {
+        updateProductsList(products, newProducts);
+      }
+      if (!isNotActive) {
+        updateProductsList(productsArr, newProducts);
+      }
     }
-
-    if (idFilteredProducts.length === 0 && isNotActive) {
-      updateProductsList(products);
-      console.log(searchComponent.isActiveSearch());
-    }
-
-    const productsContainer = getSelector(document, '.products-container');
-    productsContainer.innerHTML = newProducts;
   }
 
   makeQuery(filters: { [x: string]: string[] }) {
@@ -105,7 +110,7 @@ export { FilterProducts };
 
 // FUNCTIONS //
 
-function getIDbyFilter(products: IProductItem[]) {
+function getProductsAllFilters(products: IProductItem[]) {
   for (const key in FilterProducts.activeFilters) {
     const filterField = FilterProducts.activeFilters[key];
     let keyInProduct: keyof IProductItem = 'category';
@@ -113,16 +118,13 @@ function getIDbyFilter(products: IProductItem[]) {
       keyInProduct = 'brand';
     }
 
-    FilterProducts.stateArray[key] = products
-      .filter((item) => {
-        return filterField.some((value) => item[keyInProduct] === value);
-      })
-      .map((item) => item.id);
+    FilterProducts.stateArray[key] = products.filter((item) => {
+      return filterField.some((value) => item[keyInProduct] === value);
+    });
   }
 
-  const idArr = getIntersectionsInArray(FilterProducts.stateArray);
-
-  return idArr;
+  const allFilterProducts = getIntersectionsInArray(FilterProducts.stateArray);
+  return allFilterProducts;
 }
 
 // находим на странице все input с checkbox:true
