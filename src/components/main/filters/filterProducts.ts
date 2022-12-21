@@ -1,6 +1,6 @@
 import { FilterComponents } from './filtersComponent';
 import { IProductItem } from '../interface/Iproducts';
-import { getIntersectionsInArray, getSelector } from '../../../functions/utils';
+import { copyURLtoClipboard, getIntersectionsInArray, getSelector, parseQuery } from '../../../functions/utils';
 import { ProductComponent } from '../catalogue/productItem';
 import { sortComponent } from './sortProducts';
 import { searchComponent } from './search';
@@ -20,6 +20,16 @@ class FilterProducts extends FilterComponents {
     FilterProducts.stateArray = { category: [], brand: [], price: [], rating: [] };
   }
 
+  setQueryState(products: IProductItem[]) {
+    const stateFiltersObj = parseQuery(window.location.href);
+    const isEmpty = JSON.stringify(stateFiltersObj) === '{}';
+    if (!isEmpty) {
+      for (const key in stateFiltersObj) {
+        FilterProducts.activeFilters[key] = stateFiltersObj[key];
+      }
+    }
+  }
+
   addListener(products: IProductItem[]) {
     this.filterComponent.addEventListener('input', () => {
       const allInputs = [...document.getElementsByTagName('input')];
@@ -33,8 +43,16 @@ class FilterProducts extends FilterComponents {
       const target = e.target as HTMLElement;
       if (target.classList.contains('filter__button')) {
         const buttonID = target.getAttribute('id');
+        const buttonText = target.textContent;
         switch (buttonID) {
           case 'copy':
+            copyURLtoClipboard();
+            target.textContent = 'Link copied!';
+            target.classList.add('filter__button-copied');
+            setTimeout(() => {
+              target.textContent = buttonText;
+              target.classList.remove('filter__button-copied');
+            }, 1000);
             break;
           case 'reset':
             this.setDefaultState();
