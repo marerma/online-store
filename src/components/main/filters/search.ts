@@ -1,5 +1,6 @@
 import { IProductItem } from '../interface/Iproducts';
 import { filtersList } from './index';
+import { stateForQuery } from './state';
 
 export class Search {
   searchComponent: HTMLInputElement = document.createElement('input');
@@ -32,7 +33,7 @@ export class Search {
       if (searchInput instanceof HTMLInputElement) {
         this.setSearchValue(searchInput.value);
         this.renderProducts(products);
-        this.syncURL();
+        stateForQuery.syncURL();
       }
     });
   }
@@ -55,7 +56,7 @@ export class Search {
   }
 
   searchProducts(products: IProductItem[]) {
-    const regEx = new RegExp(`${this.getSearchValue()}`, 'gi');
+    const regEx = new RegExp(`.*` + `${this.getSearchValue()}` + `.*`, 'gi');
     const result = products.filter((product) => {
       return (
         regEx.test(product.title) ||
@@ -77,8 +78,11 @@ export class Search {
 
   makeQuery() {
     const searchValue = this.getSearchValue();
-    const query = `search=${searchValue}`;
-    return `?${query}`;
+    if (searchValue === '') {
+      return '';
+    } else {
+      return `search=${searchValue}`;
+    }
   }
 
   syncURL() {

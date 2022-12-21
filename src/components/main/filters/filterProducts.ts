@@ -1,9 +1,10 @@
 import { FilterComponents } from './filtersComponent';
 import { IProductItem } from '../interface/Iproducts';
 import { getIntersectionsInArray, getSelector } from '../../../functions/utils';
-import { ProductList } from '../catalogue/productList';
+import { ProductComponent } from '../catalogue/productItem';
 import { sortComponent } from './sortProducts';
 import { searchComponent } from './search';
+import { stateForQuery } from './state';
 
 class FilterProducts extends FilterComponents {
   static activeFilters: { [x: string]: string[] };
@@ -23,8 +24,8 @@ class FilterProducts extends FilterComponents {
     this.filterComponent.addEventListener('input', () => {
       const allInputs = [...document.getElementsByTagName('input')];
       updateFiltersObj(allInputs);
-      this.syncURL(FilterProducts.activeFilters);
       this.renderFilteredProducts(products);
+      stateForQuery.syncURL();
     });
 
     this.filterComponent.addEventListener('click', (e) => {
@@ -41,7 +42,7 @@ class FilterProducts extends FilterComponents {
             searchComponent.resetSearch();
             allInputs.forEach((item) => (item.checked = false));
             this.renderFilteredProducts(products);
-            this.syncURL({});
+            stateForQuery.syncURL();
             break;
         }
       }
@@ -51,7 +52,7 @@ class FilterProducts extends FilterComponents {
   renderFilteredProducts(products: IProductItem[]) {
     const productsArr = getProductsAllFilters(products);
     const isNotActive = Object.values(FilterProducts.stateArray).every((item) => item.length == 0);
-
+    const productsList = getSelector(document, '.product-list');
     const newProducts = '';
 
     const allCounts = [...document.querySelectorAll('.checkbox-amount-active')] as HTMLElement[];
@@ -61,9 +62,12 @@ class FilterProducts extends FilterComponents {
       sortComponent.sortProductsLogic(productsArray);
       this.updateFiltersAmount(productsArray);
       this.updateFoundProductsTotal(productsArray);
-      htmlString = productsArray.length === 0 ? 'products not found' : new ProductList().render(productsArray);
-      const productsContainer = getSelector(document, '.products-container');
-      productsContainer.innerHTML = htmlString;
+      htmlString =
+        productsArray.length === 0
+          ? 'products not found'
+          : productsArray.map((product) => new ProductComponent(product).render()).join('');
+
+      productsList.innerHTML = htmlString;
     };
 
     if (searchComponent.isActiveSearch()) {
@@ -88,8 +92,8 @@ class FilterProducts extends FilterComponents {
     }
   }
 
-  makeQuery(filters: { [x: string]: string[] }) {
-    const query = Object.entries(filters)
+  makeQuery() {
+    const query = Object.entries(FilterProducts.activeFilters)
       .map(([key, value]) => {
         if (value.length) {
           return `${key}=${value}`;
@@ -97,13 +101,7 @@ class FilterProducts extends FilterComponents {
       })
       .filter((item) => item !== undefined)
       .join('&');
-    return `?${query}`;
-  }
-
-  syncURL(filters: { [x: string]: string[] }) {
-    const path = document.location.pathname;
-    const query = this.makeQuery(filters);
-    window.history.replaceState(filters, '', `${path}${query}`);
+    return `${query}`;
   }
 }
 export { FilterProducts };

@@ -1,6 +1,7 @@
 import { getSelector } from '../../../functions/utils';
 import { ProductComponent } from '../catalogue/productItem';
 import { IProductItem } from '../interface/Iproducts';
+import { stateForQuery } from './state';
 
 export class Sort {
   sortComponent: HTMLElement = document.createElement('div');
@@ -47,25 +48,27 @@ export class Sort {
       const target = e.target as HTMLOptionElement;
       const wishSortValue = target.value;
       this.setSortValue(wishSortValue);
-      this.syncURL();
       this.sortDisplayedProducts(products);
       this.setSelectedAttribute();
+      stateForQuery.syncURL();
     });
   }
 
   sortDisplayedProducts(products: IProductItem[]) {
-    const productListNode = getSelector(document, '.product-list');
-    const displayedProductsID = [...productListNode.children].map((item) => {
-      if (item.getAttribute('id') !== null) {
-        return +(item.getAttribute('id') as string);
-      }
-    });
-    productListNode.innerHTML = '';
-    this.sortProductsLogic(products)
-      .filter((item) => displayedProductsID.includes(item.id))
-      .forEach((item) => {
-        productListNode.innerHTML += new ProductComponent(item).render();
+    const productListNode = document.querySelector('.product-list');
+    if (productListNode instanceof HTMLElement) {
+      const displayedProductsID = [...productListNode.children].map((item) => {
+        if (item.getAttribute('id') !== null) {
+          return +(item.getAttribute('id') as string);
+        }
       });
+      productListNode.innerHTML = '';
+      this.sortProductsLogic(products)
+        .filter((item) => displayedProductsID.includes(item.id))
+        .forEach((item) => {
+          productListNode.innerHTML += new ProductComponent(item).render();
+        });
+    } else return;
   }
 
   sortProductsLogic(products: IProductItem[]) {
@@ -105,8 +108,11 @@ export class Sort {
   }
   makeQuery() {
     const sortValue = this.getSortValue();
-    const query = `sort=${sortValue}`;
-    return `?${query}`;
+    if (sortValue === 'default') {
+      return '';
+    } else {
+      return `sort=${sortValue}`;
+    }
   }
 
   syncURL() {
