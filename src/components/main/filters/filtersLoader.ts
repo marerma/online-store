@@ -14,6 +14,7 @@ class FiltersLoader extends FilterProducts {
     this.filterComponent.innerHTML = new FilterComponents().render(products);
     this.filterComponent.className = 'filters__container';
     this.addListener(products);
+    this.setQueryState(products);
     return this.filterComponent;
   }
 }

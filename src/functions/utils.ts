@@ -43,4 +43,30 @@ function getIntersectionsInArray(object: { [x: string]: IProductItem[] }) {
   }
 }
 
-export { getSelector, getDataBase64, appendImage, getIntersectionsInArray };
+function copyURLtoClipboard() {
+  const url = window.location.href;
+  const element = document.createElement('textarea');
+  element.value = url;
+  element.setAttribute('readonly', '');
+  element.style.position = 'absolute';
+  element.style.left = '-9999px';
+  document.body.appendChild(element);
+  element.select();
+  document.execCommand('copy');
+  document.body.removeChild(element);
+}
+
+function parseQuery(url: string) {
+  const paramObj: { [x: string]: string[] } = {};
+  if (url.includes('?')) {
+    const query = url.split('?')[1];
+    const paramsFromUrl = new URLSearchParams(query);
+    for (const [key, value] of paramsFromUrl.entries()) {
+      paramObj[`${key}`] = value.split(',');
+    }
+    return paramObj;
+  } else {
+    return {};
+  }
+}
+export { getSelector, getDataBase64, appendImage, getIntersectionsInArray, copyURLtoClipboard, parseQuery };
