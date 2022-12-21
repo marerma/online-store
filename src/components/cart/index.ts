@@ -2,9 +2,12 @@ import { IProductItem } from '../main/interface/Iproducts';
 import { cartStatement } from './local-storage/cart-storage';
 import { getSelector } from '../../functions/utils';
 import { clearContent } from '../../router/router';
+import { countAmountOfItems } from './local-storage/cart-storage';
+import { showTotalCost } from './local-storage/cart-storage';
+import { decreaseCartIcon, increaseCartIcon } from './cart-icon/icon';
 
 class CartPage {
-  loadPage(elements: IProductItem[]) {
+  loadPage(elements: IProductItem[] | string[]) {
     clearContent();
     this.renderCart();
 
@@ -28,24 +31,20 @@ class CartPage {
               <button class="page__less">></button>
             </div>
           </div>
+          <div class="cart__inner"></div>
         </div>
 
         <div class="cart__summary">
         </div>
       `;
 
-      const productsInCart = cartStatement.inCart;
-
-      productsInCart.forEach((item, i) => {
-        // console.log(item.id);
-        // if (productsInCart.indexOf(item) !== i) {
-        //   console.log(i);
-        // }
-      });
+      renderCartInner();
+      showTotalCost();
     }
   }
 
   renderCart() {
+    clearContent();
     const main = getSelector(document, '.main-content'),
       div = document.createElement('div');
 
@@ -53,6 +52,80 @@ class CartPage {
 
     main.append(div);
   }
+}
+
+function renderCartInner() {
+  countAmountOfItems();
+
+  const productsInCart = cartStatement.inCart,
+    productsAmount = cartStatement.inCartAmount,
+    products = Object.keys(productsAmount),
+    productsOnScreen = getSelector(document, '.cart__inner');
+
+  products.forEach((product, i) => {
+    const parsedProduct = JSON.parse(product),
+      wrapper = document.createElement('div'),
+      amount = productsAmount[product];
+
+    wrapper.classList.add('cart__inner-item');
+    wrapper.innerHTML = `
+      <div class="cart__inner-index">${i + 1}</div>
+      <img class="cart__inner-thumbnail" src="${parsedProduct.thumbnail}"></img>
+      <div class="cart__inner-description">
+        <div class="product__title">${parsedProduct.title}</div>
+        <div class="product__description">${parsedProduct.description}</div>
+        <div class="product__rest">
+          <div class="product__rest-prop">Rating: ${parsedProduct.rating}</div>
+          <div class="product__rest-prop">Price: €${parsedProduct.price}</div>
+          <div class="product__rest-prop">Discount: ${parsedProduct.discountPercentage}%</div>
+        </div>
+      </div>
+      <div class="cart__inner-amount">
+        <div class="stock">Stock: ${parsedProduct.stock}</div>
+        <div class="amount__changers">
+          <button class="amount__changers-decrease">-</button>
+          <div class="amount__changers-number">${amount}</div>
+          <button class="amount__changers-increase">+</button>
+        </div>
+        <div class="item__cost">€${parsedProduct.price * amount}</div>
+      </div>
+    `;
+
+    productsOnScreen.append(wrapper);
+    wrapper.dataset.index = parsedProduct.id;
+  });
+
+  const renderedProducts: Element[] = Array.from(document.getElementsByClassName('cart__inner-item'));
+
+  renderedProducts.forEach((product) => {
+    if (product && product instanceof HTMLElement) {
+      const index = product.dataset.index;
+
+      product.addEventListener('click', (e) => {
+        for (let i = 0; i < productsInCart.length; i++) {
+          const parsedItem = JSON.parse(productsInCart[i]);
+
+          if (e.target === getSelector(product, '.amount__changers-decrease') && index == parsedItem.id) {
+            productsInCart.splice(i, 1);
+            countAmountOfItems();
+            decreaseCartIcon();
+            showTotalCost();
+            loadCartPage.loadPage(productsInCart);
+            break;
+          }
+
+          if (e.target === getSelector(product, '.amount__changers-increase') && index == parsedItem.id) {
+            productsInCart.push(productsInCart[i]);
+            countAmountOfItems();
+            increaseCartIcon();
+            showTotalCost();
+            loadCartPage.loadPage(productsInCart);
+            break;
+          }
+        }
+      });
+    }
+  });
 }
 
 const loadCartPage = new CartPage();
