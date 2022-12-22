@@ -48,6 +48,7 @@ class FilterComponents {
     const foundCount = document.querySelector('.filter__found-count-item') as HTMLElement;
     foundCount.textContent = `${products.length}`;
   }
+
   updateFiltersAmount(products: IProductItem[]) {
     FilterComponents.filterArray.forEach((el) => {
       if (el instanceof FilterCheckbox) {

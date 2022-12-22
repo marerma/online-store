@@ -11,8 +11,11 @@ export class Catalogue {
   }
 
   loadCatalogue(products: IProductItem[]) {
-    this.catalogueComponent.innerHTML = this.catalogue.render(products);
     this.catalogueComponent.className = 'catalogue__container';
+    const productsContainer = document.createElement('div');
+    productsContainer.className = 'products-container';
+    productsContainer.innerHTML = this.catalogue.render(products);
+    this.catalogueComponent.append(productsContainer);
     return this.catalogueComponent;
   }
 }

@@ -1,15 +1,21 @@
 import { FilterComponents } from './filtersComponent';
 import { IProductItem } from '../interface/Iproducts';
-import { getIntersectionsInArray } from '../../../functions/utils';
-import { ProductList } from '../catalogue/productList';
+import { copyURLtoClipboard, getIntersectionsInArray, getSelector } from '../../../functions/utils';
+import { ProductComponent } from '../catalogue/productItem';
+import { Search } from './search';
+import { Sort } from './sortProducts';
 
 class FilterProducts extends FilterComponents {
   static activeFilters: { [x: string]: string[] };
-  static stateArray: { [x: string]: number[] };
+  static stateArray: { [x: string]: IProductItem[] };
+  searchComponent: Search;
+  sortComponent: Sort;
 
   constructor() {
     super();
-    this.setDefaultState(); // потом проверять, есть ли в query или LS сохраненные фильтры, если нет - обнулять
+    this.setDefaultState();
+    this.searchComponent = new Search();
+    this.sortComponent = new Sort();
   }
 
   setDefaultState() {
@@ -21,8 +27,8 @@ class FilterProducts extends FilterComponents {
     this.filterComponent.addEventListener('input', () => {
       const allInputs = [...document.getElementsByTagName('input')];
       updateFiltersObj(allInputs);
-      this.syncURL(FilterProducts.activeFilters);
       this.renderFilteredProducts(products);
+      this.syncURL();
     });
 
     this.filterComponent.addEventListener('click', (e) => {
@@ -30,69 +36,121 @@ class FilterProducts extends FilterComponents {
       const target = e.target as HTMLElement;
       if (target.classList.contains('filter__button')) {
         const buttonID = target.getAttribute('id');
+        const buttonText = target.textContent;
         switch (buttonID) {
           case 'copy':
+            copyURLtoClipboard();
+            target.textContent = 'Link copied!';
+            target.classList.add('filter__button-copied');
+            setTimeout(() => {
+              target.textContent = buttonText;
+              target.classList.remove('filter__button-copied');
+            }, 1000);
             break;
           case 'reset':
             this.setDefaultState();
+            this.sortComponent.setSortValue('default');
+            this.searchComponent.resetSearch();
             allInputs.forEach((item) => (item.checked = false));
             this.renderFilteredProducts(products);
-            this.syncURL({});
+            this.syncURL();
             break;
         }
       }
     });
+
+    this.searchComponent.render().addEventListener('input', (e) => {
+      const searchInput = e.target;
+      if (searchInput instanceof HTMLInputElement) {
+        this.searchComponent.setSearchValue(searchInput.value);
+        this.renderFilteredProducts(products);
+        this.syncURL();
+      }
+    });
+
+    this.sortComponent.render().addEventListener('change', (e) => {
+      const target = e.target as HTMLOptionElement;
+      const wishSortValue = target.value;
+      this.sortComponent.setSortValue(wishSortValue);
+      this.sortComponent.sortDisplayedProducts(products);
+      this.sortComponent.setSelectedAttribute();
+      this.syncURL();
+    });
   }
 
   renderFilteredProducts(products: IProductItem[]) {
-    const idFilteredProducts = getIDbyFilter(products);
-    const productsArr = [...products].filter((item) => idFilteredProducts.includes(item.id));
+    const productsArr = getProductsAllFilters(products);
     const isNotActive = Object.values(FilterProducts.stateArray).every((item) => item.length == 0);
+    const productsList = getSelector(document, '.product-list');
+    const newProducts = '';
+
     const allCounts = [...document.querySelectorAll('.checkbox-amount-active')] as HTMLElement[];
-    let newProducts = '';
     allCounts.forEach((span) => (span.innerHTML = ' 0/ '));
 
-    if (idFilteredProducts.length !== 0) {
-      newProducts = new ProductList().render(productsArr);
-      this.updateFiltersAmount(productsArr);
-      this.updateFoundProductsTotal(productsArr);
+    const updateProductsList = (productsArray: IProductItem[], htmlString: string) => {
+      this.sortComponent.sortProductsLogic(productsArray);
+      this.updateFiltersAmount(productsArray);
+      this.updateFoundProductsTotal(productsArray);
+      htmlString =
+        productsArray.length === 0
+          ? 'products not found'
+          : productsArray.map((product) => new ProductComponent(product).render()).join('');
+
+      productsList.innerHTML = htmlString;
+    };
+
+    if (this.searchComponent.isActiveSearch()) {
+      if (isNotActive) {
+        const foundProducts = this.searchComponent.searchProducts(products);
+        updateProductsList(foundProducts, newProducts);
+      }
+
+      if (!isNotActive) {
+        const foundProducts = this.searchComponent.searchProducts(productsArr);
+        updateProductsList(foundProducts, newProducts);
+      }
     }
 
-    if (idFilteredProducts.length === 0 && !isNotActive) {
-      newProducts = 'products not found';
-      this.updateFoundProductsTotal(productsArr);
+    if (!this.searchComponent.isActiveSearch()) {
+      if (isNotActive) {
+        updateProductsList(products, newProducts);
+      }
+      if (!isNotActive) {
+        updateProductsList(productsArr, newProducts);
+      }
     }
-
-    if (idFilteredProducts.length === 0 && isNotActive) {
-      newProducts = new ProductList().render(products);
-      this.updateFiltersAmount(products);
-      this.updateFoundProductsTotal(products);
-    }
-
-    const catalogueContainer = document.querySelector('.catalogue__container') as HTMLElement;
-    catalogueContainer.innerHTML = newProducts;
   }
 
-  makeQuery(filters: { [x: string]: string[] }) {
-    const query = Object.entries(filters)
+  makeQuery() {
+    const query = Object.entries(FilterProducts.activeFilters)
       .map(([key, value]) => {
-        return `${key}=${value}`;
+        if (value.length) {
+          return `${key}=${value}`;
+        }
       })
+      .filter((item) => item !== undefined)
       .join('&');
-    return `?${query}`;
+    return `${query}`;
   }
-
-  syncURL(filters: { [x: string]: string[] }) {
+  generateCommonQuery() {
+    const queryAll = [this.makeQuery(), this.sortComponent.makeQuery(), this.searchComponent.makeQuery()]
+      .filter((str) => str)
+      .join('&');
+    const query = queryAll.length === 0 ? '' : `?${queryAll}`;
+    return query;
+  }
+  syncURL() {
     const path = document.location.pathname;
-    const query = this.makeQuery(filters);
-    window.history.replaceState(filters, '', `${path}${query}`);
+    const query = this.generateCommonQuery();
+    window.history.pushState('filters', '', `${path}${query}`);
+    console.log(query);
   }
 }
 export { FilterProducts };
 
 // FUNCTIONS //
 
-function getIDbyFilter(products: IProductItem[]) {
+function getProductsAllFilters(products: IProductItem[]) {
   for (const key in FilterProducts.activeFilters) {
     const filterField = FilterProducts.activeFilters[key];
     let keyInProduct: keyof IProductItem = 'category';
@@ -100,16 +158,13 @@ function getIDbyFilter(products: IProductItem[]) {
       keyInProduct = 'brand';
     }
 
-    FilterProducts.stateArray[key] = products
-      .filter((item) => {
-        return filterField.some((value) => item[keyInProduct] === value);
-      })
-      .map((item) => item.id);
+    FilterProducts.stateArray[key] = products.filter((item) => {
+      return filterField.some((value) => item[keyInProduct] === value);
+    });
   }
 
-  const idArr = getIntersectionsInArray(FilterProducts.stateArray);
-
-  return idArr;
+  const allFilterProducts = getIntersectionsInArray(FilterProducts.stateArray);
+  return allFilterProducts;
 }
 
 // находим на странице все input с checkbox:true

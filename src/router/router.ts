@@ -20,7 +20,6 @@ const routes: Routes = {
 const handleLocation = async () => {
   const path: string = window.location.pathname,
     route = routes[path] || routes[404];
-
   route();
 };
 
@@ -41,7 +40,7 @@ window.addEventListener('popstate', () => {
   handleLocation();
 });
 
-window.route = route;
+//window.route = route;
 handleLocation();
 
 export { clearContent, route, handleLocation };
