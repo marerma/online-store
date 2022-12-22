@@ -69,4 +69,23 @@ function parseQuery(url: string) {
     return {};
   }
 }
-export { getSelector, getDataBase64, appendImage, getIntersectionsInArray, copyURLtoClipboard, parseQuery };
+
+function checkQueryString() {
+  const enteredQuery = window.location.search;
+  const regex = new RegExp('\\?(brand|category|price|rating|search|sort)\\=([\\da-z\\%&])+', 'gi');
+  if (enteredQuery && enteredQuery.match(regex)) {
+    const paramsObj = parseQuery(window.location.href);
+    const isEmpty = JSON.stringify(paramsObj) === '{}';
+    return isEmpty;
+  }
+}
+
+export {
+  getSelector,
+  getDataBase64,
+  appendImage,
+  getIntersectionsInArray,
+  copyURLtoClipboard,
+  parseQuery,
+  checkQueryString,
+};
