@@ -12,22 +12,12 @@ class FilterProducts extends FilterComponents {
 
   constructor() {
     super();
-    this.setDefaultState(); // потом проверять, есть ли в query или LS сохраненные фильтры, если нет - обнулять
+    this.setDefaultState();
   }
 
   setDefaultState() {
     FilterProducts.activeFilters = { category: [], brand: [], price: [], rating: [] };
     FilterProducts.stateArray = { category: [], brand: [], price: [], rating: [] };
-  }
-
-  setQueryState(products: IProductItem[]) {
-    const stateFiltersObj = parseQuery(window.location.href);
-    const isEmpty = JSON.stringify(stateFiltersObj) === '{}';
-    if (!isEmpty) {
-      for (const key in stateFiltersObj) {
-        FilterProducts.activeFilters[key] = stateFiltersObj[key];
-      }
-    }
   }
 
   addListener(products: IProductItem[]) {

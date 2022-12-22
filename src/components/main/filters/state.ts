@@ -11,9 +11,9 @@ class QueryFilterState {
     return query;
   }
   syncURL() {
-    const path = document.location.pathname;
+    //const path = document.location.pathname;
     const query = this.generateCommonQuery();
-    window.history.pushState({}, '', `${path}${query}`);
+    window.history.pushState({}, '', `${query}`);
   }
 }
 

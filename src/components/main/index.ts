@@ -6,6 +6,7 @@ import { loadProductPage } from '../product-details';
 import { clearContent } from '../../router/router';
 import { cartButton } from '../cart/cart-icon/icon';
 import { loadCartPage } from '../cart';
+import { parseQuery } from '../../functions/utils';
 import { showTotalCost } from '../cart/local-storage/cart-storage';
 
 class MainPage extends Loader {
