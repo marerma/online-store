@@ -37,7 +37,7 @@ class CartPage {
         <div class="cart__summary">
         </div>
       `;
-
+      countAmountOfItems();
       renderCartInner();
       showTotalCost();
     }
@@ -108,7 +108,6 @@ function renderCartInner() {
           if (e.target === getSelector(product, '.amount__changers-decrease') && index == parsedItem.id) {
             productsInCart.splice(i, 1);
             countAmountOfItems();
-            decreaseCartIcon();
             showTotalCost();
             loadCartPage.loadPage(productsInCart);
             break;
@@ -118,7 +117,7 @@ function renderCartInner() {
             productsInCart.push(productsInCart[i]);
 
             productsInCart.forEach((item, j) => {
-              const lastPushed = productsInCart.slice(-1).pop()
+              const lastPushed = productsInCart.slice(-1).pop();
               if (item === lastPushed) {
                 productsInCart.splice(j, 0, lastPushed);
                 productsInCart.pop();
@@ -126,7 +125,6 @@ function renderCartInner() {
             });
 
             countAmountOfItems();
-            increaseCartIcon();
             showTotalCost();
             loadCartPage.loadPage(productsInCart);
             break;

@@ -110,9 +110,7 @@ function addToCart(items: IProductItem[], id: number) {
     productsInCart.push(product);
     increaseCartIcon();
   } else {
-    const index = productsInCart.indexOf(product);
-    productsInCart.splice(index, 1);
-    decreaseCartIcon();
+    cartStatement.inCart = productsInCart.filter((el) => el !== product);
   }
 
   countAmountOfItems();

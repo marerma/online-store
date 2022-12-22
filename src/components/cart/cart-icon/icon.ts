@@ -22,4 +22,4 @@ function increaseCartIcon() {
   setState();
 }
 
-export { increaseCartIcon, cartCounter, cartButton, decreaseCartIcon };
+export { increaseCartIcon, cartCounter, cartButton, decreaseCartIcon, renderCartIcon };
