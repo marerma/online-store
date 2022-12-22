@@ -1,7 +1,7 @@
 import { getSelector } from '../../functions/utils';
 import { IProductItem } from '../main/interface/Iproducts';
 import { loadThumbnail, loadImages } from './images/images';
-import { cartStatement, setState, Amount } from '../cart/local-storage/cart-storage';
+import { cartStatement, setState, countAmountOfItems, showTotalCost } from '../cart/local-storage/cart-storage';
 import { increaseCartIcon } from '../cart/cart-icon/icon';
 
 class ProductPage {
@@ -100,17 +100,10 @@ class ProductPage {
 }
 
 function addToCart(items: IProductItem[], id: number) {
+  cartStatement.inCart.push(JSON.stringify(items[id - 1]));
   increaseCartIcon();
-
-  const cartInner = cartStatement.inCart;
-
-  cartInner.push(JSON.stringify(items[id - 1]));
-
-  cartStatement.inCartAmount = cartInner.reduce((item: Amount, id) => {
-    item[id] = (item[id] || 0) + 1;
-    return item;
-  }, {});
-
+  countAmountOfItems();
+  showTotalCost();
   setState();
 }
 

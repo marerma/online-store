@@ -6,6 +6,7 @@ interface IApiResponse {
 }
 
 interface IProductItem {
+  time?: number;
   id: number;
   title: string;
   description: string;

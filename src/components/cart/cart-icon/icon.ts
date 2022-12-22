@@ -10,10 +10,16 @@ function renderCartIcon() {
   cartCounter.textContent = cartStatement.counter.toString();
 }
 
+function decreaseCartIcon() {
+  cartStatement.counter--;
+  renderCartIcon();
+  setState();
+}
+
 function increaseCartIcon() {
   cartStatement.counter++;
   renderCartIcon();
   setState();
 }
 
-export { increaseCartIcon, cartCounter, cartButton };
+export { increaseCartIcon, cartCounter, cartButton, decreaseCartIcon };

@@ -6,6 +6,7 @@ import { loadProductPage } from '../product-details';
 import { clearContent } from '../../router/router';
 import { cartButton } from '../cart/cart-icon/icon';
 import { loadCartPage } from '../cart';
+import { showTotalCost } from '../cart/local-storage/cart-storage';
 
 class MainPage extends Loader {
   title = 'Online Store';
@@ -23,6 +24,8 @@ class MainPage extends Loader {
 
         element?.append(filtersList.loadFilters(products), shopCatalogue.loadCatalogue(products));
         loadProductPage.loadPage(products);
+
+        showTotalCost();
 
         cartButton.addEventListener('click', () => {
           loadCartPage.loadPage(products);
