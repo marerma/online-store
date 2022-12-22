@@ -15,17 +15,9 @@ const routes: Routes = {
   404: () => loadErrorPage.loadPage(),
   '/': () => loadMainPage.loadPage(),
   '/cart': () => loadCartPage.loadPage(PRODUCTS_DB),
-  '/?': () => loadMainPage.loadPage(),
 };
 
 const handleLocation = async () => {
-  if (window.location.search) {
-    const query = window.location.search;
-    const regex = new RegExp('\\?(brand|category|price|rating|search|sort)\\=([\\da-z\\%&])+', 'gi');
-    if (query.match(regex)) {
-      routes['/?']();
-    }
-  }
   const path: string = window.location.pathname,
     route = routes[path] || routes[404];
   route();
@@ -48,7 +40,7 @@ window.addEventListener('popstate', () => {
   handleLocation();
 });
 
-window.route = route;
+//window.route = route;
 handleLocation();
 
 export { clearContent, route, handleLocation };
