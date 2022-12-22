@@ -1,5 +1,5 @@
 import { IProductItem } from '../main/interface/Iproducts';
-import { cartStatement } from './local-storage/cart-storage';
+import { cartStatement, setState } from './local-storage/cart-storage';
 import { getSelector } from '../../functions/utils';
 import { clearContent } from '../../router/router';
 import { countAmountOfItems } from './local-storage/cart-storage';
@@ -116,6 +116,15 @@ function renderCartInner() {
 
           if (e.target === getSelector(product, '.amount__changers-increase') && index == parsedItem.id) {
             productsInCart.push(productsInCart[i]);
+
+            productsInCart.forEach((item, j) => {
+              const lastPushed = productsInCart.slice(-1).pop()
+              if (item === lastPushed) {
+                productsInCart.splice(j, 0, lastPushed);
+                productsInCart.pop();
+              }
+            });
+
             countAmountOfItems();
             increaseCartIcon();
             showTotalCost();

@@ -23,6 +23,8 @@ function getState() {
 function countAmountOfItems() {
   cartStatement.inCartAmount = cartStatement.inCart.reduce((item: Amount, id) => {
     item[id] = (item[id] || 0) + 1;
+
+    if (item[id] === 0) delete item[id];
     return item;
   }, {});
 }
