@@ -7,7 +7,7 @@ import { PRODUCTS_DB } from '../data/data';
 const route = (event: Event) => {
   event = event || window.event;
   event.preventDefault();
-  window.history.pushState({}, '', event.target?.href);
+  // window.history.pushState({}, '', event.target?.href);
   handleLocation();
 };
 

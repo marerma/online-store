@@ -7,7 +7,7 @@ import { showTotalCost } from './local-storage/cart-storage';
 import { decreaseCartIcon, increaseCartIcon } from './cart-icon/icon';
 
 class CartPage {
-  loadPage(elements: IProductItem[] | string[]) {
+  loadPage(elements?: IProductItem[] | string[]) {
     clearContent();
     this.renderCart();
 
@@ -109,12 +109,19 @@ function renderCartInner() {
             productsInCart.splice(i, 1);
             countAmountOfItems();
             showTotalCost();
+            setState();
             loadCartPage.loadPage(productsInCart);
             break;
           }
 
           if (e.target === getSelector(product, '.amount__changers-increase') && index == parsedItem.id) {
-            productsInCart.push(productsInCart[i]);
+            const amountItem = getSelector(document, '.amount__changers-number');
+
+            if (parsedItem.stock > +(<string>amountItem.textContent)) {
+              productsInCart.push(productsInCart[i]);
+            } else {
+              alert('No more items in stock :(');
+            }
 
             productsInCart.forEach((item, j) => {
               const lastPushed = productsInCart.slice(-1).pop();
@@ -126,6 +133,7 @@ function renderCartInner() {
 
             countAmountOfItems();
             showTotalCost();
+            setState();
             loadCartPage.loadPage(productsInCart);
             break;
           }
@@ -137,4 +145,4 @@ function renderCartInner() {
 
 const loadCartPage = new CartPage();
 
-export { loadCartPage };
+export { loadCartPage, CartPage };

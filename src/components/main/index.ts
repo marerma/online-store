@@ -34,14 +34,15 @@ class MainPage extends Loader {
         loadProductPage.loadPage(products);
 
         showTotalCost();
-
-        cartButton.addEventListener('click', () => {
-          loadCartPage.loadPage(products);
-          window.history.pushState({}, '', `cart`);
-        });
       });
   }
 }
+
+cartButton.addEventListener('click', () => {
+  loadCartPage.loadPage();
+  history.pushState({}, '', `cart`);
+});
+
 const loadMainPage = new MainPage();
 
 export { loadMainPage };
