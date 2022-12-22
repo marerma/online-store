@@ -1,2 +1,2 @@
-import { FiltersLoader } from './filtersLoader';
-export const filtersList = new FiltersLoader();
+//import { FiltersLoader } from './filtersLoader';
+//export const filtersList = new FiltersLoader();

@@ -1,18 +1,21 @@
 import { FilterComponents } from './filtersComponent';
 import { IProductItem } from '../interface/Iproducts';
-import { copyURLtoClipboard, getIntersectionsInArray, getSelector, parseQuery } from '../../../functions/utils';
+import { copyURLtoClipboard, getIntersectionsInArray, getSelector } from '../../../functions/utils';
 import { ProductComponent } from '../catalogue/productItem';
-import { sortComponent } from './sortProducts';
-import { searchComponent } from './search';
-import { stateForQuery } from './state';
+import { Search } from './search';
+import { Sort } from './sortProducts';
 
 class FilterProducts extends FilterComponents {
   static activeFilters: { [x: string]: string[] };
   static stateArray: { [x: string]: IProductItem[] };
+  searchComponent: Search;
+  sortComponent: Sort;
 
   constructor() {
     super();
     this.setDefaultState();
+    this.searchComponent = new Search();
+    this.sortComponent = new Sort();
   }
 
   setDefaultState() {
@@ -25,7 +28,7 @@ class FilterProducts extends FilterComponents {
       const allInputs = [...document.getElementsByTagName('input')];
       updateFiltersObj(allInputs);
       this.renderFilteredProducts(products);
-      stateForQuery.syncURL();
+      this.syncURL();
     });
 
     this.filterComponent.addEventListener('click', (e) => {
@@ -46,14 +49,32 @@ class FilterProducts extends FilterComponents {
             break;
           case 'reset':
             this.setDefaultState();
-            sortComponent.setSortValue('default');
-            searchComponent.resetSearch();
+            this.sortComponent.setSortValue('default');
+            this.searchComponent.resetSearch();
             allInputs.forEach((item) => (item.checked = false));
             this.renderFilteredProducts(products);
-            stateForQuery.syncURL();
+            this.syncURL();
             break;
         }
       }
+    });
+
+    this.searchComponent.render().addEventListener('input', (e) => {
+      const searchInput = e.target;
+      if (searchInput instanceof HTMLInputElement) {
+        this.searchComponent.setSearchValue(searchInput.value);
+        this.renderFilteredProducts(products);
+        this.syncURL();
+      }
+    });
+
+    this.sortComponent.render().addEventListener('change', (e) => {
+      const target = e.target as HTMLOptionElement;
+      const wishSortValue = target.value;
+      this.sortComponent.setSortValue(wishSortValue);
+      this.sortComponent.sortDisplayedProducts(products);
+      this.sortComponent.setSelectedAttribute();
+      this.syncURL();
     });
   }
 
@@ -67,7 +88,7 @@ class FilterProducts extends FilterComponents {
     allCounts.forEach((span) => (span.innerHTML = ' 0/ '));
 
     const updateProductsList = (productsArray: IProductItem[], htmlString: string) => {
-      sortComponent.sortProductsLogic(productsArray);
+      this.sortComponent.sortProductsLogic(productsArray);
       this.updateFiltersAmount(productsArray);
       this.updateFoundProductsTotal(productsArray);
       htmlString =
@@ -78,19 +99,19 @@ class FilterProducts extends FilterComponents {
       productsList.innerHTML = htmlString;
     };
 
-    if (searchComponent.isActiveSearch()) {
+    if (this.searchComponent.isActiveSearch()) {
       if (isNotActive) {
-        const foundProducts = searchComponent.searchProducts(products);
+        const foundProducts = this.searchComponent.searchProducts(products);
         updateProductsList(foundProducts, newProducts);
       }
 
       if (!isNotActive) {
-        const foundProducts = searchComponent.searchProducts(productsArr);
+        const foundProducts = this.searchComponent.searchProducts(productsArr);
         updateProductsList(foundProducts, newProducts);
       }
     }
 
-    if (!searchComponent.isActiveSearch()) {
+    if (!this.searchComponent.isActiveSearch()) {
       if (isNotActive) {
         updateProductsList(products, newProducts);
       }
@@ -110,6 +131,19 @@ class FilterProducts extends FilterComponents {
       .filter((item) => item !== undefined)
       .join('&');
     return `${query}`;
+  }
+  generateCommonQuery() {
+    const queryAll = [this.makeQuery(), this.sortComponent.makeQuery(), this.searchComponent.makeQuery()]
+      .filter((str) => str)
+      .join('&');
+    const query = queryAll.length === 0 ? '' : `?${queryAll}`;
+    return query;
+  }
+  syncURL() {
+    const path = document.location.pathname;
+    const query = this.generateCommonQuery();
+    window.history.pushState('filters', '', `${path}${query}`);
+    console.log(query);
   }
 }
 export { FilterProducts };

@@ -1,6 +1,4 @@
 import { IProductItem } from '../interface/Iproducts';
-import { filtersList } from './index';
-import { stateForQuery } from './state';
 
 export class Search {
   searchComponent: HTMLInputElement = document.createElement('input');
@@ -21,21 +19,14 @@ export class Search {
     this.searchValue = value;
   }
 
+  updatePlaceholder(search: string) {
+    this.searchComponent.placeholder = search;
+  }
+
   resetSearch() {
     this.searchComponent.placeholder = 'Search the products..';
     this.setSearchValue('');
     this.searchComponent.value = this.getSearchValue();
-  }
-
-  addListener(products: IProductItem[]) {
-    this.searchComponent.addEventListener('input', (e) => {
-      const searchInput = e.target;
-      if (searchInput instanceof HTMLInputElement) {
-        this.setSearchValue(searchInput.value);
-        this.renderProducts(products);
-        stateForQuery.syncURL();
-      }
-    });
   }
 
   render() {
@@ -46,12 +37,11 @@ export class Search {
     return this.searchComponent;
   }
 
-  loadSearchComponent(root: HTMLElement, products: IProductItem[]) {
+  loadSearchComponent(root: HTMLElement) {
     const container = document.createElement('div');
     container.className = 'search-products';
     container.append(this.render());
     root.append(container);
-    this.addListener(products);
     return this.searchComponent;
   }
 
@@ -70,10 +60,6 @@ export class Search {
       );
     });
     return result;
-  }
-
-  renderProducts(products: IProductItem[]) {
-    filtersList.renderFilteredProducts(products);
   }
 
   makeQuery() {

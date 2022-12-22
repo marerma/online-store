@@ -1,7 +1,5 @@
-import { getSelector } from '../../../functions/utils';
 import { ProductComponent } from '../catalogue/productItem';
 import { IProductItem } from '../interface/Iproducts';
-import { stateForQuery } from './state';
 
 export class Sort {
   sortComponent: HTMLElement = document.createElement('div');
@@ -16,7 +14,7 @@ export class Sort {
   }
 
   render() {
-    return `
+    this.sortComponent.innerHTML = `
       <select class='sort-options-list' name='sort'>
         <option class='sort-options-item' selected disabled value='default'>--Select sort option--</option>
         <option class='sort-options-item' value='price-asc'>Sort by price ↑ </option>
@@ -25,12 +23,11 @@ export class Sort {
         <option class='sort-options-item' value='rating-dsc'>Sort by rating ↓ </option>
       </select>
     `;
+    return this.sortComponent;
   }
-  loadSortComponent(root: HTMLElement, products: IProductItem[]) {
+  loadSortComponent(root: HTMLElement) {
     this.sortComponent.className = 'sort-container';
-    this.sortComponent.innerHTML = this.render();
     root.append(this.sortComponent);
-    this.addListener(products);
   }
 
   setSelectedAttribute() {
@@ -41,16 +38,6 @@ export class Sort {
       } else {
         item.selected = false;
       }
-    });
-  }
-  addListener(products: IProductItem[]) {
-    this.sortComponent.addEventListener('change', (e) => {
-      const target = e.target as HTMLOptionElement;
-      const wishSortValue = target.value;
-      this.setSortValue(wishSortValue);
-      this.sortDisplayedProducts(products);
-      this.setSelectedAttribute();
-      stateForQuery.syncURL();
     });
   }
 
@@ -106,6 +93,7 @@ export class Sort {
     }
     return products;
   }
+
   makeQuery() {
     const sortValue = this.getSortValue();
     if (sortValue === 'default') {
@@ -121,5 +109,3 @@ export class Sort {
     window.history.pushState({}, '', `${path}${query}`);
   }
 }
-
-export const sortComponent = new Sort();
