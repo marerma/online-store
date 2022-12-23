@@ -1,6 +1,7 @@
 import { FilterComponents } from './filtersComponent';
 import { IProductItem } from '../interface/Iproducts';
 import { FilterProducts } from './filterProducts';
+import { FilterSliderRange } from './filterDualSlider';
 
 class FiltersLoader extends FilterProducts {
   root: HTMLElement | null = document.querySelector('.main-content');
@@ -35,6 +36,20 @@ class FiltersLoader extends FilterProducts {
           input.checked = true;
         }
       });
+      // if (key === 'price' || key === 'rating') {
+      //   const slider = document.querySelector(`input[name=${key}]`);
+      //   if (slider instanceof HTMLInputElement) {
+      //     const inputSlider = FilterComponents.filterArray.find(
+      //       (el) => el instanceof FilterSliderRange && el.type === key
+      //     );
+      //     if (inputSlider instanceof FilterSliderRange) {
+      //       inputSlider.setSavedValues(stateObj[key]);
+      //       inputSlider.setValueSpan();
+      //       inputSlider.updatePointers();
+      //     }
+      //     console.log('from downq', inputSlider, stateObj[key])
+      //   }
+      // }
       if (key === 'sort') {
         this.sortComponent.setSortValue(`${stateObj[key]}`);
       }
