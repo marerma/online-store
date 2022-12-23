@@ -1,5 +1,5 @@
 import { IProductItem } from '../main/interface/Iproducts';
-import { cartStatement } from './local-storage/cart-storage';
+import { cartStatement, setState } from './local-storage/cart-storage';
 import { getSelector } from '../../functions/utils';
 import { clearContent } from '../../router/router';
 import { countAmountOfItems } from './local-storage/cart-storage';
@@ -7,7 +7,7 @@ import { showTotalCost } from './local-storage/cart-storage';
 import { decreaseCartIcon, increaseCartIcon } from './cart-icon/icon';
 
 class CartPage {
-  loadPage(elements: IProductItem[] | string[]) {
+  loadPage(elements?: IProductItem[] | string[]) {
     clearContent();
     this.renderCart();
 
@@ -37,7 +37,7 @@ class CartPage {
         <div class="cart__summary">
         </div>
       `;
-
+      countAmountOfItems();
       renderCartInner();
       showTotalCost();
     }
@@ -108,17 +108,32 @@ function renderCartInner() {
           if (e.target === getSelector(product, '.amount__changers-decrease') && index == parsedItem.id) {
             productsInCart.splice(i, 1);
             countAmountOfItems();
-            decreaseCartIcon();
             showTotalCost();
+            setState();
             loadCartPage.loadPage(productsInCart);
             break;
           }
 
           if (e.target === getSelector(product, '.amount__changers-increase') && index == parsedItem.id) {
-            productsInCart.push(productsInCart[i]);
+            const amountItem = getSelector(document, '.amount__changers-number');
+
+            if (parsedItem.stock > +(<string>amountItem.textContent)) {
+              productsInCart.push(productsInCart[i]);
+            } else {
+              alert('No more items in stock :(');
+            }
+
+            productsInCart.forEach((item, j) => {
+              const lastPushed = productsInCart.slice(-1).pop();
+              if (item === lastPushed) {
+                productsInCart.splice(j, 0, lastPushed);
+                productsInCart.pop();
+              }
+            });
+
             countAmountOfItems();
-            increaseCartIcon();
             showTotalCost();
+            setState();
             loadCartPage.loadPage(productsInCart);
             break;
           }
@@ -130,4 +145,4 @@ function renderCartInner() {
 
 const loadCartPage = new CartPage();
 
-export { loadCartPage };
+export { loadCartPage, CartPage };

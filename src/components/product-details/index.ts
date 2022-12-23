@@ -2,7 +2,7 @@ import { getSelector } from '../../functions/utils';
 import { IProductItem } from '../main/interface/Iproducts';
 import { loadThumbnail, loadImages } from './images/images';
 import { cartStatement, setState, countAmountOfItems, showTotalCost } from '../cart/local-storage/cart-storage';
-import { increaseCartIcon } from '../cart/cart-icon/icon';
+import { increaseCartIcon, decreaseCartIcon } from '../cart/cart-icon/icon';
 
 class ProductPage {
   loadPage(elements: IProductItem[]) {
@@ -11,15 +11,17 @@ class ProductPage {
     items.forEach((item) => {
       item.addEventListener('click', (e) => {
         const id = +item.id,
-          target = e.target;
+          target = e.target,
+          buttonBuy = getSelector(item, '.product-item__buy');
 
         if (target === getSelector(item, '.product-item__details')) {
           this.renderItem(elements, id);
           window.history.pushState({}, '', `product-${id}`);
         }
 
-        if (target === getSelector(item, '.product-item__buy') && target instanceof HTMLElement) {
+        if (target === buttonBuy && target instanceof HTMLElement) {
           addToCart(elements, id);
+          buttonBuy.innerHTML = setBuyButtonState(elements[id - 1]);
         }
       });
     });
@@ -74,7 +76,7 @@ class ProductPage {
                 </div>
               <div class="product__options">
                 <div class="product__options-price">€${item.price}</div>
-                <button class="product__options-add">ADD TO CART</button>
+                <button class="product__options-add">${setBuyButtonState(item)}</button>
                 <button class="product__options-buy">BUY NOW</button>
               </div>
               </div>
@@ -86,6 +88,7 @@ class ProductPage {
 
         addToCartButton.addEventListener('click', () => {
           addToCart(elements, item.id);
+          addToCartButton.innerHTML = setBuyButtonState(item);
         });
 
         this.appendImages(item);
@@ -100,11 +103,30 @@ class ProductPage {
 }
 
 function addToCart(items: IProductItem[], id: number) {
-  cartStatement.inCart.push(JSON.stringify(items[id - 1]));
-  increaseCartIcon();
+  const productsInCart = cartStatement.inCart,
+    product = JSON.stringify(items[id - 1]);
+
+  if (!productsInCart.includes(product)) {
+    productsInCart.push(product);
+    increaseCartIcon();
+  } else {
+    cartStatement.inCart = productsInCart.filter((el) => el !== product);
+  }
+
   countAmountOfItems();
   showTotalCost();
   setState();
+}
+
+function setBuyButtonState(element: IProductItem) {
+  const productsInCart = cartStatement.inCart,
+    current = JSON.stringify(element);
+
+  if (productsInCart.includes(current)) {
+    return 'REMOVE FROM CART';
+  } else {
+    return 'ADD TO CART';
+  }
 }
 
 interface ProductInCart {
@@ -114,4 +136,4 @@ interface ProductInCart {
 
 const loadProductPage = new ProductPage();
 
-export { loadProductPage, ProductInCart };
+export { loadProductPage, ProductInCart, setBuyButtonState };
