@@ -36,8 +36,6 @@ class MainPage extends Loader {
           mainContent.filters.setFilterStateFromQuery(products, paramObj);
         }
 
-        loadProductPage.loadPage(products);
-
         showTotalCost();
       });
   }

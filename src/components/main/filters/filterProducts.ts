@@ -6,6 +6,7 @@ import { Search } from './search';
 import { Sort } from './sortProducts';
 import { FilterSliderRange } from './filterDualSlider';
 import { DisplayOptions } from './displayOptions';
+import { ProductPage } from '../../product-details';
 
 class FilterProducts extends FilterComponents {
   static activeFilters: { [x: string]: (string | number)[] };
@@ -128,6 +129,7 @@ class FilterProducts extends FilterComponents {
           : productsArray.map((product) => new ProductComponent(product).render()).join('');
 
       productsList.innerHTML = htmlString;
+      new ProductPage().loadPage(productsArray);
     };
 
     if (this.searchComponent.isActiveSearch()) {
