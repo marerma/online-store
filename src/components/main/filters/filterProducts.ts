@@ -5,18 +5,21 @@ import { ProductComponent } from '../catalogue/productItem';
 import { Search } from './search';
 import { Sort } from './sortProducts';
 import { FilterSliderRange } from './filterDualSlider';
+import { DisplayOptions } from './displayOptions';
 
 class FilterProducts extends FilterComponents {
   static activeFilters: { [x: string]: (string | number)[] };
   static stateArray: { [x: string]: IProductItem[] };
   searchComponent: Search;
   sortComponent: Sort;
+  displayComponent: DisplayOptions;
 
   constructor() {
     super();
     this.setDefaultState();
     this.searchComponent = new Search();
     this.sortComponent = new Sort();
+    this.displayComponent = new DisplayOptions();
   }
 
   setDefaultState() {
@@ -94,6 +97,15 @@ class FilterProducts extends FilterComponents {
       this.sortComponent.setSelectedAttribute();
       this.syncURL();
     });
+
+    this.displayComponent.render().addEventListener('click', (e) => {
+      const target = e.target;
+      if (target instanceof HTMLElement) {
+        this.displayComponent.setDisplayValue(target.id);
+        this.displayComponent.changeProductsView();
+        this.syncURL();
+      }
+    });
   }
 
   renderFilteredProducts(products: IProductItem[]) {
@@ -140,7 +152,7 @@ class FilterProducts extends FilterComponents {
     }
   }
 
-  makeQuery() {
+  makeFiltersQuery() {
     const query = Object.entries(FilterProducts.activeFilters)
       .map(([key, value]) => {
         if (value.length) {
@@ -152,7 +164,12 @@ class FilterProducts extends FilterComponents {
     return `${query}`;
   }
   generateCommonQuery() {
-    const queryAll = [this.makeQuery(), this.sortComponent.makeQuery(), this.searchComponent.makeQuery()]
+    const queryAll = [
+      this.makeFiltersQuery(),
+      this.sortComponent.makeQuery(),
+      this.searchComponent.makeQuery(),
+      this.displayComponent.makeQuery(),
+    ]
       .filter((str) => str)
       .join('&');
     const query = queryAll.length === 0 ? '' : `?${queryAll}`;
