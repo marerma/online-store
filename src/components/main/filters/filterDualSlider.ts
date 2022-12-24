@@ -65,7 +65,7 @@ export class FilterSliderRange extends FilterBase {
               </span>
             </div>
               <div class="filter__slider-container">
-                <div class="filter__slider-track" ></div>
+                <div class="filter__slider-track" id="${this.type}-track"></div>
                 ${this.sliderInputOne.outerHTML}
                 ${this.sliderInputTwo.outerHTML}
               </div>
@@ -146,21 +146,30 @@ export class FilterSliderRange extends FilterBase {
   updateState(products: IProductItem[]) {
     const key: keyof IProductItem = this.type;
     const productsValues = products.map((item) => +item[key]);
-    console.log(productsValues)
     if (productsValues.length) {
       const min = Math.min.apply(Math, [...productsValues]);
       const max = Math.max.apply(Math, [...productsValues]);
-      console.log(min, max, this.type)
-      // if (min === max) {
-      //   this.setOneSpan(`${min}`);
-      // } else {
-      //   this.setValueSpan();
-      // }
-      // this.setValue(`${min}`, this.sliderInputOneID);
-      // this.setValue(`${max}`, this.sliderInputTwoID);
+      this.setValue(`${min}`, this.sliderInputOneID);
+      this.setValue(`${max}`, this.sliderInputTwoID);
+      if (min === max) {
+        this.setOneSpan(`${min}`);
+      } else {
+        this.setValueSpan();
+      }
       this.updatePointers();
     } else {
       this.setOneSpan('Products not found!');
+    }
+    this.fillColor();
+  }
+
+  fillColor() {
+    const sliderTrack = document.getElementById(`${this.type}-track`);
+    const sliderMaxValue = +this.sliderInputOne.max;
+    if (sliderTrack instanceof HTMLElement) {
+      const percent1 = (+this.getValue()[0] / sliderMaxValue) * 100;
+      const percent2 = (+this.getValue()[1] / sliderMaxValue) * 100;
+      sliderTrack.style.background = `linear-gradient(to right, #dadae5 ${percent1}% , #3264fe ${percent1}% , #3264fe ${percent2}%, #dadae5 ${percent2}%)`;
     }
   }
 }

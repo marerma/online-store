@@ -38,12 +38,13 @@ class FilterProducts extends FilterComponents {
           FilterProducts.activeFilters[target.name] = actualValues;
           inputSlider.setValueSpan();
         }
+        this.renderFilteredProducts(products);
       }
       if (target instanceof HTMLInputElement && target.type === 'checkbox') {
         const allInputs = [...document.querySelectorAll('input[type=checkbox')] as HTMLInputElement[];
         updateFiltersObj(allInputs);
+        this.renderFilteredProducts(products);
       }
-      this.renderFilteredProducts(products);
       this.syncURL();
     });
 
