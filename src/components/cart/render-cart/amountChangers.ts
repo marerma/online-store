@@ -1,5 +1,7 @@
 import { loadCartPage } from '..';
+import { PRODUCTS_DB } from '../../../data/data';
 import { getSelector } from '../../../functions/utils';
+import { loadProductPage } from '../../product-details';
 import { cartStatement, countAmountOfItems, setState, showTotalCost } from '../local-storage/cart-storage';
 
 export function addAmountChangers() {
@@ -20,6 +22,15 @@ export function addAmountChangers() {
             showTotalCost();
             setState();
             loadCartPage.loadPage(productsInCart);
+            break;
+          }
+
+          if (
+            e.target === getSelector(product, '.cart__inner-description') ||
+            e.target === getSelector(product, '.product__title')
+          ) {
+            if (index) loadProductPage.renderItem(PRODUCTS_DB, +index);
+            window.history.pushState({}, '', `product-${index}`);
             break;
           }
 

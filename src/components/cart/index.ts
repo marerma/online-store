@@ -1,5 +1,5 @@
 import { IProductItem } from '../main/interface/Iproducts';
-import { cartStatement, setState } from './local-storage/cart-storage';
+import { cartStatement } from './local-storage/cart-storage';
 import { getSelector } from '../../functions/utils';
 import { clearContent } from '../../router/router';
 import { countAmountOfItems } from './local-storage/cart-storage';

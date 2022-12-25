@@ -42,7 +42,6 @@
   &__inner {
     display: flex;
     flex-direction: column;
-   
 
     &-item {
       display: flex;
@@ -62,10 +61,15 @@
 
     &-thumbnail {
       width: 150px;
+      cursor: pointer;
     }
 
     &-description {
       width: 500px;
+    }
+
+    .product__title {
+      cursor: pointer;
     }
 
     &-amount {
