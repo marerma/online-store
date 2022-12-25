@@ -22,13 +22,13 @@ class CartPage {
             <div class="header__name">Products in Cart</div>
             <div class="items__amount">
               <div class="items__amount-text">Items:</div>
-              <input class="items__amount-num" type="number"></input>
+              <input class="items__amount-num" type="number" value="${cartStatement.itemsPerPage}"></input>
             </div>
             <div class="page">
               <div class="page__text">Page:</div>
-              <button class="page__less"><</button>
-              <div class="page__current">1</div>
-              <button class="page__less">></button>
+              <button class="page__back"><</button>
+              <div class="page__current">${cartStatement.currentPage}</div>
+              <button class="page__forward">></button>
             </div>
           </div>
           <div class="cart__inner"></div>
@@ -37,6 +37,7 @@ class CartPage {
         <div class="cart__summary">
         </div>
       `;
+
       countAmountOfItems();
       renderCartInner();
       showTotalCost();
@@ -60,7 +61,8 @@ function renderCartInner() {
   const productsInCart = cartStatement.inCart,
     productsAmount = cartStatement.inCartAmount,
     products = Object.keys(productsAmount),
-    productsOnScreen = getSelector(document, '.cart__inner');
+    productsOnScreen = getSelector(document, '.cart__inner'),
+    paginationData: HTMLDivElement[] = [];
 
   products.forEach((product, i) => {
     const parsedProduct = JSON.parse(product),
@@ -91,56 +93,131 @@ function renderCartInner() {
       </div>
     `;
 
-    productsOnScreen.append(wrapper);
+    // productsOnScreen.append(wrapper);
     wrapper.dataset.index = parsedProduct.id;
+    paginationData.push(wrapper);
   });
 
-  const renderedProducts: Element[] = Array.from(document.getElementsByClassName('cart__inner-item'));
+  paginate();
+  addAmountChangers();
 
-  renderedProducts.forEach((product) => {
-    if (product && product instanceof HTMLElement) {
-      const index = product.dataset.index;
+  function addAmountChangers() {
+    const renderedProducts: Element[] = Array.from(document.getElementsByClassName('cart__inner-item'));
 
-      product.addEventListener('click', (e) => {
-        for (let i = 0; i < productsInCart.length; i++) {
-          const parsedItem = JSON.parse(productsInCart[i]);
+    renderedProducts.forEach((product) => {
+      if (product && product instanceof HTMLElement) {
+        const index = product.dataset.index;
 
-          if (e.target === getSelector(product, '.amount__changers-decrease') && index == parsedItem.id) {
-            productsInCart.splice(i, 1);
-            countAmountOfItems();
-            showTotalCost();
-            setState();
-            loadCartPage.loadPage(productsInCart);
-            break;
-          }
+        product.addEventListener('click', (e) => {
+          for (let i = 0; i < productsInCart.length; i++) {
+            const parsedItem = JSON.parse(productsInCart[i]);
 
-          if (e.target === getSelector(product, '.amount__changers-increase') && index == parsedItem.id) {
-            const amountItem = getSelector(document, '.amount__changers-number');
-
-            if (parsedItem.stock > +(<string>amountItem.textContent)) {
-              productsInCart.push(productsInCart[i]);
-            } else {
-              alert('No more items in stock :(');
+            if (e.target === getSelector(product, '.amount__changers-decrease') && index == parsedItem.id) {
+              productsInCart.splice(i, 1);
+              countAmountOfItems();
+              showTotalCost();
+              setState();
+              loadCartPage.loadPage(productsInCart);
+              break;
             }
 
-            productsInCart.forEach((item, j) => {
-              const lastPushed = productsInCart.slice(-1).pop();
-              if (item === lastPushed) {
-                productsInCart.splice(j, 0, lastPushed);
-                productsInCart.pop();
-              }
-            });
+            if (e.target === getSelector(product, '.amount__changers-increase') && index == parsedItem.id) {
+              const amountItem = getSelector(document, '.amount__changers-number');
 
-            countAmountOfItems();
-            showTotalCost();
-            setState();
-            loadCartPage.loadPage(productsInCart);
-            break;
+              if (parsedItem.stock > +(<string>amountItem.textContent)) {
+                productsInCart.push(productsInCart[i]);
+              } else {
+                alert('No more items in stock :(');
+              }
+
+              productsInCart.forEach((item, j) => {
+                const lastPushed = productsInCart.slice(-1).pop();
+                if (item === lastPushed) {
+                  productsInCart.splice(j, 0, lastPushed);
+                  productsInCart.pop();
+                }
+              });
+
+              countAmountOfItems();
+              showTotalCost();
+              setState();
+              loadCartPage.loadPage(productsInCart);
+              break;
+            }
           }
-        }
+        });
+      }
+    });
+  }
+
+  function paginate() {
+    const currentPageDiv = getSelector(document, '.page__current');
+    let currentPage = cartStatement.currentPage;
+
+    const forwardButton = getSelector(document, '.page__forward'),
+      backButton = getSelector(document, '.page__back'),
+      amountItemsInput = document.querySelector('.items__amount-num');
+
+    displayList(paginationData, cartStatement.itemsPerPage, currentPage);
+
+    forwardButton.addEventListener('click', () => {
+      currentPage++;
+      displayOtherPage();
+      setQuery();
+    });
+
+    backButton.addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        displayOtherPage();
+        setQuery();
+      }
+    });
+
+    if (amountItemsInput instanceof HTMLInputElement) {
+      amountItemsInput.addEventListener('change', () => {
+        cartStatement.itemsPerPage = +amountItemsInput.value;
+        displayList(paginationData, cartStatement.itemsPerPage, currentPage);
+        setQuery();
       });
     }
-  });
+
+    function displayList(data: HTMLDivElement[], rowPerPage: number, page: number) {
+      productsOnScreen.innerHTML = '';
+      page--;
+
+      const start = rowPerPage * page,
+        end = start + rowPerPage,
+        paginatedData = data.slice(start, end);
+
+      if (paginatedData.length === 0) {
+        currentPage--;
+        displayOtherPage();
+        setQuery();
+      }
+
+      paginatedData.forEach((item) => {
+        productsOnScreen.append(item);
+      });
+    }
+
+    function displayOtherPage() {
+      addAmountChangers();
+      currentPageDiv.innerHTML = currentPage.toString();
+      cartStatement.currentPage = currentPage;
+      setState();
+      displayList(paginationData, cartStatement.itemsPerPage, currentPage);
+    }
+
+    function setQuery() {
+      if (window.location.href.includes('cart')) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('page', cartStatement.currentPage.toString());
+        url.searchParams.set('limit', cartStatement.itemsPerPage.toString());
+        history.pushState({}, '', url.search);
+      }
+    }
+  }
 }
 
 const loadCartPage = new CartPage();

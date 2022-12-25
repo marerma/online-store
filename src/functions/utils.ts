@@ -2,10 +2,10 @@ import { IProductItem } from '../components/main/interface/Iproducts';
 
 function getSelector(parent: DocumentFragment | Document | Element, selector: string) {
   const item = parent.querySelector(selector);
-  if (!(item instanceof HTMLElement)) {
-    throw new Error(`Can't find selector: ${selector}`);
-  } else {
+  if (item instanceof HTMLElement) {
     return item;
+  } else {
+    throw new Error(`Can't find selector: ${selector}`);
   }
 }
 

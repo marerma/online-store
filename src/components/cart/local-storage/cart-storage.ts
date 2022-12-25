@@ -10,6 +10,8 @@ if (localStorage.getItem('cartStatement')) {
     inCart: [],
     inCartAmount: {},
     counter: 0,
+    itemsPerPage: 5,
+    currentPage: 1,
   };
 }
 
@@ -53,6 +55,8 @@ interface Cart {
   inCart: string[];
   inCartAmount: Amount;
   counter: number;
+  itemsPerPage: number;
+  currentPage: number;
 }
 
 type Amount = { [key: string]: number };
