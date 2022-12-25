@@ -22,6 +22,7 @@ class FiltersLoader extends FilterProducts {
     sortSearchContainer.className = 'catalogue-helpers';
     this.sortComponent.loadSortComponent(sortSearchContainer);
     this.searchComponent.loadSearchComponent(sortSearchContainer);
+    sortSearchContainer.append(this.displayComponent.render());
     return sortSearchContainer;
   }
 
@@ -40,6 +41,10 @@ class FiltersLoader extends FilterProducts {
       }
       if (key === 'search') {
         this.searchComponent.updatePlaceholder(`${stateObj[key]}`);
+      }
+      if (key === 'display') {
+        this.displayComponent.setDisplayValue(`${stateObj[key]}`);
+        this.displayComponent.changeProductsView();
       }
     }
     this.renderFilteredProducts(products);

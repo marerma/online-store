@@ -1,6 +1,7 @@
 import { IProductItem } from '../interface/Iproducts';
 import { FilterCheckbox } from './filterCheckbox';
 import { FilterSliderRange } from './filterDualSlider';
+import { FiltersLoader } from './filtersLoader';
 class FilterComponents {
   static typesList: string[];
   static filterArray: (FilterCheckbox | FilterSliderRange)[];
@@ -16,12 +17,14 @@ class FilterComponents {
 
     FilterComponents.typesList.forEach((type) => {
       if (type === 'brand' || type === 'category') {
-        innerHTMLFilters += new FilterCheckbox(type, products).render();
-        FilterComponents.filterArray.push(new FilterCheckbox(type, products));
+        const checkboxFilter = new FilterCheckbox(type, products);
+        innerHTMLFilters += checkboxFilter.render();
+        FilterComponents.filterArray.push(checkboxFilter);
       }
       if (type === 'price' || type === 'rating') {
-        innerHTMLFilters += new FilterSliderRange(type, products).render();
-        FilterComponents.filterArray.push(new FilterSliderRange(type, products));
+        const sliderFilter = new FilterSliderRange(type, products);
+        innerHTMLFilters += sliderFilter.render();
+        FilterComponents.filterArray.push(sliderFilter);
       }
     });
     return innerHTMLFilters;
@@ -53,6 +56,9 @@ class FilterComponents {
     FilterComponents.filterArray.forEach((el) => {
       if (el instanceof FilterCheckbox) {
         el.updateAmount(products);
+      }
+      if (el instanceof FilterSliderRange) {
+        el.updateState(products);
       }
     });
   }

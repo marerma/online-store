@@ -4,18 +4,23 @@ import { copyURLtoClipboard, getIntersectionsInArray, getSelector } from '../../
 import { ProductComponent } from '../catalogue/productItem';
 import { Search } from './search';
 import { Sort } from './sortProducts';
+import { FilterSliderRange } from './filterDualSlider';
+import { DisplayOptions } from './displayOptions';
+import { ProductPage } from '../../product-details';
 
 class FilterProducts extends FilterComponents {
-  static activeFilters: { [x: string]: string[] };
+  static activeFilters: { [x: string]: (string | number)[] };
   static stateArray: { [x: string]: IProductItem[] };
   searchComponent: Search;
   sortComponent: Sort;
+  displayComponent: DisplayOptions;
 
   constructor() {
     super();
     this.setDefaultState();
     this.searchComponent = new Search();
     this.sortComponent = new Sort();
+    this.displayComponent = new DisplayOptions();
   }
 
   setDefaultState() {
@@ -24,16 +29,33 @@ class FilterProducts extends FilterComponents {
   }
 
   addListener(products: IProductItem[]) {
-    this.filterComponent.addEventListener('input', () => {
-      const allInputs = [...document.getElementsByTagName('input')];
-      updateFiltersObj(allInputs);
-      this.renderFilteredProducts(products);
+    this.filterComponent.addEventListener('input', (e) => {
+      const target = e.target;
+      if (target instanceof HTMLInputElement && target.type === 'range') {
+        const inputSlider = FilterComponents.filterArray.find(
+          (el) =>
+            el instanceof FilterSliderRange && (el.sliderInputOneID === target.id || el.sliderInputTwoID === target.id)
+        );
+        if (inputSlider instanceof FilterSliderRange) {
+          inputSlider.setValue(target.value, target.id);
+          const actualValues = inputSlider.getValue();
+          FilterProducts.activeFilters[target.name] = actualValues;
+          inputSlider.setValueSpan();
+        }
+        this.renderFilteredProducts(products);
+      }
+      if (target instanceof HTMLInputElement && target.type === 'checkbox') {
+        const allInputs = [...document.querySelectorAll('input[type=checkbox')] as HTMLInputElement[];
+        updateFiltersObj(allInputs);
+        this.renderFilteredProducts(products);
+      }
       this.syncURL();
     });
 
     this.filterComponent.addEventListener('click', (e) => {
       const allInputs = [...document.getElementsByTagName('input')];
       const target = e.target as HTMLElement;
+
       if (target.classList.contains('filter__button')) {
         const buttonID = target.getAttribute('id');
         const buttonText = target.textContent;
@@ -76,6 +98,15 @@ class FilterProducts extends FilterComponents {
       this.sortComponent.setSelectedAttribute();
       this.syncURL();
     });
+
+    this.displayComponent.render().addEventListener('click', (e) => {
+      const target = e.target;
+      if (target instanceof HTMLElement) {
+        this.displayComponent.setDisplayValue(target.id);
+        this.displayComponent.changeProductsView();
+        this.syncURL();
+      }
+    });
   }
 
   renderFilteredProducts(products: IProductItem[]) {
@@ -89,6 +120,7 @@ class FilterProducts extends FilterComponents {
 
     const updateProductsList = (productsArray: IProductItem[], htmlString: string) => {
       this.sortComponent.sortProductsLogic(productsArray);
+
       this.updateFiltersAmount(productsArray);
       this.updateFoundProductsTotal(productsArray);
       htmlString =
@@ -97,6 +129,7 @@ class FilterProducts extends FilterComponents {
           : productsArray.map((product) => new ProductComponent(product).render()).join('');
 
       productsList.innerHTML = htmlString;
+      new ProductPage().loadPage(productsArray);
     };
 
     if (this.searchComponent.isActiveSearch()) {
@@ -121,7 +154,7 @@ class FilterProducts extends FilterComponents {
     }
   }
 
-  makeQuery() {
+  makeFiltersQuery() {
     const query = Object.entries(FilterProducts.activeFilters)
       .map(([key, value]) => {
         if (value.length) {
@@ -133,7 +166,12 @@ class FilterProducts extends FilterComponents {
     return `${query}`;
   }
   generateCommonQuery() {
-    const queryAll = [this.makeQuery(), this.sortComponent.makeQuery(), this.searchComponent.makeQuery()]
+    const queryAll = [
+      this.makeFiltersQuery(),
+      this.sortComponent.makeQuery(),
+      this.searchComponent.makeQuery(),
+      this.displayComponent.makeQuery(),
+    ]
       .filter((str) => str)
       .join('&');
     const query = queryAll.length === 0 ? '' : `?${queryAll}`;
@@ -143,7 +181,6 @@ class FilterProducts extends FilterComponents {
     const path = document.location.pathname;
     const query = this.generateCommonQuery();
     window.history.pushState('filters', '', `${path}${query}`);
-    console.log(query);
   }
 }
 export { FilterProducts };
@@ -153,16 +190,27 @@ export { FilterProducts };
 function getProductsAllFilters(products: IProductItem[]) {
   for (const key in FilterProducts.activeFilters) {
     const filterField = FilterProducts.activeFilters[key];
-    let keyInProduct: keyof IProductItem = 'category';
-    if (key === 'brand') {
-      keyInProduct = 'brand';
+    let keyInProduct: keyof IProductItem;
+    if (key === 'category' || key === 'brand') {
+      keyInProduct = key;
+      FilterProducts.stateArray[key] = products.filter((item) => {
+        return filterField.some((value) => item[keyInProduct] === value);
+      });
     }
 
-    FilterProducts.stateArray[key] = products.filter((item) => {
-      return filterField.some((value) => item[keyInProduct] === value);
-    });
+    if (key === 'price') {
+      keyInProduct = key;
+      FilterProducts.stateArray[key] = products.filter((item) => {
+        return item['price'] <= +filterField[1] && item['price'] >= +filterField[0];
+      });
+    }
+    if (key === 'rating') {
+      keyInProduct = key;
+      FilterProducts.stateArray[key] = products.filter((item) => {
+        return item['rating'] <= +filterField[1] && item['rating'] >= +filterField[0];
+      });
+    }
   }
-
   const allFilterProducts = getIntersectionsInArray(FilterProducts.stateArray);
   return allFilterProducts;
 }
@@ -183,7 +231,7 @@ function updateFiltersObj(inputArr: HTMLInputElement[]) {
           updateActiveFilters(input.checked === true, key, input.id);
           break;
         case 'range':
-          updateActiveFilters(input.value >= input.min && input.value <= input.max, key, input.value);
+          updateActiveFilters(true, key, input.value);
           break;
       }
     });

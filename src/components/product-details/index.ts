@@ -136,4 +136,4 @@ interface ProductInCart {
 
 const loadProductPage = new ProductPage();
 
-export { loadProductPage, ProductInCart, setBuyButtonState };
+export { loadProductPage, ProductInCart, setBuyButtonState, ProductPage };
