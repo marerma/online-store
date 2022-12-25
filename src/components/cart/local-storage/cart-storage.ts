@@ -10,7 +10,7 @@ if (localStorage.getItem('cartStatement')) {
     inCart: [],
     inCartAmount: {},
     counter: 0,
-    itemsPerPage: 5,
+    itemsPerPage: 3,
     currentPage: 1,
   };
 }
