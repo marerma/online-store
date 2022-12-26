@@ -40,15 +40,13 @@ class FilterProducts extends FilterComponents {
           inputSlider.setValue(target.value, target.id);
           const actualValues = inputSlider.getValue();
           FilterProducts.activeFilters[target.name] = actualValues;
-          inputSlider.setValueSpan();
         }
-        this.renderFilteredProducts(products);
       }
       if (target instanceof HTMLInputElement && target.type === 'checkbox') {
         const allInputs = [...document.querySelectorAll('input[type=checkbox')] as HTMLInputElement[];
         updateFiltersObj(allInputs);
-        this.renderFilteredProducts(products);
       }
+      this.renderFilteredProducts(products);
       this.syncURL();
     });
 
@@ -116,7 +114,7 @@ class FilterProducts extends FilterComponents {
     const newProducts = '';
 
     const allCounts = [...document.querySelectorAll('.checkbox-amount-active')] as HTMLElement[];
-    allCounts.forEach((span) => (span.innerHTML = ' 0/ '));
+    allCounts.forEach((span) => (span.innerHTML = ' 0 / '));
 
     const updateProductsList = (productsArray: IProductItem[], htmlString: string) => {
       this.sortComponent.sortProductsLogic(productsArray);

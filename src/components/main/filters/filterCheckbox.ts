@@ -21,13 +21,15 @@ export class FilterCheckbox extends FilterBase {
                  name='${this.type}' 
                  id ='${filterItem}'>
           <label class='filter__checkbox-label' for='${filterItem}'>${filterItem}
+          <div class='checkbox-amount-container'>
             <span class='checkbox-amount-active'> ${amountObject[filterItem]}/ </span>
             <span class='checkbox-amount'>${amountObject[filterItem]}</span>
+          </div>
           </label>
       </div>`;
     });
     this.root.innerHTML +=
-      `<div class='filter__checkbox-container'><h3 class='filter__title'>${this.type}</h3>` +
+      `<div class='filter__checkbox-container'><h3 class='filter__title'>${this.type.toUpperCase()}</h3>` +
       `<div class='filter__list'>${filtersListHTML}</div></div>`;
     return this.root.innerHTML;
   }
@@ -39,7 +41,7 @@ export class FilterCheckbox extends FilterBase {
       label.forEach((el) => {
         const activeAmount = el.querySelector('.checkbox-amount-active') as HTMLElement;
         if (el.getAttribute('for') === key) {
-          activeAmount.innerHTML = ` ${amountObject[key]}/ `;
+          activeAmount.innerHTML = `${amountObject[key]} / `;
         }
       });
     }
