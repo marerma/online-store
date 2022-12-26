@@ -8,10 +8,18 @@ export class Loader {
   }
 
   async fetchData(url: string) {
+    let retryCount = 5;
     return fetch(url)
+      .then((res: Response) => {
+        if (!res.ok && retryCount > 1) {
+          retryCount -= 1;
+          return fetch(url);
+        }
+        return res;
+      })
       .then((res: Response) => res.json())
-      .then((data): IApiResponse => data)
-      .catch((error) => {
+      .then((data: IApiResponse): IApiResponse => data)
+      .catch((error: Error) => {
         throw new Error(`Something went wrong: ${error}`);
       });
   }
