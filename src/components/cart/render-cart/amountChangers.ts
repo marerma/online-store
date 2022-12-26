@@ -5,8 +5,8 @@ import { loadProductPage } from '../../product-details';
 import { cartStatement, countAmountOfItems, setState, showTotalCost } from '../local-storage/cart-storage';
 
 export function addAmountChangers() {
-  const renderedProducts: Element[] = Array.from(document.getElementsByClassName('cart__inner-item'));
-  const productsInCart = cartStatement.inCart;
+  const renderedProducts: Element[] = Array.from(document.getElementsByClassName('cart__inner-item')),
+    productsInCart = cartStatement.inCart;
 
   renderedProducts.forEach((product) => {
     if (product && product instanceof HTMLElement) {

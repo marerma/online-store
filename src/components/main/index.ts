@@ -31,10 +31,10 @@ class MainPage extends Loader {
         const mainContent = new MainRender(element);
         mainContent.load(products);
 
-        if (!checkQueryString()) {
-          const paramObj = parseQuery(window.location.search);
-          mainContent.filters.setFilterStateFromQuery(products, paramObj);
-        }
+        // if (!checkQueryString()) {
+        const paramObj = parseQuery();
+        mainContent.filters.setFilterStateFromQuery(products, paramObj);
+        // }
 
         showTotalCost();
       });
@@ -42,8 +42,8 @@ class MainPage extends Loader {
 }
 
 cartButton.addEventListener('click', () => {
-  loadCartPage.loadPage();
   history.pushState({}, '', `cart`);
+  loadCartPage.loadPage();
 });
 
 const loadMainPage = new MainPage();
