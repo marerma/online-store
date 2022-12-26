@@ -3,13 +3,19 @@
 @import './components/product-details/_product';
 @import './components/cart/_cart';
 @import './components/main/preloader/preloader';
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,400&display=swap');
+
+$color: rgb(212, 212, 212);
+$mainFont: 'Open Sans', sans-serif;
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: $mainFont;
 }
 
-$color: rgb(212, 212, 212);
+
 
 .header {
   &__container {
@@ -58,9 +64,20 @@ $color: rgb(212, 212, 212);
 .main-content {
   position: relative;
   display: flex;
-  width: 100%;
+  width: 90%;
   height: 100%;
   min-height: 100vh;
   margin: 0 auto;
-  background: $color;
+  padding: 20px;
+}
+
+.footer {
+  &__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+
+    background: rgb(156, 156, 156);
+}
 }

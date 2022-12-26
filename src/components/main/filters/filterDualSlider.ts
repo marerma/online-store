@@ -32,14 +32,12 @@ export class FilterSliderRange extends FilterBase {
     this.sliderInputOne.min = '0';
     this.sliderInputOne.max = `${valuesData[1]}`;
     this.sliderInputOne.setAttribute('value', defaultvalueMin);
-    this.sliderInputOne.step = '0.1';
     this.sliderInputOne.name = `${this.type}`;
     this.sliderInputTwo.id = this.sliderInputTwoID;
     this.sliderInputTwo.type = 'range';
     this.sliderInputTwo.min = '0';
     this.sliderInputTwo.max = `${valuesData[1]}`;
     this.sliderInputTwo.setAttribute('value', defaultvalueMax);
-    this.sliderInputTwo.step = '0.1';
     this.sliderInputTwo.name = `${this.type}`;
     if (this.type === 'price') {
       this.sliderInputOne.step = '1';
@@ -55,7 +53,7 @@ export class FilterSliderRange extends FilterBase {
     const valuesData = this.getRangeData();
     const sliderHTML = `
             <div class="filter__slider" id="slider-${this.type}">
-            <h3 class="filter__title">${this.type}</h3>
+            <h3 class="filter__title">${this.type.toUpperCase()}</h3>
             <div class="filter-values" id="${this.type}-values">
               <span class="filter-values__item" id="${this.type}-value-min">
                 ${valuesData[0]}
@@ -70,20 +68,6 @@ export class FilterSliderRange extends FilterBase {
                 ${this.sliderInputTwo.outerHTML}
               </div>
             </div>`;
-    /*<input id="${this.type}-one"
-                      type="range"
-                      min=${valuesData[0]}
-                      max=${valuesData[1]}
-                      value="${(valuesData[1] + valuesData[0]) / 2}"
-                      step="0.01"
-                      name="${this.type}">
-                <input id="${this.type}-two"
-                      type="range"
-                      min=${valuesData[0]}
-                      max=${valuesData[1]}
-                      value="${valuesData[1] - valuesData[0]}"
-                      step="0.01"
-                      name="${this.type}"> */
     return sliderHTML;
   }
 
@@ -111,8 +95,7 @@ export class FilterSliderRange extends FilterBase {
     if (spanDiv instanceof HTMLElement) {
       spanDiv.innerHTML = `
         <span class="filter-values__item" id="${this.type}-value-min">
-                ${this.getValue()[0]}
-              </span>
+                ${this.getValue()[0]} -</span>
               <span class="filter-values__item" id="${this.type}-value-max">
               ${this.getValue()[1]}
               </span>
@@ -156,10 +139,10 @@ export class FilterSliderRange extends FilterBase {
       } else {
         this.setValueSpan();
       }
-      this.updatePointers();
     } else {
       this.setOneSpan('Products not found!');
     }
+    this.updatePointers();
     this.fillColor();
   }
 
@@ -169,7 +152,7 @@ export class FilterSliderRange extends FilterBase {
     if (sliderTrack instanceof HTMLElement) {
       const percent1 = (+this.getValue()[0] / sliderMaxValue) * 100;
       const percent2 = (+this.getValue()[1] / sliderMaxValue) * 100;
-      sliderTrack.style.background = `linear-gradient(to right, #dadae5 ${percent1}% , #3264fe ${percent1}% , #3264fe ${percent2}%, #dadae5 ${percent2}%)`;
+      sliderTrack.style.background = `linear-gradient(to right, #dadae5 ${percent1}% , rgb(238, 136, 53) ${percent1}% , rgb(238, 136, 53) ${percent2}%, #dadae5 ${percent2}%)`;
     }
   }
 }

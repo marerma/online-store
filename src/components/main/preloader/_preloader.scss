@@ -21,7 +21,7 @@
   margin: 30px auto;
   border-radius: 50%;
   border: 3px solid transparent;
-  border-top-color: #337AB7;
+  border-top-color: rgb(238, 136, 53);
   animation: preloader-animation-spin  2s linear infinite;
   &:before {
     content: "";
@@ -45,7 +45,7 @@
     bottom: 15px;
     border-radius: 50%;
     border: 3px solid transparent;
-    border-top-color: #337AB7;
+    border-top-color: rgb(238, 136, 53);
     animation: preloader-animation-spin 1.5s linear infinite;
   }
 }
