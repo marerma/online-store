@@ -35,9 +35,9 @@ export function addAmountChangers() {
           }
 
           if (e.target === getSelector(product, '.amount__changers-increase') && index == parsedItem.id) {
-            const amountItem = getSelector(document, '.amount__changers-number');
+            const amountItem = getSelector(product, '.amount__changers-number');
 
-            if (parsedItem.stock > +(<string>amountItem.textContent)) {
+            if (parsedItem.stock > +amountItem.innerHTML) {
               productsInCart.push(productsInCart[i]);
             } else {
               alert('No more items in stock :(');
