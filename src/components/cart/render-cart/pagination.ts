@@ -2,17 +2,33 @@ import { getSelector } from '../../../functions/utils';
 import { cartStatement, setState } from '../local-storage/cart-storage';
 import { addAmountChangers } from './amountChangers';
 import { paginationData } from './renderCart';
+import { parseQuery } from '../../../functions/utils';
 
 export function paginate() {
   const currentPageDiv = getSelector(document, '.page__current'),
     forwardButton = getSelector(document, '.page__forward'),
     backButton = getSelector(document, '.page__back'),
     amountItemsInput = document.querySelector('.items__amount-num'),
-    productsOnScreen = getSelector(document, '.cart__inner');
+    productsOnScreen = getSelector(document, '.cart__inner'),
+    paramsObj = parseQuery(),
+    limit = +paramsObj.limit || cartStatement.itemsPerPage;
 
-  let currentPage = cartStatement.currentPage;
+  let currentPage = +paramsObj.page || cartStatement.currentPage;
 
-  displayList(paginationData, cartStatement.itemsPerPage, currentPage);
+  currentPageDiv.innerHTML = currentPage.toString();
+
+  if (amountItemsInput instanceof HTMLInputElement) {
+    amountItemsInput.value = limit.toString();
+    amountItemsInput.addEventListener('change', () => {
+      cartStatement.itemsPerPage = +amountItemsInput.value;
+      displayList(paginationData, cartStatement.itemsPerPage, currentPage);
+      setState();
+      setQuery();
+    });
+  }
+
+  displayList(paginationData, limit, currentPage);
+  addAmountChangers();
 
   forwardButton.addEventListener('click', () => {
     currentPage++;
@@ -27,15 +43,6 @@ export function paginate() {
       setQuery();
     }
   });
-
-  if (amountItemsInput instanceof HTMLInputElement) {
-    amountItemsInput.addEventListener('change', () => {
-      cartStatement.itemsPerPage = +amountItemsInput.value;
-      displayList(paginationData, cartStatement.itemsPerPage, currentPage);
-      setState();
-      setQuery();
-    });
-  }
 
   function displayList(data: HTMLDivElement[], rowPerPage: number, page: number) {
     productsOnScreen.innerHTML = '';
@@ -57,11 +64,11 @@ export function paginate() {
   }
 
   function displayOtherPage() {
-    addAmountChangers();
     currentPageDiv.innerHTML = currentPage.toString();
     cartStatement.currentPage = currentPage;
     setState();
     displayList(paginationData, cartStatement.itemsPerPage, currentPage);
+    addAmountChangers();
   }
 
   function setQuery() {

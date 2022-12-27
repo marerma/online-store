@@ -5,8 +5,8 @@ import { loadProductPage } from '../../product-details';
 import { cartStatement, countAmountOfItems, setState, showTotalCost } from '../local-storage/cart-storage';
 
 export function addAmountChangers() {
-  const renderedProducts: Element[] = Array.from(document.getElementsByClassName('cart__inner-item'));
-  const productsInCart = cartStatement.inCart;
+  const renderedProducts: Element[] = Array.from(document.getElementsByClassName('cart__inner-item')),
+    productsInCart = cartStatement.inCart;
 
   renderedProducts.forEach((product) => {
     if (product && product instanceof HTMLElement) {
@@ -35,9 +35,9 @@ export function addAmountChangers() {
           }
 
           if (e.target === getSelector(product, '.amount__changers-increase') && index == parsedItem.id) {
-            const amountItem = getSelector(document, '.amount__changers-number');
+            const amountItem = getSelector(product, '.amount__changers-number');
 
-            if (parsedItem.stock > +(<string>amountItem.textContent)) {
+            if (parsedItem.stock > +amountItem.innerHTML) {
               productsInCart.push(productsInCart[i]);
             } else {
               alert('No more items in stock :(');

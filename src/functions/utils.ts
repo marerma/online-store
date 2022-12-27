@@ -61,28 +61,29 @@ function copyURLtoClipboard() {
   document.body.removeChild(element);
 }
 
-function parseQuery(url: string) {
-  const paramObj: { [x: string]: string[] } = {};
+function parseQuery() {
+  const url = window.location.href,
+    paramObj: { [x: string]: string[] } = {};
+
   if (url.includes('?')) {
-    const query = url.split('?')[1];
-    const paramsFromUrl = new URLSearchParams(query);
+    const query = url.split('?')[1],
+      paramsFromUrl = new URLSearchParams(query);
+
     for (const [key, value] of paramsFromUrl.entries()) {
-      paramObj[`${key}`] = value.split(',');
+      paramObj[key] = value.split(',');
     }
-    return paramObj;
-  } else {
-    return {};
   }
+
+  return paramObj;
 }
 
 function checkQueryString() {
-  const enteredQuery = window.location.search;
-  const regex = new RegExp('\\?(brand|category|price|rating|search|sort)\\=([\\da-z\\%&])+', 'gi');
-  if (enteredQuery && enteredQuery.match(regex)) {
-    const paramsObj = parseQuery(window.location.href);
-    const isEmpty = JSON.stringify(paramsObj) === '{}';
-    return isEmpty;
-  }
+  // const enteredQuery = window.location.search;
+  // const regex = new RegExp('\\?(brand|category|price|rating|search|sort|page)\\=([\\da-z\\%&])+', 'gi');
+  // if (enteredQuery && enteredQuery.match(regex)) {
+  // const paramsObj = parseQuery();
+  // return JSON.stringify(paramsObj) === '{}';
+  // }
 }
 
 export {

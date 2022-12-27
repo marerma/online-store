@@ -1,5 +1,4 @@
 import { cartStatement, countAmountOfItems } from '../local-storage/cart-storage';
-import { addAmountChangers } from './amountChangers';
 import { paginate } from './pagination';
 
 let paginationData: HTMLDivElement[] = [];
@@ -45,7 +44,6 @@ function renderCartInner() {
   });
 
   paginate();
-  addAmountChangers();
 }
 
 export { renderCartInner, paginationData };
