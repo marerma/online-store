@@ -7,6 +7,7 @@ import { Sort } from './sortProducts';
 import { FilterSliderRange } from './filterDualSlider';
 import { DisplayOptions } from './displayOptions';
 import { ProductPage } from '../../product-details';
+import { loadProductPage } from '../../product-details';
 
 class FilterProducts extends FilterComponents {
   static activeFilters: { [x: string]: (string | number)[] };

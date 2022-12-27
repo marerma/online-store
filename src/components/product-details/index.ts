@@ -10,18 +10,26 @@ class ProductPage {
 
     items.forEach((item) => {
       item.addEventListener('click', (e) => {
-        const id = +item.id,
-          target = e.target,
+        const target = e.target,
           buttonBuy = getSelector(item, '.product-item__buy');
 
-        if (target === getSelector(item, '.product-item__details')) {
-          this.renderItem(elements, id);
-          window.history.pushState({}, '', `product-${id}`);
-        }
+        if (target instanceof HTMLElement) {
+          const product = target.closest('.product-item');
 
-        if (target === buttonBuy && target instanceof HTMLElement) {
-          addToCart(elements, id);
-          buttonBuy.innerHTML = setBuyButtonState(elements[id - 1]);
+          if (target === getSelector(item, '.product-item__details') && product) {
+            this.renderItem(elements, +product.id);
+            window.history.pushState({}, '', `product-${+product.id}`);
+          }
+
+          if (target === buttonBuy && product) {
+            const findedItem = findById(elements, +product.id);
+
+            addToCart(elements, +product.id);
+
+            if (findedItem) {
+              buttonBuy.innerHTML = setBuyButtonState(findedItem);
+            }
+          }
         }
       });
     });
@@ -102,9 +110,14 @@ class ProductPage {
   }
 }
 
+function findById(elems: IProductItem[], index: number) {
+  return elems.find((el) => el.id === index);
+}
+
 function addToCart(items: IProductItem[], id: number) {
   const productsInCart = cartStatement.inCart,
-    product = JSON.stringify(items[id - 1]);
+    product = JSON.stringify(findById(items, id));
+
   if (!productsInCart.includes(product)) {
     productsInCart.push(product);
     increaseCartIcon();
