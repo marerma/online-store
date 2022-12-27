@@ -46,4 +46,9 @@ export class FilterCheckbox extends FilterBase {
       });
     }
   }
+
+  setDefaultState() {
+    const allInputs = [...document.getElementsByTagName('input')];
+    allInputs.forEach((item) => (item.checked = false));
+  }
 }

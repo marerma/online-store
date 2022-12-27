@@ -19,13 +19,13 @@ export class Search {
     this.searchValue = value;
   }
 
-  updatePlaceholder(search: string) {
-    this.searchComponent.placeholder = search;
-  }
-
   resetSearch() {
     this.searchComponent.placeholder = 'Search the products..';
     this.setSearchValue('');
+    this.searchComponent.value = this.getSearchValue();
+  }
+
+  updateSearchValue() {
     this.searchComponent.value = this.getSearchValue();
   }
 
@@ -69,12 +69,6 @@ export class Search {
     } else {
       return `search=${searchValue}`;
     }
-  }
-
-  syncURL() {
-    const path = document.location.pathname;
-    const query = this.makeQuery();
-    window.history.pushState({}, '', `${path}${query}`);
   }
 }
 
