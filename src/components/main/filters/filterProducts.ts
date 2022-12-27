@@ -40,18 +40,18 @@ class FilterProducts extends FilterComponents {
           inputSlider.setValue(target.value, target.id);
           const actualValues = inputSlider.getValue();
           FilterProducts.activeFilters[target.name] = actualValues;
+          this.renderFilteredProducts(products);
         }
       }
       if (target instanceof HTMLInputElement && target.type === 'checkbox') {
         const allInputs = [...document.querySelectorAll('input[type=checkbox')] as HTMLInputElement[];
         updateFiltersObj(allInputs);
+        this.renderFilteredProducts(products);
       }
-      this.renderFilteredProducts(products);
       this.syncURL();
     });
 
     this.filterComponent.addEventListener('click', (e) => {
-      const allInputs = [...document.getElementsByTagName('input')];
       const target = e.target as HTMLElement;
 
       if (target.classList.contains('filter__button')) {
@@ -71,7 +71,7 @@ class FilterProducts extends FilterComponents {
             this.setDefaultState();
             this.sortComponent.setSortValue('default');
             this.searchComponent.resetSearch();
-            allInputs.forEach((item) => (item.checked = false));
+            this.resetFilters();
             this.renderFilteredProducts(products);
             this.syncURL();
             break;
@@ -92,8 +92,8 @@ class FilterProducts extends FilterComponents {
       const target = e.target as HTMLOptionElement;
       const wishSortValue = target.value;
       this.sortComponent.setSortValue(wishSortValue);
-      this.sortComponent.sortDisplayedProducts(products);
       this.sortComponent.setSelectedAttribute();
+      this.renderFilteredProducts(products);
       this.syncURL();
     });
 
@@ -196,16 +196,10 @@ function getProductsAllFilters(products: IProductItem[]) {
       });
     }
 
-    if (key === 'price') {
+    if (key === 'price' || key === 'rating') {
       keyInProduct = key;
       FilterProducts.stateArray[key] = products.filter((item) => {
-        return item['price'] <= +filterField[1] && item['price'] >= +filterField[0];
-      });
-    }
-    if (key === 'rating') {
-      keyInProduct = key;
-      FilterProducts.stateArray[key] = products.filter((item) => {
-        return item['rating'] <= +filterField[1] && item['rating'] >= +filterField[0];
+        return item[key] <= +filterField[1] && item[key] >= +filterField[0];
       });
     }
   }

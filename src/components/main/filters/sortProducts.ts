@@ -1,4 +1,3 @@
-import { ProductComponent } from '../catalogue/productItem';
 import { IProductItem } from '../interface/Iproducts';
 
 export class Sort {
@@ -39,23 +38,6 @@ export class Sort {
         item.selected = false;
       }
     });
-  }
-
-  sortDisplayedProducts(products: IProductItem[]) {
-    const productListNode = document.querySelector('.product-list');
-    if (productListNode instanceof HTMLElement) {
-      const displayedProductsID = [...productListNode.children].map((item) => {
-        if (item.getAttribute('id') !== null) {
-          return +(item.getAttribute('id') as string);
-        }
-      });
-      productListNode.innerHTML = '';
-      this.sortProductsLogic(products)
-        .filter((item) => displayedProductsID.includes(item.id))
-        .forEach((item) => {
-          productListNode.innerHTML += new ProductComponent(item).render();
-        });
-    } else return;
   }
 
   sortProductsLogic(products: IProductItem[]) {
@@ -101,11 +83,5 @@ export class Sort {
     } else {
       return `sort=${sortValue}`;
     }
-  }
-
-  syncURL() {
-    const path = window.location.search || document.location.pathname;
-    const query = this.makeQuery();
-    window.history.pushState({}, '', `${path}${query}`);
   }
 }

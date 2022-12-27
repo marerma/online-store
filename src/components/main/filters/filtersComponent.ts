@@ -1,7 +1,7 @@
 import { IProductItem } from '../interface/Iproducts';
 import { FilterCheckbox } from './filterCheckbox';
 import { FilterSliderRange } from './filterDualSlider';
-import { FiltersLoader } from './filtersLoader';
+
 class FilterComponents {
   static typesList: string[];
   static filterArray: (FilterCheckbox | FilterSliderRange)[];
@@ -61,6 +61,10 @@ class FilterComponents {
         el.updateState(products);
       }
     });
+  }
+
+  resetFilters() {
+    FilterComponents.filterArray.forEach((el) => el.setDefaultState());
   }
 }
 

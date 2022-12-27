@@ -77,21 +77,4 @@ function parseQuery() {
   return paramObj;
 }
 
-function checkQueryString() {
-  // const enteredQuery = window.location.search;
-  // const regex = new RegExp('\\?(brand|category|price|rating|search|sort|page)\\=([\\da-z\\%&])+', 'gi');
-  // if (enteredQuery && enteredQuery.match(regex)) {
-  // const paramsObj = parseQuery();
-  // return JSON.stringify(paramsObj) === '{}';
-  // }
-}
-
-export {
-  getSelector,
-  getDataBase64,
-  appendImage,
-  getIntersectionsInArray,
-  copyURLtoClipboard,
-  parseQuery,
-  checkQueryString,
-};
+export { getSelector, getDataBase64, appendImage, getIntersectionsInArray, copyURLtoClipboard, parseQuery };

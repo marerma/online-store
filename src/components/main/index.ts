@@ -5,7 +5,7 @@ import { loadProductPage } from '../product-details';
 import { clearContent } from '../../router/router';
 import { cartButton } from '../cart/cart-icon/icon';
 import { loadCartPage } from '../cart';
-import { parseQuery, checkQueryString } from '../../functions/utils';
+import { parseQuery } from '../../functions/utils';
 import { showTotalCost } from '../cart/local-storage/cart-storage';
 import { Preloader } from '../main/preloader/preloader';
 
@@ -31,10 +31,8 @@ class MainPage extends Loader {
         const mainContent = new MainRender(element);
         mainContent.load(products);
 
-        // if (!checkQueryString()) {
         const paramObj = parseQuery();
         mainContent.filters.setFilterStateFromQuery(products, paramObj);
-        // }
 
         showTotalCost();
       });

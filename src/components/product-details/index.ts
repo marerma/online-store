@@ -105,7 +105,6 @@ class ProductPage {
 function addToCart(items: IProductItem[], id: number) {
   const productsInCart = cartStatement.inCart,
     product = JSON.stringify(items[id - 1]);
-
   if (!productsInCart.includes(product)) {
     productsInCart.push(product);
     increaseCartIcon();
