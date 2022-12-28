@@ -26,7 +26,7 @@ class FilterProducts extends FilterComponents {
 
   setDefaultState() {
     FilterProducts.activeFilters = { category: [], brand: [], price: [], rating: [] };
-    FilterProducts.stateArray = { category: [], brand: [], price: [], rating: [] };
+    FilterProducts.stateArray = {};
   }
 
   addListener(products: IProductItem[]) {
@@ -41,15 +41,15 @@ class FilterProducts extends FilterComponents {
           inputSlider.setValue(target.value, target.id);
           const actualValues = inputSlider.getValue();
           FilterProducts.activeFilters[target.name] = actualValues;
-          this.renderFilteredProducts(products);
+          inputSlider.isActive = true;
         }
       }
       if (target instanceof HTMLInputElement && target.type === 'checkbox') {
         const allInputs = [...document.querySelectorAll('input[type=checkbox')] as HTMLInputElement[];
         updateFiltersObj(allInputs);
-        this.renderFilteredProducts(products);
       }
       this.syncURL();
+      this.renderFilteredProducts(products);
     });
 
     this.filterComponent.addEventListener('click', (e) => {
@@ -73,8 +73,8 @@ class FilterProducts extends FilterComponents {
             this.sortComponent.setSortValue('default');
             this.searchComponent.resetSearch();
             this.resetFilters();
-            this.renderFilteredProducts(products);
             this.syncURL();
+            this.renderFilteredProducts(products);
             break;
         }
       }
@@ -110,16 +110,16 @@ class FilterProducts extends FilterComponents {
 
   renderFilteredProducts(products: IProductItem[]) {
     const productsArr = getProductsAllFilters(products);
-    const isNotActive = Object.values(FilterProducts.stateArray).every((item) => item.length == 0);
+
+    const isNotActive = Object.values(FilterProducts.activeFilters).every((item) => item.length == 0);
     const productsList = getSelector(document, '.product-list');
-    const newProducts = '';
+    const newProductsHTML = '';
 
     const allCounts = [...document.querySelectorAll('.checkbox-amount-active')] as HTMLElement[];
     allCounts.forEach((span) => (span.innerHTML = ' 0 / '));
 
     const updateProductsList = (productsArray: IProductItem[], htmlString: string) => {
       this.sortComponent.sortProductsLogic(productsArray);
-
       this.updateFiltersAmount(productsArray);
       this.updateFoundProductsTotal(productsArray);
       htmlString =
@@ -134,21 +134,21 @@ class FilterProducts extends FilterComponents {
     if (this.searchComponent.isActiveSearch()) {
       if (isNotActive) {
         const foundProducts = this.searchComponent.searchProducts(products);
-        updateProductsList(foundProducts, newProducts);
+        updateProductsList(foundProducts, newProductsHTML);
       }
 
       if (!isNotActive) {
         const foundProducts = this.searchComponent.searchProducts(productsArr);
-        updateProductsList(foundProducts, newProducts);
+        updateProductsList(foundProducts, newProductsHTML);
       }
     }
 
     if (!this.searchComponent.isActiveSearch()) {
       if (isNotActive) {
-        updateProductsList(products, newProducts);
+        updateProductsList(products, newProductsHTML);
       }
       if (!isNotActive) {
-        updateProductsList(productsArr, newProducts);
+        updateProductsList(productsArr, newProductsHTML);
       }
     }
   }
@@ -164,6 +164,7 @@ class FilterProducts extends FilterComponents {
       .join('&');
     return `${query}`;
   }
+
   generateCommonQuery() {
     const queryAll = [
       this.makeFiltersQuery(),
@@ -176,6 +177,7 @@ class FilterProducts extends FilterComponents {
     const query = queryAll.length === 0 ? '' : `?${queryAll}`;
     return query;
   }
+
   syncURL() {
     const path = document.location.pathname;
     const query = this.generateCommonQuery();
@@ -189,19 +191,23 @@ export { FilterProducts };
 function getProductsAllFilters(products: IProductItem[]) {
   for (const key in FilterProducts.activeFilters) {
     const filterField = FilterProducts.activeFilters[key];
-    let keyInProduct: keyof IProductItem;
-    if (key === 'category' || key === 'brand') {
-      keyInProduct = key;
-      FilterProducts.stateArray[key] = products.filter((item) => {
-        return filterField.some((value) => item[keyInProduct] === value);
-      });
-    }
+    if (filterField.length) {
+      let keyInProduct: keyof IProductItem;
+      if (key === 'category' || key === 'brand') {
+        keyInProduct = key;
+        FilterProducts.stateArray[key] = products.filter((item) => {
+          return filterField.some((value) => item[keyInProduct] === value);
+        });
+      }
 
-    if (key === 'price' || key === 'rating') {
-      keyInProduct = key;
-      FilterProducts.stateArray[key] = products.filter((item) => {
-        return item[key] <= +filterField[1] && item[key] >= +filterField[0];
-      });
+      if (key === 'price' || key === 'rating') {
+        keyInProduct = key;
+        FilterProducts.stateArray[key] = products.filter((item) => {
+          return item[key] <= +filterField[1] && item[key] >= +filterField[0];
+        });
+      }
+    } else {
+      delete FilterProducts.stateArray[key];
     }
   }
   const allFilterProducts = getIntersectionsInArray(FilterProducts.stateArray);
