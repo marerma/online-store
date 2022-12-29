@@ -12,6 +12,7 @@ if (localStorage.getItem('cartStatement')) {
     counter: 0,
     itemsPerPage: 3,
     currentPage: 1,
+    codes: [],
   };
 }
 
@@ -48,7 +49,11 @@ function showTotalCost() {
     sum += +JSON.parse(item).price;
   });
 
-  getSelector(document, '.money-counter').innerHTML = `€${sum.toString()}`;
+  const result = `€${sum.toString()}`;
+
+  getSelector(document, '.money-counter').innerHTML = result;
+
+  return result;
 }
 
 interface Cart {
@@ -57,6 +62,7 @@ interface Cart {
   counter: number;
   itemsPerPage: number;
   currentPage: number;
+  codes: string[];
 }
 
 type Amount = { [key: string]: number };
