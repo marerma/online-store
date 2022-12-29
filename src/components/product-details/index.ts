@@ -2,7 +2,7 @@ import { getSelector } from '../../functions/utils';
 import { IProductItem } from '../main/interface/Iproducts';
 import { loadThumbnail, loadImages } from './images/images';
 import { cartStatement, setState, countAmountOfItems, showTotalCost } from '../cart/local-storage/cart-storage';
-import { increaseCartIcon, decreaseCartIcon } from '../cart/cart-icon/icon';
+import { increaseCartIcon } from '../cart/cart-icon/icon';
 
 class ProductPage {
   loadPage(elements: IProductItem[]) {

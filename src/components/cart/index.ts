@@ -5,6 +5,7 @@ import { clearContent } from '../../router/router';
 import { countAmountOfItems } from './local-storage/cart-storage';
 import { showTotalCost } from './local-storage/cart-storage';
 import { renderCartInner } from './render-cart/renderCart';
+import { renderPromo } from './render-cart/promo';
 
 class CartPage {
   loadPage(elements?: IProductItem[] | string[]) {
@@ -33,13 +34,11 @@ class CartPage {
           </div>
           <div class="cart__inner"></div>
         </div>
-
-        <div class="cart__summary">
-        </div>
       `;
 
       countAmountOfItems();
       renderCartInner();
+      renderPromo();
       showTotalCost();
     }
   }
