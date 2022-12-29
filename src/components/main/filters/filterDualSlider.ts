@@ -1,5 +1,6 @@
 import { FilterBase, filtersTypes } from './filterBase';
 import { IProductItem } from '../interface/Iproducts';
+import { parseQuery } from '../../../functions/utils';
 
 export class FilterSliderRange extends FilterBase {
   sliderInputOne = document.createElement('input');
@@ -8,6 +9,7 @@ export class FilterSliderRange extends FilterBase {
   sliderInputTwoID = `${this.type}-two`;
   sliderValueOne = '';
   sliderValueTwo = '';
+  isActive = false;
 
   constructor(type: filtersTypes, products: IProductItem[]) {
     super(type, products);
@@ -44,22 +46,23 @@ export class FilterSliderRange extends FilterBase {
       this.sliderInputTwo.step = '1';
     }
     if (this.type === 'rating') {
-      this.sliderInputOne.step = '0.1';
-      this.sliderInputTwo.step = '0.1';
+      this.sliderInputOne.step = '0.01';
+      this.sliderInputTwo.step = '0.01';
     }
+    this.isActive = false;
   }
 
   render() {
-    const valuesData = this.getRangeData();
+    const initialValues = this.getRangeData();
     const sliderHTML = `
             <div class="filter__slider" id="slider-${this.type}">
             <h3 class="filter__title">${this.type.toUpperCase()}</h3>
             <div class="filter-values" id="${this.type}-values">
               <span class="filter-values__item" id="${this.type}-value-min">
-                ${valuesData[0]}
+                ${initialValues[0]}
               </span>
               <span class="filter-values__item" id="${this.type}-value-max">
-              ${valuesData[1]}
+              ${initialValues[1]}
               </span>
             </div>
               <div class="filter__slider-container">
@@ -129,18 +132,36 @@ export class FilterSliderRange extends FilterBase {
   updateState(products: IProductItem[]) {
     const key: keyof IProductItem = this.type;
     const productsValues = products.map((item) => +item[key]);
-    if (productsValues.length) {
-      const min = Math.min.apply(Math, [...productsValues]);
-      const max = Math.max.apply(Math, [...productsValues]);
-      this.setValue(`${min}`, this.sliderInputOneID);
-      this.setValue(`${max}`, this.sliderInputTwoID);
-      if (min === max) {
-        this.setOneSpan(`${min}`);
-      } else {
-        this.setValueSpan();
-      }
+
+    let minValue;
+    let maxValue;
+    if (this.isActive) {
+      minValue = this.getValue()[0];
+      maxValue = this.getValue()[1];
+      this.isActive = false;
+    } else if (
+      document.location.search.includes(`${this.type}`) &&
+      !document.location.search.includes('brand') &&
+      !document.location.search.includes('category')
+    ) {
+      minValue = parseQuery()[this.type][0];
+      maxValue = parseQuery()[this.type][1];
+      this.setValue(`${minValue}`, this.sliderInputOneID);
+      this.setValue(`${maxValue}`, this.sliderInputTwoID);
     } else {
+      if (productsValues.length) {
+        minValue = Math.min.apply(Math, [...productsValues]);
+        maxValue = Math.max.apply(Math, [...productsValues]);
+        this.setValue(`${minValue}`, this.sliderInputOneID);
+        this.setValue(`${maxValue}`, this.sliderInputTwoID);
+      }
+    }
+    if (productsValues.length === 0) {
       this.setOneSpan('Products not found!');
+    } else if (minValue === maxValue) {
+      this.setOneSpan(`${maxValue}`);
+    } else {
+      this.setValueSpan();
     }
     this.updatePointers();
     this.fillColor();
@@ -149,6 +170,7 @@ export class FilterSliderRange extends FilterBase {
   fillColor() {
     const sliderTrack = document.getElementById(`${this.type}-track`);
     const sliderMaxValue = +this.sliderInputOne.max;
+
     if (sliderTrack instanceof HTMLElement) {
       const percent1 = (+this.getValue()[0] / sliderMaxValue) * 100;
       const percent2 = (+this.getValue()[1] / sliderMaxValue) * 100;

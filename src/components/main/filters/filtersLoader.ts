@@ -45,8 +45,7 @@ class FiltersLoader extends FilterProducts {
         const sliderInput = FilterComponents.filterArray.find((el) => el.type === key);
         if (sliderInput instanceof FilterSliderRange) {
           sliderInput.setSavedValues(stateObj[key]);
-          sliderInput.setValueSpan();
-          sliderInput.updatePointers();
+          sliderInput.isActive = true;
         }
       }
       if (key === 'sort') {

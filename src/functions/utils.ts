@@ -31,20 +31,15 @@ function appendImage(parentSelector: string, className: string, path: string) {
 
 function getIntersectionsInArray(object: { [x: string]: IProductItem[] }) {
   const values = Object.values(object);
-  const valuesNotEmpty = values.filter((item) => item.length !== 0);
-  if (valuesNotEmpty.length > 1) {
-    let result: IProductItem[] = [...valuesNotEmpty[0]];
-    for (let i = 1; i < valuesNotEmpty.length; i++) {
-      result = result.filter((el) => valuesNotEmpty[i].includes(el));
-    }
-    // const combinedArray = Object.values(object).reduce((acc, item) => {
-    //   return acc.concat(item);
-    // }, [] as IProductItem[]);
-    // const cleanedArray = combinedArray.filter((item, index) => combinedArray.indexOf(item) !== index);
-    // return cleanedArray;
+  const result: IProductItem[] = [];
+  if (values.some((arr) => arr.length === 0)) {
     return result;
   } else {
-    return valuesNotEmpty.flat();
+    let result: IProductItem[] = values[0];
+    for (let i = 1; i < values.length; i++) {
+      result = [...result.filter((el) => values[i].includes(el))];
+    }
+    return result;
   }
 }
 
