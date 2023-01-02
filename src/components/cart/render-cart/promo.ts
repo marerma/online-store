@@ -2,6 +2,7 @@ import { cartStatement } from '../local-storage/cart-storage';
 import { showTotalCost, setState } from '../local-storage/cart-storage';
 import { getSelector } from '../../../functions/utils';
 import { loadCartPage } from '..';
+import { renderModal } from './modal';
 
 function renderPromo() {
   const cart = getSelector(document, '.cart'),
@@ -120,6 +121,8 @@ function renderPromo() {
 
   addCode(promoRolling, 'RS');
   addCode(promoEpam, 'EPM');
+
+  renderModal();
 }
 
 function addCode(codeName: Element, value: string) {
