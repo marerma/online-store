@@ -1,8 +1,8 @@
 import { IProductItem } from '../components/main/interface/Iproducts';
 
-function getSelector(parent: DocumentFragment | Document | Element, selector: string) {
+function getSelector(parent: DocumentFragment | Document | Element | HTMLInputElement | ParentNode, selector: string) {
   const item = parent.querySelector(selector);
-  if (item instanceof HTMLElement) {
+  if (item instanceof HTMLElement || item instanceof HTMLInputElement) {
     return item;
   } else {
     throw new Error(`Can't find selector: ${selector}`);
@@ -72,4 +72,29 @@ function parseQuery() {
   return paramObj;
 }
 
-export { getSelector, getDataBase64, appendImage, getIntersectionsInArray, copyURLtoClipboard, parseQuery };
+function checkLength(item: HTMLInputElement, amount: number, length: number) {
+  const words = item.value.split(' ');
+
+  const isTooShort = words.some((word) => {
+    return word.length < length;
+  });
+
+  isTooShort || words.length < amount ? item.classList.add('wrong') : item.classList.remove('wrong');
+}
+
+function allowOnlyDigits(item: HTMLInputElement, key: string, code: string, length: number) {
+  if ((!/^\d+$/.test(key) && code !== 'Backspace') || item.value.length > length) {
+    item.value = item.value.slice(0, -1);
+  }
+}
+
+export {
+  getSelector,
+  getDataBase64,
+  appendImage,
+  getIntersectionsInArray,
+  copyURLtoClipboard,
+  parseQuery,
+  checkLength,
+  allowOnlyDigits,
+};

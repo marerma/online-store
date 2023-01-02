@@ -3,6 +3,8 @@ import { IProductItem } from '../main/interface/Iproducts';
 import { loadThumbnail, loadImages } from './images/images';
 import { cartStatement, setState, countAmountOfItems, showTotalCost } from '../cart/local-storage/cart-storage';
 import { increaseCartIcon } from '../cart/cart-icon/icon';
+import { loadCartPage } from '../cart';
+import { renderModal } from '../cart/render-cart/modal';
 
 class ProductPage {
   loadPage(elements: IProductItem[]) {
@@ -24,7 +26,7 @@ class ProductPage {
           if (target === buttonBuy && product) {
             const findedItem = findById(elements, +product.id);
 
-            addToCart(elements, +product.id);
+            toggleCartItem(elements, +product.id);
 
             if (findedItem) {
               buttonBuy.innerHTML = setBuyButtonState(findedItem);
@@ -92,11 +94,22 @@ class ProductPage {
           </div>
         `;
 
-        const addToCartButton = getSelector(document, '.product__options-add');
+        const addToCartButton = getSelector(document, '.product__options-add'),
+          buyNowButton = getSelector(document, '.product__options-buy');
 
         addToCartButton.addEventListener('click', () => {
-          addToCart(elements, item.id);
+          toggleCartItem(elements, item.id);
           addToCartButton.innerHTML = setBuyButtonState(item);
+        });
+
+        buyNowButton.addEventListener('click', () => {
+          addToCart(elements, item.id);
+          setState();
+          history.pushState({}, '', '/cart');
+          loadCartPage.loadPage();
+          const cart = getSelector(document, '.cart'),
+            buyButton = getSelector(cart, '.product__options-buy');
+          buyButton.click();
         });
 
         this.appendImages(item);
@@ -114,7 +127,7 @@ function findById(elems: IProductItem[], index: number) {
   return elems.find((el) => el.id === index);
 }
 
-function addToCart(items: IProductItem[], id: number) {
+function toggleCartItem(items: IProductItem[], id: number) {
   const productsInCart = cartStatement.inCart,
     product = JSON.stringify(findById(items, id));
 
@@ -123,6 +136,20 @@ function addToCart(items: IProductItem[], id: number) {
     increaseCartIcon();
   } else {
     cartStatement.inCart = productsInCart.filter((el) => el !== product);
+  }
+
+  countAmountOfItems();
+  showTotalCost();
+  setState();
+}
+
+function addToCart(items: IProductItem[], id: number) {
+  const productsInCart = cartStatement.inCart,
+    product = JSON.stringify(findById(items, id));
+
+  if (!productsInCart.includes(product)) {
+    productsInCart.push(product);
+    increaseCartIcon();
   }
 
   countAmountOfItems();

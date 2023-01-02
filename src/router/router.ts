@@ -24,11 +24,14 @@ const handleLocation = async () => {
 };
 
 const clearContent = () => {
-  const children = document.querySelector('.main-content')?.childNodes;
+  const children = document.querySelector('.main-content')?.childNodes,
+    modal = document.querySelector('.modal');
 
   children?.forEach((item) => {
     item.remove();
   });
+
+  modal?.remove();
 };
 
 PRODUCTS_DB.forEach((item) => {
@@ -40,7 +43,6 @@ window.addEventListener('popstate', () => {
   handleLocation();
 });
 
-//window.route = route;
 handleLocation();
 
 export { clearContent, route, handleLocation };

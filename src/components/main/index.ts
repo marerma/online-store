@@ -1,11 +1,10 @@
 import { MainRender } from './catalogue/index';
 import { Loader } from './catalogue/loader';
 import { IApiResponse, IProductItem } from './interface/Iproducts';
-import { loadProductPage } from '../product-details';
 import { clearContent } from '../../router/router';
 import { cartButton } from '../cart/cart-icon/icon';
 import { loadCartPage } from '../cart';
-import { parseQuery } from '../../functions/utils';
+import { getSelector, parseQuery } from '../../functions/utils';
 import { showTotalCost } from '../cart/local-storage/cart-storage';
 import { Preloader } from '../main/preloader/preloader';
 
@@ -39,11 +38,18 @@ class MainPage extends Loader {
   }
 }
 
+const loadMainPage = new MainPage(),
+  homePage = getSelector(document, '.header__container-home');
+
+homePage.onclick = () => {
+  clearContent();
+  history.pushState({}, '', '/');
+  loadMainPage.loadPage();
+};
+
 cartButton.addEventListener('click', () => {
-  history.pushState({}, '', `cart`);
+  history.pushState({}, '', '/cart');
   loadCartPage.loadPage();
 });
-
-const loadMainPage = new MainPage();
 
 export { loadMainPage };
