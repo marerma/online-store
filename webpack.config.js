@@ -42,6 +42,11 @@ const baseConfig = {
       filename: 'index.html',
       favicon: './src/favicon.ico',
     }),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, './src/components/error-page/404.html'),
+      filename: '404.html',
+      favicon: './src/favicon.ico',
+    }),
     new CleanWebpackPlugin(),
     new CopyPlugin({
       patterns: [{ from: path.resolve(__dirname, './src/assets'), to: path.resolve(__dirname, './dist/assets') }],
