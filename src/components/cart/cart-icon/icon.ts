@@ -1,4 +1,4 @@
-import { setState, cartStatement } from '../local-storage/cart-storage';
+import { setState, cartStatement, showTotalCost } from '../local-storage/cart-storage';
 import { getSelector } from '../../../functions/utils';
 
 const cartButton = getSelector(document, '.header__container-cart'),
@@ -8,6 +8,7 @@ renderCartIcon();
 
 function renderCartIcon() {
   cartCounter.textContent = cartStatement.counter.toString();
+  showTotalCost();
 }
 
 function decreaseCartIcon() {
