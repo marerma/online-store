@@ -1,4 +1,4 @@
-import { getSumOfArray, getSumOfObject } from './utils';
+import { getSumOfArray, getSumOfObject, getDataBase64 } from './utils';
 
 describe('function getSumOfArray:', () => {
   let array: number[];
@@ -33,5 +33,11 @@ describe('function getSumOfObject:', () => {
 
   test('should return non-falsy value', () => {
     expect(getSumOfObject(object)).not.toBeFalsy();
+  });
+});
+
+describe('function getDataBase64:', () => {
+  test('should be function:', () => {
+    expect(getDataBase64()).toBeInstanceOf(Function);
   });
 });
