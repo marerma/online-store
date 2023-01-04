@@ -88,8 +88,12 @@ function allowOnlyDigits(item: HTMLInputElement, key: string, code: string, leng
   }
 }
 
-function sum(a: number, b: number) {
-  return a + b;
+function getSumOfArray(arr: number[]) {
+  return arr.reduce((acc, val) => acc + val, 0);
+}
+
+function getSumOfObject(object: { [x: string]: number }) {
+  return getSumOfArray(Object.values(object));
 }
 
 export {
@@ -101,5 +105,6 @@ export {
   parseQuery,
   checkLength,
   allowOnlyDigits,
-  sum,
+  getSumOfArray,
+  getSumOfObject,
 };

@@ -96,6 +96,10 @@ body {
     display: flex;
     justify-content: start;
 
+    & #rsschool {
+      width: 80px;
+    }
+
     & #rsschool path,
     #rsschool:hover .st3 path {
       fill: #fff;

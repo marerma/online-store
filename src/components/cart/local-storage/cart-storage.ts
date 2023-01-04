@@ -1,4 +1,4 @@
-import { getSelector } from '../../../functions/utils';
+import { getSelector, getSumOfObject } from '../../../functions/utils';
 import { renderCartIcon, cartCounter } from '../cart-icon/icon';
 
 let cartStatement: Cart;
@@ -31,13 +31,7 @@ function countAmountOfItems() {
     return item;
   }, {});
 
-  let sum = 0;
-
-  for (const key in cartStatement.inCartAmount) {
-    sum += cartStatement.inCartAmount[key];
-  }
-
-  cartStatement.counter = sum;
+  cartStatement.counter = getSumOfObject(cartStatement.inCartAmount);
 
   getSelector(document, '.cart-count').textContent = cartStatement.counter.toString();
 }
