@@ -8,13 +8,10 @@ import { showTotalCost } from '../components/cart/local-storage/cart-storage';
 const route = (event: Event) => {
   event = event || window.event;
   event.preventDefault();
-  // window.history.pushState({}, '', event.target?.href);
   handleLocation();
 };
 
 const routes: Routes = {
-  // 404: () => loadErrorPage.loadPage(),
-  // 404: '../components/error-page/404.html',
   '/': () => loadMainPage.loadPage(),
   '/cart': () => loadCartPage.loadPage(PRODUCTS_DB),
 };
