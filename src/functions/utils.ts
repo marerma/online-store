@@ -88,6 +88,10 @@ function allowOnlyDigits(item: HTMLInputElement, key: string, code: string, leng
   }
 }
 
+function sum(a: number, b: number) {
+  return a + b;
+}
+
 export {
   getSelector,
   getDataBase64,
@@ -97,4 +101,5 @@ export {
   parseQuery,
   checkLength,
   allowOnlyDigits,
+  sum,
 };
