@@ -110,6 +110,7 @@
   margin: 0 auto;
   width: 50%;
 
+  height: 36px;
   color: $color1;
   background: $color3;
   border-radius: 3px;
@@ -119,6 +120,10 @@
   &:hover {
     opacity: 0.8;
   }
+}
+
+.product-item__added {
+  background: $color2;
 }
 
 .filter__button-container {
