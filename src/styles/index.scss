@@ -57,19 +57,29 @@ body::-webkit-scrollbar-thumb {
     padding: 10px 20px;
 
     &-home {
+      width: 32%;
       font-weight: 800;
       font-size: 1.5rem;
       color: $color1;
       cursor: pointer;
       transition: all 0.3s ease;
+
       &:hover {
         color: $color3;
       }
     }
 
     &-money {
+      width: 32%;
       font-weight: 600;
       color: $color1;
+      text-align: center;
+    }
+
+    & .cart__wrapper {
+      display: flex;
+      justify-content: end;
+      width: 32%;
     }
 
     &-cart {
@@ -81,7 +91,9 @@ body::-webkit-scrollbar-thumb {
       height: 40px;
 
       background-image: url('../assets/cart.jpg');
-      background-size: 100% 100%;
+      background-size: 40px 100%;
+      background-position: right;
+      background-repeat: no-repeat;
 
       cursor: pointer;
     }
@@ -119,7 +131,8 @@ body::-webkit-scrollbar-thumb {
 .footer {
   display: flex;
   justify-content: center;
-  width: 100%;
+  width: 90%;
+  border-radius: 20px 20px 0 0;
   background: $color2;
 
   & .container {
@@ -152,7 +165,7 @@ body::-webkit-scrollbar-thumb {
     }
 
     & #rsschool:hover path {
-      fill: red;
+      fill: $color3;
     }
   }
 
@@ -179,6 +192,27 @@ body::-webkit-scrollbar-thumb {
 
   & .github:hover path,
   & .github:hover text {
-    fill: red;
+    fill: $color3;
+  }
+}
+
+@media (max-width: 1366px) {
+  .main-content,
+  .header,
+  .footer {
+    width: 100%;
+  }
+
+  .header__container,
+  .footer .container {
+    padding: 5px;
+  }
+
+  .footer .container {
+    width: 100%;
+  }
+
+  .main-content {
+    padding: 5px;
   }
 }

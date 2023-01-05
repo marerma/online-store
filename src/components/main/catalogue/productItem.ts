@@ -1,5 +1,4 @@
 import { IProductItem } from '../interface/Iproducts';
-import { cartStatement } from '../../cart/local-storage/cart-storage';
 import { setBuyButtonState } from '../../product-details';
 
 export class ProductComponent {
@@ -11,7 +10,7 @@ export class ProductComponent {
   render() {
     return `
     <div class="product-item" id=${this.product.id}>
-        <img class="product-item__thumb" src=${this.product.thumbnail} alt="${this.product.title}">  
+        <div class="product-item__thumb" style="background-image: url(${this.product.thumbnail});"></div>
         <div class="product-item__props">
           <h3 product-item__title>${this.product.title}</h3>
             <span class="product-item__price">€${this.product.price}</span>
