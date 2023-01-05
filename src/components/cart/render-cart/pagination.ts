@@ -28,7 +28,6 @@ export function paginate() {
   }
 
   displayList(paginationData, limit, currentPage);
-  addAmountChangers();
 
   forwardButton.addEventListener('click', () => {
     currentPage++;
@@ -61,6 +60,8 @@ export function paginate() {
     paginatedData.forEach((item) => {
       productsOnScreen.append(item);
     });
+
+    addAmountChangers();
   }
 
   function displayOtherPage() {
@@ -68,7 +69,6 @@ export function paginate() {
     cartStatement.currentPage = currentPage;
     setState();
     displayList(paginationData, cartStatement.itemsPerPage, currentPage);
-    addAmountChangers();
   }
 
   function setQuery() {

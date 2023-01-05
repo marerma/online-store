@@ -12,7 +12,7 @@ export function addAmountChangers() {
     if (product && product instanceof HTMLElement) {
       const index = product.dataset.index;
 
-      product.addEventListener('click', (e) => {
+      product.onclick = (e) => {
         for (let i = 0; i < productsInCart.length; i++) {
           const parsedItem = JSON.parse(productsInCart[i]);
 
@@ -58,7 +58,7 @@ export function addAmountChangers() {
             break;
           }
         }
-      });
+      };
     }
   });
 }
