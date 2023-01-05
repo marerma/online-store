@@ -13,7 +13,7 @@ class FilterComponents {
   }
 
   render(products: IProductItem[]) {
-    let innerHTMLFilters = this.addButtons() + this.addFoundProductsTotal();
+    let innerHTMLFilters = this.addFoundProductsTotal() + this.addButtons();
 
     FilterComponents.typesList.forEach((type) => {
       if (type === 'brand' || type === 'category') {

@@ -14,7 +14,7 @@ export class ProductComponent {
         <img class="product-item__thumb" src=${this.product.thumbnail} alt="${this.product.title}">  
         <div class="product-item__props">
           <h3 product-item__title>${this.product.title}</h3>
-            <span class="product-item__price">$ ${this.product.price}</span>
+            <span class="product-item__price">€${this.product.price}</span>
             <div class="product-item__button-container">
             <button class="product-item__buy">${setBuyButtonState(this.product)}</button>
             <button class="product-item__details">DETAILS</button>
