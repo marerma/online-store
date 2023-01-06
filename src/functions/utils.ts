@@ -96,6 +96,13 @@ function getSumOfObject(object: { [x: string]: number }) {
   return getSumOfArray(Object.values(object));
 }
 
+function compareStrings(givenValue: string | number, searchValue: string) {
+  if (typeof givenValue === 'number') {
+    givenValue = `${givenValue}`;
+  }
+  return givenValue.toLowerCase().includes(searchValue.toLowerCase());
+}
+
 function getPromise(data: string) {
   return new Promise((resolve, reject) => {
     data ? resolve(data) : reject(new Error('error'));
@@ -114,4 +121,5 @@ export {
   getSumOfArray,
   getSumOfObject,
   getPromise,
+  compareStrings,
 };

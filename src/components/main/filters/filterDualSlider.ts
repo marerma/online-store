@@ -140,7 +140,7 @@ export class FilterSliderRange extends FilterBase {
       maxValue = this.getValue()[1];
       this.isActive = false;
     } else if (
-      document.location.search.includes(`${this.type}`) &&
+      document.location.search.includes(`${this.type}=`) &&
       !document.location.search.includes('brand') &&
       !document.location.search.includes('category')
     ) {
