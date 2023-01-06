@@ -32,13 +32,13 @@ export class FilterSliderRange extends FilterBase {
     this.sliderInputOne.id = this.sliderInputOneID;
     this.sliderInputOne.type = 'range';
     this.sliderInputOne.min = '0';
-    this.sliderInputOne.max = `${valuesData[1]}`;
+    this.sliderInputOne.max = defaultvalueMax;
     this.sliderInputOne.setAttribute('value', defaultvalueMin);
     this.sliderInputOne.name = `${this.type}`;
     this.sliderInputTwo.id = this.sliderInputTwoID;
     this.sliderInputTwo.type = 'range';
     this.sliderInputTwo.min = '0';
-    this.sliderInputTwo.max = `${valuesData[1]}`;
+    this.sliderInputTwo.max = defaultvalueMax;
     this.sliderInputTwo.setAttribute('value', defaultvalueMax);
     this.sliderInputTwo.name = `${this.type}`;
     if (this.type === 'price') {
@@ -76,10 +76,10 @@ export class FilterSliderRange extends FilterBase {
 
   setValue(value: string, id: string) {
     if (id === this.sliderInputOneID) {
-      this.sliderValueOne = value;
+      +value >= this.getRangeData()[0] ? (this.sliderValueOne = value) : this.getRangeData()[0];
     }
     if (id === this.sliderInputTwoID) {
-      this.sliderValueTwo = value;
+      +value <= this.getRangeData()[1] ? (this.sliderValueTwo = value) : this.getRangeData()[1];
     }
   }
 
@@ -156,6 +156,7 @@ export class FilterSliderRange extends FilterBase {
         this.setValue(`${maxValue}`, this.sliderInputTwoID);
       }
     }
+
     if (productsValues.length === 0) {
       this.setOneSpan('Products not found!');
     } else if (minValue === maxValue) {

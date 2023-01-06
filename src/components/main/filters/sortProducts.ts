@@ -8,7 +8,11 @@ export class Sort {
     return this.sortValue;
   }
   setSortValue(value: string) {
-    this.sortValue = value;
+    if (['price-asc', 'price-dsc', 'rating-asc', 'rating-dsc'].includes(value)) {
+      this.sortValue = value;
+    } else {
+      this.sortValue = 'default';
+    }
     this.setSelectedAttribute();
   }
 
