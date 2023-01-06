@@ -1,4 +1,5 @@
 import { IProductItem } from '../interface/Iproducts';
+import { compareStrings } from '../../../functions/utils';
 
 export class Search {
   searchComponent: HTMLInputElement = document.createElement('input');
@@ -46,17 +47,17 @@ export class Search {
   }
 
   searchProducts(products: IProductItem[]) {
-    const regEx = new RegExp(`.*` + `${this.getSearchValue()}` + `.*`, 'gi');
+    const searchValue = this.getSearchValue();
     const result = products.filter((product) => {
       return (
-        regEx.test(product.title) ||
-        regEx.test(product.brand) ||
-        regEx.test(product.category) ||
-        regEx.test(product.description) ||
-        regEx.test(`${product.discountPercentage}`) ||
-        regEx.test(`${product.price}`) ||
-        regEx.test(`${product.rating}`) ||
-        regEx.test(`${product.stock}`)
+        compareStrings(product.title, searchValue) ||
+        compareStrings(product.brand, searchValue) ||
+        compareStrings(product.category, searchValue) ||
+        compareStrings(product.description, searchValue) ||
+        compareStrings(product.discountPercentage, searchValue) ||
+        compareStrings(product.price, searchValue) ||
+        compareStrings(product.rating, searchValue) ||
+        compareStrings(product.stock, searchValue)
       );
     });
     return result;
