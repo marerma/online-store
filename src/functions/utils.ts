@@ -96,6 +96,12 @@ function getSumOfObject(object: { [x: string]: number }) {
   return getSumOfArray(Object.values(object));
 }
 
+function getPromise(data: string) {
+  return new Promise((resolve, reject) => {
+    data ? resolve(data) : reject(new Error('error'));
+  });
+}
+
 export {
   getSelector,
   getDataBase64,
@@ -107,4 +113,5 @@ export {
   allowOnlyDigits,
   getSumOfArray,
   getSumOfObject,
+  getPromise,
 };

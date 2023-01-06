@@ -1,4 +1,4 @@
-import { getSumOfArray, getSumOfObject, getDataBase64 } from './utils';
+import { getSumOfArray, getSumOfObject, getDataBase64, getPromise } from './utils';
 
 describe('function getSumOfArray:', () => {
   let array: number[];

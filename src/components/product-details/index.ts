@@ -4,16 +4,17 @@ import { loadThumbnail, loadImages } from './images/images';
 import { cartStatement, setState, countAmountOfItems, showTotalCost } from '../cart/local-storage/cart-storage';
 import { increaseCartIcon } from '../cart/cart-icon/icon';
 import { loadCartPage } from '../cart';
-import { renderModal } from '../cart/render-cart/modal';
 
 class ProductPage {
   loadPage(elements: IProductItem[]) {
     const items = Array.from(document.getElementsByClassName('product-item'));
 
     items.forEach((item) => {
+      const buttonBuy = getSelector(item, '.product-item__buy');
+      toggleBuyButtonStyle(buttonBuy);
+
       item.addEventListener('click', (e) => {
-        const target = e.target,
-          buttonBuy = getSelector(item, '.product-item__buy');
+        const target = e.target;
 
         if (target instanceof HTMLElement) {
           const product = target.closest('.product-item');
@@ -30,6 +31,7 @@ class ProductPage {
 
             if (findedItem) {
               buttonBuy.innerHTML = setBuyButtonState(findedItem);
+              toggleBuyButtonStyle(buttonBuy);
             }
           }
         }
@@ -155,6 +157,14 @@ function addToCart(items: IProductItem[], id: number) {
   countAmountOfItems();
   showTotalCost();
   setState();
+}
+
+function toggleBuyButtonStyle(item: HTMLElement) {
+  if (item.innerHTML === 'remove from cart'.toUpperCase()) {
+    item.classList.add('product-item__added');
+  } else {
+    item.classList.remove('product-item__added');
+  }
 }
 
 function setBuyButtonState(element: IProductItem) {
