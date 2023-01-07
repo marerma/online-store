@@ -137,6 +137,9 @@ function addCode(codeName: Element, value: string) {
       if (promoInput.value.toUpperCase() === value) {
         codeName.classList.remove('hide');
         codeName.classList.add('show');
+      } else {
+        codeName.classList.remove('show');
+        codeName.classList.add('hide');
       }
     });
   }

@@ -226,7 +226,7 @@ input {
 
       padding: 10px;
 
-      width: 300px;
+      width: 330px;
 
       border-radius: 5px;
       background: $color1;
@@ -265,6 +265,13 @@ input {
       font-weight: 700;
       font-size: 1.1rem;
     }
+
+    &-input {
+      margin-bottom: 10px;
+      width: 200px;
+      height: 30px;
+      padding: 5px;
+    }
   }
 }
 
@@ -272,15 +279,35 @@ input {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 10px;
+}
+
+.promo-add,
+.code__remove {
+  width: 60px;
+  height: 20px;
+
+  border-radius: 5px;
+
+  background: $color3;
+  color: $color1;
+
+  cursor: pointer;
+}
+
+.promo-info, .code__inner {
+  margin-right: 10px;
 }
 
 .applied__codes-inner {
   display: flex;
   flex-direction: column;
+  gap: 5px;
 }
 
 .code {
   display: flex;
+  justify-content: space-between;
 }
 
 .hide {
