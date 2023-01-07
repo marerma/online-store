@@ -6,6 +6,7 @@ import { renderModal } from './modal';
 
 function renderPromo() {
   const cart = getSelector(document, '.cart'),
+  wrapper = getSelector(cart, '.main__cart'),
     summary = document.createElement('div'),
     codes = cartStatement.codes;
 
@@ -49,7 +50,7 @@ function renderPromo() {
     <button class="product__options-buy">BUY NOW</button>
   `;
 
-  cart.append(summary);
+  wrapper.append(summary);
 
   const totals = getSelector(document, '.totals-item'),
     clone = getSelector(document, '.clone__totals-item'),

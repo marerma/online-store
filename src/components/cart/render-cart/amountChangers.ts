@@ -10,7 +10,8 @@ export function addAmountChangers() {
 
   renderedProducts.forEach((product) => {
     if (product && product instanceof HTMLElement) {
-      const index = product.dataset.index;
+      const index = product.dataset.index,
+        description = getSelector(product, '.cart__inner-description');
 
       product.onclick = (e) => {
         for (let i = 0; i < productsInCart.length; i++) {
@@ -22,15 +23,6 @@ export function addAmountChangers() {
             showTotalCost();
             setState();
             loadCartPage.loadPage(productsInCart);
-            break;
-          }
-
-          if (
-            e.target === getSelector(product, '.cart__inner-description') ||
-            e.target === getSelector(product, '.product__title')
-          ) {
-            if (index) loadProductPage.renderItem(PRODUCTS_DB, +index);
-            window.history.pushState({}, '', `product-${index}`);
             break;
           }
 
@@ -59,6 +51,11 @@ export function addAmountChangers() {
           }
         }
       };
+
+      description.onclick = () => {
+        if (index) loadProductPage.renderItem(PRODUCTS_DB, +index);
+        window.history.pushState({}, '', `product-${index}`);
+      }
     }
   });
 }

@@ -18,21 +18,23 @@ class CartPage {
       container.innerHTML = 'Cart is empty.';
     } else {
       container.innerHTML = `
-        <div class="cart__products">
-          <div class="cart__products-header">
-            <div class="header__name">Products in Cart</div>
-            <div class="items__amount">
-              <div class="items__amount-text">Items:</div>
-              <input class="items__amount-num" type="number" value="${cartStatement.itemsPerPage}"></input>
+        <div class="main__cart">
+          <div class="cart__products">
+            <div class="cart__products-header">
+              <div class="header__name">Products in Cart</div>
+              <div class="items__amount">
+                <div class="items__amount-text">Items on page:</div>
+                <input class="items__amount-num" type="number" value="${cartStatement.itemsPerPage}"></input>
+              </div>
+              <div class="page">
+                <div class="page__text">Page:</div>
+                <button class="page__back"><</button>
+                <div class="page__current">${cartStatement.currentPage}</div>
+                <button class="page__forward">></button>
+              </div>
             </div>
-            <div class="page">
-              <div class="page__text">Page:</div>
-              <button class="page__back"><</button>
-              <div class="page__current">${cartStatement.currentPage}</div>
-              <button class="page__forward">></button>
-            </div>
+            <div class="cart__inner"></div>
           </div>
-          <div class="cart__inner"></div>
         </div>
       `;
 
