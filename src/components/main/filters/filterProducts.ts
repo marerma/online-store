@@ -7,7 +7,6 @@ import { Sort } from './sortProducts';
 import { FilterSliderRange } from './filterDualSlider';
 import { DisplayOptions } from './displayOptions';
 import { ProductPage } from '../../product-details';
-import { loadProductPage } from '../../product-details';
 
 class FilterProducts extends FilterComponents {
   static activeFilters: { [x: string]: (string | number)[] };
@@ -213,11 +212,6 @@ function getProductsAllFilters(products: IProductItem[]) {
   const allFilterProducts = getIntersectionsInArray(FilterProducts.stateArray);
   return allFilterProducts;
 }
-
-// находим на странице все input с checkbox:true
-// собираем из них объект для дальнейшей фильтрации по базе данных по ключу "название фильтра": [значения];
-// присваиваем статическому свойству класса этот объект,
-// т.о. он будет доступен для формирования query
 
 function updateFiltersObj(inputArr: HTMLInputElement[]) {
   return inputArr

@@ -7,7 +7,11 @@ export class DisplayOptions {
   }
 
   setDisplayValue(value: string) {
-    this.displayValue = value;
+    if (value === 'table' || value === 'list') {
+      this.displayValue = value;
+    } else {
+      this.displayValue = 'default';
+    }
   }
 
   render() {

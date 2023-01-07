@@ -37,24 +37,38 @@ class FiltersLoader extends FilterProducts {
           const input = document.getElementById(`${item}`);
           if (input instanceof HTMLInputElement) {
             input.checked = true;
+          } else {
+            this.setDefaultState();
+            this.resetFilters();
           }
         });
       }
+
       if (key === 'rating' || key === 'price') {
-        FilterProducts.activeFilters[key] = stateObj[key];
         const sliderInput = FilterComponents.filterArray.find((el) => el.type === key);
         if (sliderInput instanceof FilterSliderRange) {
-          sliderInput.setSavedValues(stateObj[key]);
-          sliderInput.isActive = true;
+          if (
+            +stateObj[key][0] >= sliderInput.getRangeData()[0] &&
+            +stateObj[key][1] <= sliderInput.getRangeData()[1]
+          ) {
+            FilterProducts.activeFilters[key] = stateObj[key];
+            sliderInput.setSavedValues(stateObj[key]);
+            sliderInput.isActive = true;
+          } else {
+            this.resetFilters();
+          }
         }
       }
+
       if (key === 'sort') {
         this.sortComponent.setSortValue(`${stateObj[key]}`);
       }
+
       if (key === 'search') {
         this.searchComponent.setSearchValue(`${stateObj[key]}`);
         this.searchComponent.updateSearchValue();
       }
+
       if (key === 'display') {
         this.displayComponent.setDisplayValue(`${stateObj[key]}`);
         this.displayComponent.changeProductsView();
