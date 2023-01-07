@@ -6,50 +6,53 @@ import { renderModal } from './modal';
 
 function renderPromo() {
   const cart = getSelector(document, '.cart'),
+  wrapper = getSelector(cart, '.main__cart'),
     summary = document.createElement('div'),
     codes = cartStatement.codes;
 
   summary.classList.add('cart__summary');
 
   summary.innerHTML = `
-    <div class="cart__summary-header">Summary</div>
-    <div class="cart__summary-products">
-      <span class="summary-text">Products:</span>
-      <span class="summary-amount">${cartStatement.counter}</span>
-    </div>
-    <div class="cart__summary-total">
-      <div class="totals">
-        <div class="totals-item">
-          <span class="summary-text">Total:</span>
-          <span class="summary-price">${showTotalCost()}</span>
-        </div>
-        <div class="clone__totals-item hide">
-          <span class="summary-text">Total:</span>
-          <span class="summary-price"></span>
-        </div>
+    <div class="summary__wrapper">
+      <div class="cart__summary-header">Summary</div>
+      <div class="cart__summary-products">
+        <span class="summary-text">Products:</span>
+        <span class="summary-amount">${cartStatement.counter}</span>
       </div>
+      <div class="cart__summary-total">
+        <div class="totals">
+          <div class="totals-item">
+            <span class="summary-text">Total:</span>
+            <span class="summary-price">${showTotalCost()}</span>
+          </div>
+          <div class="clone__totals-item hide">
+            <span class="summary-text">Total:</span>
+            <span class="summary-price"></span>
+          </div>
+        </div>
 
-      <div class="applied__codes">
-        <div class="applied__codes-header">Applied codes:</div>
-        <div class="applied__codes-inner"></div>
+        <div class="applied__codes">
+          <div class="applied__codes-header">Applied codes:</div>
+          <div class="applied__codes-inner"></div>
+        </div>
       </div>
+      <input class="cart__summary-input" type="text" placeholder="Enter promo code">
+      <div class="cart__summary-promo">
+        <div class="promo-rolling hide">
+          <span class="promo-info">RS School - 10%</span>
+          <button class="promo-add">ADD</button>
+        </div>
+        <div class="promo-epam hide">
+          <span class="promo-info">EPAM Systems - 10%</span>
+          <button class="promo-add">ADD</button>
+        </div>
+      </div>
+      <p class ="cart__promo-examples">Promo for test: "RS", "EPM"</p>
+      <button class="product__options-buy">BUY NOW</button>
     </div>
-    <input class="cart__summary-input" type="text" placeholder="Enter promo code">
-    <div class="cart__summary-promo">
-      <div class="promo-rolling hide">
-        <span class="promo-info">Rolling Scopes School - 10%</span>
-        <button class="promo-add">ADD</button>
-      </div>
-      <div class="promo-epam hide">
-        <span class="promo-info">EPAM Systems - 10%</span>
-        <button class="promo-add">ADD</button>
-      </div>
-    </div>
-    <p class ="cart__promo-examples">Promo for test: "RS", "EPM"</p>
-    <button class="product__options-buy">BUY NOW</button>
   `;
 
-  cart.append(summary);
+  wrapper.append(summary);
 
   const totals = getSelector(document, '.totals-item'),
     clone = getSelector(document, '.clone__totals-item'),
@@ -134,6 +137,9 @@ function addCode(codeName: Element, value: string) {
       if (promoInput.value.toUpperCase() === value) {
         codeName.classList.remove('hide');
         codeName.classList.add('show');
+      } else {
+        codeName.classList.remove('show');
+        codeName.classList.add('hide');
       }
     });
   }
