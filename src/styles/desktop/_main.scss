@@ -123,7 +123,8 @@
 }
 
 .product-item__added {
-  background: $color2;
+  background: $color2 !important;
+  outline: 1px solid $color1;
 }
 
 .filter__button-container {

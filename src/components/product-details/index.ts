@@ -85,12 +85,14 @@ class ProductPage {
                     <div class="details__header">Category:</div>
                     <div class="details__inner">${item.category}</div>
                   </div>
+                  <div class="product__options">
+                    <div class="product__options-price">€${item.price}</div>
+                    <div class="product__options-buttons">
+                      <button class="product__options-add">${setBuyButtonState(item)}</button>
+                      <button class="product__options-buy">BUY NOW</button>
+                    </div>
+                  </div>
                 </div>
-              <div class="product__options">
-                <div class="product__options-price">€${item.price}</div>
-                <button class="product__options-add">${setBuyButtonState(item)}</button>
-                <button class="product__options-buy">BUY NOW</button>
-              </div>
               </div>
             </div>
           </div>
@@ -99,9 +101,12 @@ class ProductPage {
         const addToCartButton = getSelector(document, '.product__options-add'),
           buyNowButton = getSelector(document, '.product__options-buy');
 
+        toggleBuyButtonStyle(addToCartButton);
+
         addToCartButton.addEventListener('click', () => {
           toggleCartItem(elements, item.id);
           addToCartButton.innerHTML = setBuyButtonState(item);
+          toggleBuyButtonStyle(addToCartButton);
         });
 
         buyNowButton.addEventListener('click', () => {
