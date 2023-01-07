@@ -12,7 +12,7 @@ input {
 .cart {
   display: flex;
   justify-content: center;
-  padding: 20px;
+  padding: 35px 0 80px;
   width: 100%;
 
   & .main__cart {
@@ -20,8 +20,8 @@ input {
     justify-content: space-around;
 
     padding: 30px 10px;
-    width: 80%;
     min-height: 650px;
+    width: 80%;
 
     background: $color2;
     color: $color1;
@@ -34,6 +34,7 @@ input {
     display: flex;
     flex-direction: column;
     width: 60%;
+    max-height: 400px;
 
     &-header {
       display: flex;
@@ -113,7 +114,7 @@ input {
     &-item {
       display: flex;
       justify-content: space-around;
-      align-items: center;
+      align-items: flex-start;
       // gap: 20px;
       padding: 15px 0;
 
@@ -134,6 +135,8 @@ input {
       display: flex;
       align-items: center;
       justify-content: center;
+
+      height: 100%;
       width: 5%;
 
       font-size: 1.3rem;
@@ -142,18 +145,30 @@ input {
     &-thumbnail {
       width: 20%;
       border-radius: 2px;
+
+      cursor: pointer;
     }
 
     &-description {
       width: 60%;
       padding: 0 15px;
-      cursor: pointer;
+      font-size: 0.8rem;
     }
 
     .product__title {
+      display: inline-flex;
+
       font-size: 1.2rem;
       font-weight: 600;
       margin-bottom: 5px;
+
+      cursor: pointer;
+
+      transition: $transition;
+
+      &:hover {
+        color: $color3;
+      }
     }
 
     &-amount {
@@ -171,6 +186,7 @@ input {
 
       & .amount__changers {
         display: flex;
+        align-items: center;
         gap: 10px;
 
         &-decrease,
@@ -187,10 +203,75 @@ input {
 
           font-size: 1rem;
           color: $color1;
+
+          cursor: pointer;
         }
+      }
+
+
+      & .item__cost {
+        font-size: 1.1rem;
+        font-weight: 500;
       }
     }
   }
+
+  &__summary {
+    margin-top: 80px;
+
+    & .summary__wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      padding: 10px;
+
+      width: 300px;
+
+      border-radius: 5px;
+      background: $color1;
+      color: $color2;
+    }
+
+    &-header {
+      margin-bottom: 10px;
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    &-products {
+      margin-bottom: 5px;
+    }
+
+    &-total {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      // justify-content: center;
+    }
+
+    & .totals {
+      margin-bottom: 10px;
+    }
+
+    & .summary-text {
+      font-weight: 500;
+      font-size: 1.1rem;
+    }
+
+    & .summary-price,
+    & .summary-amount {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+  }
+}
+
+.applied__codes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .applied__codes-inner {

@@ -24,7 +24,7 @@ class CartPage {
               <div class="header__name">Products in Cart</div>
               <div class="items__amount">
                 <div class="items__amount-text">Items on page:</div>
-                <input class="items__amount-num" type="number" value="${cartStatement.itemsPerPage}"></input>
+                <input class="items__amount-num" value="${cartStatement.itemsPerPage}"></input>
               </div>
               <div class="page">
                 <div class="page__text">Page:</div>
