@@ -3,9 +3,15 @@ input {
   border: none;
   outline: none;
 
+  transition: $transition;
+
   &:active {
     border: none;
     outline: none;
+  }
+
+  &:hover {
+    opacity: 0.8;
   }
 }
 
@@ -17,7 +23,7 @@ input {
 
   & .main__cart {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-evenly;
 
     padding: 30px 10px;
     min-height: 650px;
@@ -34,20 +40,18 @@ input {
     display: flex;
     flex-direction: column;
     width: 60%;
-    max-height: 400px;
 
     &-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 40px;
-      gap: 50px;
+      margin-bottom: 20px;
       padding: 5px;
-      font-size: 1.2rem;
+      font-size: 1rem;
       font-weight: 600;
 
       & .header__name {
-        width: 33%;
+        width: 30%;
       }
 
 
@@ -56,7 +60,7 @@ input {
         justify-content: center;
         align-items: center;
         gap: 10px;
-        width: 33%;
+        width: 40%;
 
         &-num {
           width: 50px;
@@ -65,7 +69,7 @@ input {
           border-radius: 2px;
 
           text-align: center;
-          font-size: 1.3rem;
+          font-size: 1rem;
           font-weight: 500;
 
           background: $color3;
@@ -78,7 +82,7 @@ input {
         justify-content: end;
         align-items: center;
         gap: 5px;
-        width: 33%;
+        width: 30%;
 
         &__current {
           width: 15px;
@@ -117,6 +121,7 @@ input {
       align-items: flex-start;
       // gap: 20px;
       padding: 15px 0;
+      padding-right: 5px;
 
       border-radius: 5px;
 
@@ -150,8 +155,8 @@ input {
     }
 
     &-description {
-      width: 60%;
-      padding: 0 15px;
+      width: 55%;
+      padding-left: 15px;
       font-size: 0.8rem;
     }
 
@@ -273,6 +278,12 @@ input {
       padding: 5px;
     }
   }
+
+  &__promo {
+    &-examples {
+      margin-bottom: 5px;
+    }
+  }
 }
 
 .applied__codes {
@@ -280,6 +291,32 @@ input {
   flex-direction: column;
   align-items: center;
   margin-bottom: 10px;
+
+  &-header {
+    margin-bottom: 5px;
+  } 
+
+  &-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+
+.stock {
+  text-align: center;
+}
+
+.product__options-buy {
+  width: 100px;
+  height: 30px;
+
+  border-radius: 5px;
+
+  color: $color1;
+  background: $color3;
+
+  cursor: pointer;
 }
 
 .promo-add,
@@ -299,15 +336,10 @@ input {
   margin-right: 10px;
 }
 
-.applied__codes-inner {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
 .code {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .hide {
@@ -317,3 +349,5 @@ input {
 .show {
   display: flex;
 }
+
+@import '../media/cart';

@@ -39,7 +39,7 @@ function renderPromo() {
       <input class="cart__summary-input" type="text" placeholder="Enter promo code">
       <div class="cart__summary-promo">
         <div class="promo-rolling hide">
-          <span class="promo-info">Rolling Scopes School - 10%</span>
+          <span class="promo-info">RS School - 10%</span>
           <button class="promo-add">ADD</button>
         </div>
         <div class="promo-epam hide">
