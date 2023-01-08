@@ -4,7 +4,7 @@ export class Preloader {
   setPreloader() {
     this.preloaderComponent.className = 'preloader-animation';
     const element = document.querySelector('.main-content') as HTMLElement;
-    element.append(this.preloaderComponent);
+    element.before(this.preloaderComponent);
   }
 
   removePreloader() {
