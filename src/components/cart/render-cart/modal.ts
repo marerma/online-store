@@ -256,7 +256,7 @@ function validateCardValidity(valid: HTMLElement) {
     valid.addEventListener('change', () => {
       const value = valid.value.replace('/', '');
 
-      if (!regDigits.test(value) || +value.slice(0, 2) > 12 || value.length !== 4) {
+      if (!regDigits.test(value) || +value.slice(0, 2) > 12 || +value.slice(2) > 31 || value.length !== 4) {
         valid.classList.add('wrong');
       } else {
         valid.classList.remove('wrong');
