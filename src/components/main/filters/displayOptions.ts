@@ -8,7 +8,6 @@ export class DisplayOptions {
   getDisplayValue() {
     return this.displayValue;
   }
-
   setDisplayValue(value: string) {
     if (value === TABLE_VIEW || value === LIST_VIEW) {
       this.displayValue = value;

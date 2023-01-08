@@ -41,7 +41,6 @@ class FiltersLoader extends FilterProducts {
               input.checked = true;
             } else {
               this.setDefaultState();
-              this.resetFilters();
             }
           });
           break;
@@ -50,20 +49,14 @@ class FiltersLoader extends FilterProducts {
         case 'price': {
           const sliderInput = FilterComponents.filterArray.find((el) => el.type === key);
           if (sliderInput instanceof FilterSliderRange) {
-            if (
-              +stateObj[key][0] >= sliderInput.getRangeData()[0] &&
-              +stateObj[key][1] <= sliderInput.getRangeData()[1]
-            ) {
+            if (+stateObj[key][0] >= 0 && +stateObj[key][1] <= sliderInput.getRangeData()[1]) {
               FilterProducts.activeFilters[key] = stateObj[key];
               sliderInput.setSavedValues(stateObj[key]);
               sliderInput.isActive = true;
-            } else {
-              this.resetFilters();
             }
           }
           break;
         }
-
         case 'sort':
           this.sortComponent.setSortValue(`${stateObj[key]}`);
           break;
@@ -79,7 +72,6 @@ class FiltersLoader extends FilterProducts {
           break;
       }
     }
-
     this.renderFilteredProducts(products);
   }
 }
