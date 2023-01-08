@@ -1,4 +1,4 @@
-import { getSelector, checkLength, allowOnlyDigits } from '../../../functions/utils';
+import { getSelector, checkLength, allowOnlyDigits, reductLength } from '../../../functions/utils';
 import { loadMainPage } from '../../main';
 import { cartStatement, setState, showTotalCost } from '../local-storage/cart-storage';
 import { renderCartIcon } from '../cart-icon/icon';
@@ -234,7 +234,8 @@ function validateCardNumber(number: HTMLElement) {
       number.oninput = () => {
         const firstDigit = +number.value.slice(0, 1);
 
-        allowOnlyDigits(number, e.key, e.code, 16);
+        allowOnlyDigits(number);
+        reductLength(number, 16);
 
         if (firstDigit === 3) {
           logo.style.backgroundImage = `url('../../assets/american-express.png')`;
@@ -270,7 +271,8 @@ function validateCardValidity(valid: HTMLElement) {
       }
 
       valid.oninput = () => {
-        allowOnlyDigits(valid, e.key, e.code, 5);
+        valid.value = valid.value.replace(/[^\d+/]/g, '');
+        reductLength(valid, 5);
       };
     });
   }
@@ -278,10 +280,9 @@ function validateCardValidity(valid: HTMLElement) {
 
 function validateCVV(cvv: HTMLElement | ParentNode) {
   if (cvv instanceof HTMLInputElement) {
-    document.onkeydown = (e) => {
-      cvv.oninput = () => {
-        allowOnlyDigits(cvv, e.key, e.code, 3);
-      };
+    cvv.oninput = () => {
+      allowOnlyDigits(cvv);
+      reductLength(cvv, 3);
     };
 
     cvv.onchange = () => {

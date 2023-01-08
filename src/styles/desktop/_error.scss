@@ -4,7 +4,6 @@
   justify-content: center;
   align-items: center;
   width: 100vw;
-  height: 100vh;
 
   &__number {
     font-size: 10rem;
@@ -13,5 +12,9 @@
 
   &__description {
     font-size: 1.5rem;
+    text-align: center;
   }
 }
+
+@import '../media/error';
+

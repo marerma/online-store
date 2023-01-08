@@ -82,9 +82,13 @@ function checkLength(item: HTMLInputElement, amount: number, length: number) {
   isTooShort || words.length < amount ? item.classList.add('wrong') : item.classList.remove('wrong');
 }
 
-function allowOnlyDigits(item: HTMLInputElement, key: string, code: string, length: number) {
-  if ((!/^\d+$/.test(key) && code !== 'Backspace') || item.value.length > length) {
-    item.value = item.value.slice(0, -1);
+function allowOnlyDigits(item: HTMLInputElement) {
+  item.value = item.value.replace(/[^\d]/g, '');
+}
+
+function reductLength(item: HTMLInputElement, length: number) {
+  if (item.value.length > length) {
+    item.value = item.value.slice(0, length);
   }
 }
 
@@ -122,4 +126,5 @@ export {
   getSumOfObject,
   getPromise,
   compareStrings,
+  reductLength,
 };
