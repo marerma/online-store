@@ -44,14 +44,16 @@ function renderModal() {
           </div>
           <div class="credit-card__bottom">
             <div class="credit-card__valid">
-              <div class="info-title">Valid:</div>
+              <div class="info-title">
+                Valid:
+              </div>
               <div class="input-wrapper">
                 <input class="credit-card__info wrong" placeholder="MM/DD" id="valid">
                 <div class="input-error hide">error</div>
               </div>
             </div>
             <div class="credit-card__valid">
-              <div class="info-title">CVV:<div>
+              <div class="info-title">CVV:</div>
               <div class="input-wrapper">
                 <input class="credit-card__info wrong" placeholder="CVV" id="cvv">
                 <div class="input-error hide">error</div>
@@ -59,10 +61,13 @@ function renderModal() {
             </div>
           </div>
         </div>
+
         <button class="confirm">CONFIRM</button>
       </form>
     `;
     body.append(modal);
+
+    hideOverflow();
 
     const modalWindow = getSelector(document, '.modal'),
       [name, phone, address, email, number, valid, cvv] = [
@@ -124,10 +129,25 @@ function renderModal() {
 
     function removeModal(e: Event) {
       if (e.target === modal) {
+        showOverflow();
         modal.remove();
       }
     }
   });
+}
+
+function hideOverflow() {
+  const body = getSelector(document, 'body');
+  body.style.overflow = 'hidden';
+
+  if (body.scrollHeight > body.clientHeight) {
+    body.style.paddingRight = '10px';
+  }
+}
+
+function showOverflow() {
+  getSelector(document, 'body').style.overflow = 'visible';
+  getSelector(document, 'body').style.paddingRight = '0';
 }
 
 function validateName(name: HTMLElement) {

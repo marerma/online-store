@@ -46,7 +46,6 @@
 
     .cart__summary {
 
-        // margin-top: 60px;
         &-input {
             width: 180px;
         }
@@ -168,8 +167,6 @@
             &-amount {
                 font-size: 0.9rem;
 
-                & .stock {}
-
                 & .amount__changers {
                     font-size: 1.1rem;
                     font-weight: 500;
@@ -181,8 +178,6 @@
 
                         border-radius: 20%;
                     }
-
-
                 }
 
                 & .item__cost {
@@ -198,8 +193,6 @@
         &-header {
             font-size: 1.2rem;
         }
-
-        &-products {}
 
         & .summary-text,
         & .summary-amount,
@@ -227,6 +220,5 @@
                 font-size: 0.7rem;
             }
         }
-
     }
 }
