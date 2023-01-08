@@ -102,16 +102,6 @@ function renderModal() {
       handleAllErrors();
 
       if (isFormValid) {
-        cartStatement.inCart = [];
-        cartStatement.inCartAmount = {};
-        cartStatement.counter = 0;
-        cartStatement.codes = [];
-        setState();
-
-        loadCartPage.loadPage();
-        renderCartIcon();
-        showTotalCost();
-
         modal.removeEventListener('click', removeModal);
 
         modal.innerHTML = `
@@ -121,6 +111,16 @@ function renderModal() {
           `;
 
         setTimeout(() => {
+          cartStatement.inCart = [];
+          cartStatement.inCartAmount = {};
+          cartStatement.counter = 0;
+          cartStatement.codes = [];
+          setState();
+
+          loadCartPage.loadPage();
+          renderCartIcon();
+          showTotalCost();
+
           modal.remove();
           loadMainPage.loadPage();
         }, 3000);
