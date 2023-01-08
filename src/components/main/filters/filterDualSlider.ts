@@ -76,10 +76,14 @@ export class FilterSliderRange extends FilterBase {
 
   setValue(value: string, id: string) {
     if (id === this.sliderInputOneID) {
-      +value >= this.getRangeData()[0] ? (this.sliderValueOne = value) : this.getRangeData()[0];
+      +value <= +this.sliderInputOne.min
+        ? (this.sliderValueOne = `${this.getRangeData()[0]}`)
+        : (this.sliderValueOne = value);
     }
     if (id === this.sliderInputTwoID) {
-      +value <= this.getRangeData()[1] ? (this.sliderValueTwo = value) : this.getRangeData()[1];
+      +value >= +this.sliderInputTwo.max
+        ? (this.sliderValueTwo = `${this.getRangeData()[1]}`)
+        : (this.sliderValueTwo = value);
     }
   }
 
