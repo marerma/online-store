@@ -89,12 +89,14 @@ class FilterProducts extends FilterComponents {
     });
 
     this.sortComponent.render().addEventListener('change', (e) => {
-      const target = e.target as HTMLOptionElement;
-      const wishSortValue = target.value;
-      this.sortComponent.setSortValue(wishSortValue);
-      this.sortComponent.setSelectedAttribute();
-      this.renderFilteredProducts(products);
-      this.syncURL();
+      const target = e.target;
+      if (target instanceof HTMLSelectElement) {
+        const wishSortValue = target.value;
+        this.sortComponent.setSortValue(wishSortValue);
+        this.sortComponent.setSelectedAttribute();
+        this.renderFilteredProducts(products);
+        this.syncURL();
+      }
     });
 
     this.displayComponent.render().addEventListener('click', (e) => {
@@ -131,14 +133,17 @@ class FilterProducts extends FilterComponents {
     };
 
     if (this.searchComponent.isActiveSearch()) {
-      if (isNotActive) {
-        const foundProducts = this.searchComponent.searchProducts(products);
-        updateProductsList(foundProducts, newProductsHTML);
-      }
-
-      if (!isNotActive) {
-        const foundProducts = this.searchComponent.searchProducts(productsArr);
-        updateProductsList(foundProducts, newProductsHTML);
+      switch (isNotActive) {
+        case true: {
+          const foundProducts = this.searchComponent.searchProducts(products);
+          updateProductsList(foundProducts, newProductsHTML);
+          break;
+        }
+        case false: {
+          const foundProducts = this.searchComponent.searchProducts(productsArr);
+          updateProductsList(foundProducts, newProductsHTML);
+          break;
+        }
       }
     }
 

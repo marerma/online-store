@@ -1,17 +1,19 @@
 import { IProductItem } from '../interface/Iproducts';
 
+const SORTER_TYPES = ['price-asc', 'price-dsc', 'rating-asc', 'rating-dsc'];
+const DEFAULT_SORTER_TYPE = 'default';
 export class Sort {
   sortComponent: HTMLElement = document.createElement('div');
-  sortValue = 'default';
+  sortValue = DEFAULT_SORTER_TYPE;
 
   getSortValue() {
     return this.sortValue;
   }
   setSortValue(value: string) {
-    if (['price-asc', 'price-dsc', 'rating-asc', 'rating-dsc'].includes(value)) {
+    if (SORTER_TYPES.includes(value)) {
       this.sortValue = value;
     } else {
-      this.sortValue = 'default';
+      this.sortValue = DEFAULT_SORTER_TYPE;
     }
     this.setSelectedAttribute();
   }
@@ -19,7 +21,7 @@ export class Sort {
   render() {
     this.sortComponent.innerHTML = `
       <select class='sort-options-list' name='sort'>
-        <option class='sort-options-item' selected disabled value='default'>--Select sort option--</option>
+        <option class='sort-options-item' selected disabled value='${DEFAULT_SORTER_TYPE}'>--Select sort option--</option>
         <option class='sort-options-item' value='price-asc'>Sort by price ↑ </option>
         <option class='sort-options-item' value='price-dsc'>Sort by price ↓ </option>
         <option class='sort-options-item' value='rating-asc'>Sort by rating ↑ </option>
@@ -45,7 +47,7 @@ export class Sort {
   }
 
   sortProductsLogic(products: IProductItem[]) {
-    if (this.getSortValue() === 'default') {
+    if (this.getSortValue() === DEFAULT_SORTER_TYPE) {
       return products.sort((a, b) => a.id - b.id);
     }
     const [keySort, direction] = this.getSortValue().split('-');
@@ -82,7 +84,7 @@ export class Sort {
 
   makeQuery() {
     const sortValue = this.getSortValue();
-    if (sortValue === 'default') {
+    if (sortValue === DEFAULT_SORTER_TYPE) {
       return '';
     } else {
       return `sort=${sortValue}`;

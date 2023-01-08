@@ -31,49 +31,55 @@ class FiltersLoader extends FilterProducts {
     this.setDefaultState();
 
     for (const key in stateObj) {
-      if (key === 'brand' || key === 'category') {
-        FilterProducts.activeFilters[key] = stateObj[key];
-        stateObj[key].forEach((item) => {
-          const input = document.getElementById(`${item}`);
-          if (input instanceof HTMLInputElement) {
-            input.checked = true;
-          } else {
-            this.setDefaultState();
-            this.resetFilters();
-          }
-        });
-      }
+      switch (key) {
+        case 'category':
+        case 'brand':
+          FilterProducts.activeFilters[key] = stateObj[key];
+          stateObj[key].forEach((item) => {
+            const input = document.getElementById(`${item}`);
+            if (input instanceof HTMLInputElement) {
+              input.checked = true;
+            } else {
+              this.setDefaultState();
+              this.resetFilters();
+            }
+          });
+          break;
 
-      if (key === 'rating' || key === 'price') {
-        const sliderInput = FilterComponents.filterArray.find((el) => el.type === key);
-        if (sliderInput instanceof FilterSliderRange) {
-          if (
-            +stateObj[key][0] >= sliderInput.getRangeData()[0] &&
-            +stateObj[key][1] <= sliderInput.getRangeData()[1]
-          ) {
-            FilterProducts.activeFilters[key] = stateObj[key];
-            sliderInput.setSavedValues(stateObj[key]);
-            sliderInput.isActive = true;
-          } else {
-            this.resetFilters();
+        case 'rating':
+        case 'price': {
+          const sliderInput = FilterComponents.filterArray.find((el) => el.type === key);
+          if (sliderInput instanceof FilterSliderRange) {
+            if (
+              +stateObj[key][0] >= sliderInput.getRangeData()[0] &&
+              +stateObj[key][1] <= sliderInput.getRangeData()[1]
+            ) {
+              FilterProducts.activeFilters[key] = stateObj[key];
+              sliderInput.setSavedValues(stateObj[key]);
+              sliderInput.isActive = true;
+            } else {
+              this.resetFilters();
+            }
           }
+          break;
         }
-      }
 
-      if (key === 'sort') {
-        this.sortComponent.setSortValue(`${stateObj[key]}`);
-      }
+        case 'sort':
+          this.sortComponent.setSortValue(`${stateObj[key]}`);
+          break;
 
-      if (key === 'search') {
-        this.searchComponent.setSearchValue(`${stateObj[key]}`);
-        this.searchComponent.updateSearchValue();
-      }
+        case 'search':
+          this.searchComponent.setSearchValue(`${stateObj[key]}`);
+          this.searchComponent.updateSearchValue();
+          break;
 
-      if (key === 'display') {
-        this.displayComponent.setDisplayValue(`${stateObj[key]}`);
-        this.displayComponent.changeProductsView();
+        case 'display':
+          this.displayComponent.setDisplayValue(`${stateObj[key]}`);
+          this.displayComponent.changeProductsView();
+          break;
       }
     }
+
     this.renderFilteredProducts(products);
   }
 }

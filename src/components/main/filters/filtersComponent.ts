@@ -48,8 +48,10 @@ class FilterComponents {
             </div>`;
   }
   updateFoundProductsTotal(products: IProductItem[]) {
-    const foundCount = document.querySelector('.filter__found-count-item') as HTMLElement;
-    foundCount.textContent = `${products.length}`;
+    const foundCount = document.querySelector('.filter__found-count-item');
+    if (foundCount instanceof HTMLElement) {
+      foundCount.textContent = `${products.length}`;
+    }
   }
 
   updateFiltersAmount(products: IProductItem[]) {
