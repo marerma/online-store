@@ -25,7 +25,10 @@ export function addAmountChangers() {
             break;
           }
 
-          if (e.target === getSelector(product, '.product__title') || e.target === getSelector(product, '.cart__inner-thumbnail')) {
+          if (
+            e.target === getSelector(product, '.product__title') ||
+            e.target === getSelector(product, '.cart__inner-thumbnail')
+          ) {
             if (index) loadProductPage.renderItem(PRODUCTS_DB, +index);
             window.history.pushState({}, '', `product-${index}`);
             break;

@@ -3,7 +3,7 @@ import { IProductItem } from '../interface/Iproducts';
 
 export class Catalogue {
   catalogue: ProductList;
-  root: HTMLElement | null = document.querySelector('.main-content'); // согласовать селектор в зависимости от главной страницы!
+  root: HTMLElement | null = document.querySelector('.main-content');
   catalogueComponent: HTMLElement = document.createElement('div');
 
   constructor() {

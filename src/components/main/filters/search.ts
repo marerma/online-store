@@ -1,9 +1,10 @@
 import { IProductItem } from '../interface/Iproducts';
 import { compareStrings } from '../../../functions/utils';
 
+const EMPTY_SEARCH_VALUE = '';
 export class Search {
   searchComponent: HTMLInputElement = document.createElement('input');
-  searchValue = '';
+  searchValue = EMPTY_SEARCH_VALUE;
 
   getSearchValue() {
     return this.searchValue;
@@ -22,7 +23,7 @@ export class Search {
 
   resetSearch() {
     this.searchComponent.placeholder = 'Search the products..';
-    this.setSearchValue('');
+    this.setSearchValue(EMPTY_SEARCH_VALUE);
     this.searchComponent.value = this.getSearchValue();
   }
 
@@ -65,8 +66,8 @@ export class Search {
 
   makeQuery() {
     const searchValue = this.getSearchValue();
-    if (searchValue === '') {
-      return '';
+    if (searchValue === EMPTY_SEARCH_VALUE) {
+      return EMPTY_SEARCH_VALUE;
     } else {
       return `search=${searchValue}`;
     }

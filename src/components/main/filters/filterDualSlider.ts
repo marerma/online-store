@@ -136,16 +136,14 @@ export class FilterSliderRange extends FilterBase {
     let minValue;
     let maxValue;
     if (this.isActive) {
-      minValue = this.getValue()[0];
-      maxValue = this.getValue()[1];
+      [minValue, maxValue] = [this.getValue()[0], this.getValue()[1]];
       this.isActive = false;
     } else if (
       document.location.search.includes(`${this.type}=`) &&
       !document.location.search.includes('brand') &&
       !document.location.search.includes('category')
     ) {
-      minValue = parseQuery()[this.type][0];
-      maxValue = parseQuery()[this.type][1];
+      [minValue, maxValue] = [parseQuery()[this.type][0], parseQuery()[this.type][1]];
       this.setValue(`${minValue}`, this.sliderInputOneID);
       this.setValue(`${maxValue}`, this.sliderInputTwoID);
     } else {

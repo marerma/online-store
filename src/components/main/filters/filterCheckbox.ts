@@ -29,8 +29,10 @@ export class FilterCheckbox extends FilterBase {
       </div>`;
     });
     this.root.innerHTML +=
-      `<div class='filter__checkbox-container'><h3 class='filter__title'>${this.type.toUpperCase()}</h3>` +
-      `<div class='filter__list'>${filtersListHTML}</div></div>`;
+      `<div class='filter__checkbox-container'>
+        <h3 class='filter__title'>${this.type.toUpperCase()}</h3>` +
+      `<div class='filter__list'>${filtersListHTML}</div>
+      </div>`;
     return this.root.innerHTML;
   }
 

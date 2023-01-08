@@ -1,31 +1,34 @@
+const DEFAULT_VIEW = 'default';
+const LIST_VIEW = 'list';
+const TABLE_VIEW = 'table';
 export class DisplayOptions {
   displayComponent = document.createElement('div');
-  displayValue = 'default';
+  displayValue = DEFAULT_VIEW;
 
   getDisplayValue() {
     return this.displayValue;
   }
 
   setDisplayValue(value: string) {
-    if (value === 'table' || value === 'list') {
+    if (value === TABLE_VIEW || value === LIST_VIEW) {
       this.displayValue = value;
     } else {
-      this.displayValue = 'default';
+      this.displayValue = DEFAULT_VIEW;
     }
   }
 
   render() {
     this.displayComponent.classList.add('products__display-options');
     this.displayComponent.innerHTML = `
-      <span class="products__display-icon active-icon" id="table"></span>
-      <span class="products__display-icon" id="list"></span>`;
+      <span class="products__display-icon active-icon" id="${TABLE_VIEW}"></span>
+      <span class="products__display-icon" id="${LIST_VIEW}"></span>`;
 
     return this.displayComponent;
   }
 
   makeQuery() {
     const displayValue = this.getDisplayValue();
-    if (displayValue === 'default') {
+    if (displayValue === DEFAULT_VIEW) {
       return '';
     } else {
       return `display=${displayValue}`;
@@ -42,8 +45,8 @@ export class DisplayOptions {
 
   addActiveStyle() {
     let id = this.getDisplayValue();
-    if (id === 'default') {
-      id = 'table';
+    if (id === DEFAULT_VIEW) {
+      id = TABLE_VIEW;
     }
     const icons = [...document.querySelectorAll('.products__display-icon')];
     const icon = document.getElementById(`${id}`);

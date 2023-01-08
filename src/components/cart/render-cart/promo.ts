@@ -6,7 +6,7 @@ import { renderModal } from './modal';
 
 function renderPromo() {
   const cart = getSelector(document, '.cart'),
-  wrapper = getSelector(cart, '.main__cart'),
+    wrapper = getSelector(cart, '.main__cart'),
     summary = document.createElement('div'),
     codes = cartStatement.codes;
 
