@@ -154,15 +154,18 @@ function validateName(name: HTMLElement) {
   if (name instanceof HTMLInputElement) {
     name.addEventListener('change', () => {
       const words = name.value.split(' ');
-
-      checkLength(name, 2, 3);
-      words.forEach((word) => {
-        if (!/[A-Z]/.test(word.slice(0, 1))) {
-          name.classList.add('wrong');
-        } else {
-          name.classList.remove('wrong');
-        }
-      });
+      if (words.length <= 1) {
+        name.classList.add('wrong');
+      } else {
+        checkLength(name, 2, 3);
+        words.forEach((word) => {
+          if (!/[A-Z]/.test(word.slice(0, 1))) {
+            name.classList.toggle('wrong');
+          } else {
+            name.classList.toggle('wrong');
+          }
+        });
+      }
       handleError(name);
     });
   }
