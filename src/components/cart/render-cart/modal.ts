@@ -70,17 +70,10 @@ function renderModal() {
     hideOverflow();
 
     const modalWindow = getSelector(document, '.modal'),
-      [name, phone, address, email, number, valid, cvv] = [
-        getSelector(document, '#name'),
-        getSelector(document, '#phone'),
-        getSelector(document, '#address'),
-        getSelector(document, '#email'),
-        getSelector(document, '#number'),
-        getSelector(document, '#valid'),
-        getSelector(document, '#cvv'),
-      ],
       confirmButton = getSelector(document, '.confirm'),
-      inputs = Array.from(modalWindow.querySelectorAll('input'));
+      inputs = Array.from(modalWindow.querySelectorAll('input')),
+      temp = ['name', 'phone', 'address', 'email', 'number', 'valid', 'cvv'],
+      [name, phone, address, email, number, valid, cvv] = temp.map((item) => getSelector(document, `#${item}`));
 
     modal.addEventListener('click', removeModal);
 
