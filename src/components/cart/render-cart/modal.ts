@@ -154,18 +154,15 @@ function validateName(name: HTMLElement) {
   if (name instanceof HTMLInputElement) {
     name.addEventListener('change', () => {
       const words = name.value.split(' ');
-      if (words.length <= 1) {
-        name.classList.add('wrong');
-      } else {
-        checkLength(name, 2, 3);
-        words.forEach((word) => {
-          if (!/[A-Z]/.test(word.slice(0, 1))) {
-            name.classList.toggle('wrong');
-          } else {
-            name.classList.toggle('wrong');
-          }
-        });
-      }
+
+      checkLength(name, 2, 3);
+
+      words.forEach((word) => {
+        if (!/[A-Z]/.test(word.slice(0, 1)) || words.length <= 1) {
+          name.classList.add('wrong');
+        }
+      });
+
       handleError(name);
     });
   }
@@ -192,11 +189,6 @@ function validateAddress(address: HTMLElement) {
   if (address instanceof HTMLInputElement) {
     address.addEventListener('change', () => {
       checkLength(address, 3, 5);
-      if (!address.value.includes(',')) {
-        address.classList.add('wrong');
-      } else {
-        address.classList.remove('wrong');
-      }
 
       handleError(address);
     });
