@@ -14,7 +14,7 @@ class CartPage {
 
     const container = getSelector(document, '.cart');
 
-    if (cartStatement.counter === 0) {
+    if (!cartStatement.counter) {
       container.innerHTML = 'Cart is empty.';
     } else {
       container.innerHTML = `
