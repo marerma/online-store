@@ -49,18 +49,13 @@ export class Search {
 
   searchProducts(products: IProductItem[]) {
     const searchValue = this.getSearchValue();
-    const result = products.filter((product) => {
-      return (
-        compareStrings(product.title, searchValue) ||
-        compareStrings(product.brand, searchValue) ||
-        compareStrings(product.category, searchValue) ||
-        compareStrings(product.description, searchValue) ||
-        compareStrings(product.discountPercentage, searchValue) ||
-        compareStrings(product.price, searchValue) ||
-        compareStrings(product.rating, searchValue) ||
-        compareStrings(product.stock, searchValue)
-      );
-    });
+    const result = products.filter(
+      ({ title, brand, category, description, discountPercentage, price, rating, stock }) => {
+        return [title, brand, category, description, discountPercentage, price, rating, stock].some((prop) =>
+          compareStrings(prop, searchValue)
+        );
+      }
+    );
     return result;
   }
 

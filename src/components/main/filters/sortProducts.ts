@@ -51,30 +51,16 @@ export class Sort {
       return products.sort((a, b) => a.id - b.id);
     }
     const [keySort, direction] = this.getSortValue().split('-');
-    if (keySort === 'price') {
+    if (keySort === 'price' || keySort === 'rating') {
       switch (direction) {
         case 'asc':
           products.sort((a, b) => {
-            return a.price - b.price;
+            return a[keySort] - b[keySort];
           });
           break;
         case 'dsc':
           products.sort((a, b) => {
-            return b.price - a.price;
-          });
-          break;
-      }
-    }
-    if (keySort === 'rating') {
-      switch (direction) {
-        case 'asc':
-          products.sort((a, b) => {
-            return a.rating - b.rating;
-          });
-          break;
-        case 'dsc':
-          products.sort((a, b) => {
-            return b.rating - a.rating;
+            return b[keySort] - a[keySort];
           });
           break;
       }

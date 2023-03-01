@@ -1,9 +1,10 @@
 import { IProductItem } from '../interface/Iproducts';
+import { filtersTypes } from './filterBase';
 import { FilterCheckbox } from './filterCheckbox';
 import { FilterSliderRange } from './filterDualSlider';
 
 class FilterComponents {
-  static typesList: string[];
+  static typesList: filtersTypes[];
   static filterArray: (FilterCheckbox | FilterSliderRange)[];
   filterComponent: HTMLElement = document.createElement('div');
 
@@ -16,12 +17,12 @@ class FilterComponents {
     let innerHTMLFilters = this.addFoundProductsTotal() + this.addButtons();
 
     FilterComponents.typesList.forEach((type) => {
-      if (type === 'brand' || type === 'category') {
+      if (['brand', 'category'].includes(type)) {
         const checkboxFilter = new FilterCheckbox(type, products);
         innerHTMLFilters += checkboxFilter.render();
         FilterComponents.filterArray.push(checkboxFilter);
       }
-      if (type === 'price' || type === 'rating') {
+      if (['price', 'rating'].includes(type)) {
         const sliderFilter = new FilterSliderRange(type, products);
         innerHTMLFilters += sliderFilter.render();
         FilterComponents.filterArray.push(sliderFilter);

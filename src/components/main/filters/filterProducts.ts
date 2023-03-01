@@ -222,8 +222,7 @@ function updateFiltersObj(inputArr: HTMLInputElement[]) {
   return inputArr
     .filter((input) => input.type === 'checkbox' || input.type === 'range')
     .forEach((input) => {
-      const key = input.name;
-      const type = input.type;
+      const { name: key, type } = input;
       switch (type) {
         case 'checkbox':
           updateActiveFilters(input.checked === true, key, input.id);
